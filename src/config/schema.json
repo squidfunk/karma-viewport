@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "type": "object",
+  "required": [
+    "breakpoints"
+  ],
+  "properties": {
+    "breakpoints": {
+      "description": "Breakpoint specification",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "size"
+        ],
+        "properties": {
+          "name": {
+            "description": "Breakpoint name",
+            "type": "string"
+          },
+          "size": {
+            "description": "Breakpoint viewport",
+            "type": "object",
+            "required": [
+              "width"
+            ],
+            "properties": {
+              "width": {
+                "description": "Viewport width",
+                "type": "integer"
+              },
+              "height": {
+                "description": "Viewport height",
+                "type": "integer"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
