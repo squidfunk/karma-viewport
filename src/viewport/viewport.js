@@ -114,6 +114,9 @@ export default class Viewport {
   reset() {
     this.context_.style.width = ""
     this.context_.style.height = ""
+
+    /* Force layout, so styles are sure to propagate */
+    this.context_.getBoundingClientRect()
   }
 
   /**

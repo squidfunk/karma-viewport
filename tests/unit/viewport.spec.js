@@ -154,6 +154,11 @@ describe("Viewport", () => {
     it("should reset width and height",
       resetShouldResetWidthAndHeight
     )
+
+    /* Test: should force layout */
+    it("should force layout",
+      resetShouldForceLayout
+    )
   })
 
   /* #between */
@@ -354,6 +359,13 @@ function resetShouldResetWidthAndHeight() {
     .toEqual("")
   expect(this.el.style.height)
     .toEqual("")
+}
+
+/* Test: #reset should force layout */
+function resetShouldForceLayout() {
+  new Viewport(this.el).reset()
+  expect(this.el.getBoundingClientRect)
+    .toHaveBeenCalled()
 }
 
 /* ----------------------------------------------------------------------------
