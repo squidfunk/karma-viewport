@@ -32,7 +32,6 @@
 /tests
 
 # Coverage reports
-/.nyc_output
 /coverage
 
 # Configuration
@@ -42,8 +41,9 @@
 .eslintrc
 .gitignore
 .npmignore
-.nycrc
 .travis.yml
+webpack.config.js
 
 # Git hooks
 /.githooks
+/.github

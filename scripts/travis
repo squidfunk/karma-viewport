@@ -30,11 +30,11 @@ if [[ ! -d "$(npm bin)" ]]; then
   exit 1
 fi
 
-# Clean build directory
-rm -rf dist
-
 # Lint sources
 "$(npm bin)"/eslint --max-warnings 0 .
+
+# Copy ES5-compatible files directly
+"$(npm bin)"/copyfiles --up 1 src/index.js src/config/** dist
 
 # Build library for production
 "$(npm bin)"/cross-env NODE_ENV=production \
