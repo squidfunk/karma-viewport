@@ -1,6 +1,6 @@
 {
   "name": "karma-viewport",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Karma viewport resizer",
   "keywords": [
     "breakpoint",
@@ -11,7 +11,7 @@
     "testing",
     "viewport"
   ],
-  "homepage": "http://squidfunk.github.io/karma-viewport/",
+  "homepage": "https://github.com/squidfunk/karma-viewport",
   "bugs": {
     "url": "https://github.com/squidfunk/karma-viewport/issues",
     "email": "martin.donath@squidfunk.com"

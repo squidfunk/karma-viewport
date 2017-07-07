@@ -39,24 +39,24 @@ describe("Viewport", () => {
       /* Initialize breakpoints */
       this.breakpoints = [
         {
-          "name": "mobile",
-          "size": {
-            "width": 320,
-            "height": 480
+          name: "mobile",
+          size: {
+            width: 320,
+            height: 480
           }
         },
         {
-          "name": "tablet",
-          "size": {
-            "width": 768,
-            "height": 1024
+          name: "tablet",
+          size: {
+            width: 768,
+            height: 1024
           }
         },
         {
-          "name": "screen",
-          "size": {
-            "width": 1440,
-            "height": 900
+          name: "screen",
+          size: {
+            width: 1440,
+            height: 900
           }
         }
       ]
