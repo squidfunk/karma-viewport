@@ -38,4 +38,4 @@ fi
   "$(npm bin)"/webpack "$@"
 
 # Start test runner
-"$(npm bin)"/karma start --single-run
+"$(npm bin)"/karma start tests/karma.conf.js --single-run "$@"

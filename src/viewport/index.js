@@ -20,11 +20,17 @@
  * IN THE SOFTWARE.
  */
 
+import "array-findindex-polyfill"
+
 import Viewport from "./viewport"
 
 /* ----------------------------------------------------------------------------
  * Initialization
  * ------------------------------------------------------------------------- */
 
-// eslint-disable-next-line no-unused-vars, no-underscore-dangle
-const viewport = new Viewport(window.__viewport__)
+/* Retrieve context and breakpoints */
+const context = parent.document.getElementById("context")
+const options = window.__viewport__
+
+// eslint-disable-next-line no-underscore-dangle
+window.viewport = new Viewport(context, options)

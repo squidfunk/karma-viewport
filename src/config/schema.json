@@ -23,7 +23,8 @@
             "description": "Breakpoint viewport",
             "type": "object",
             "required": [
-              "width"
+              "width",
+              "height"
             ],
             "properties": {
               "width": {

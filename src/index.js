@@ -51,10 +51,8 @@ const pattern = file => {
  * @param {Object} config - Karma configuration
  */
 const framework = config => {
-  ;["config/default.json", "viewport/index.js"]
-    .forEach(file => {
-      config.files.push(pattern(path.resolve(__dirname, file)))
-    })
+  config.files.push("./config/default.json")
+  config.files.push("./viewport/index.js")
 
   /* Register preprocessor for viewport configuration */
   config.preprocessors = config.preprocessors || {}
@@ -77,7 +75,7 @@ const preprocessor = viewport => {
 
   /* Return preprocessor function */
   return (content, file, done) => {
-    const schema = require(path.resolve(__dirname, "config/schema.json"))
+    const schema = require("./config/schema.json")
     const config = viewport || JSON.parse(content)
 
     /* Validate viewport configuration */
@@ -86,7 +84,7 @@ const preprocessor = viewport => {
       throw new TypeError(
         `Invalid viewport configuration: ${result.errors[0].stack}`)
 
-    /* Store viewport configuration for browser */
+    /* Store viewport configuration globally */
     done(`window.__viewport__ = ${JSON.stringify(config)}`)
   }
 }

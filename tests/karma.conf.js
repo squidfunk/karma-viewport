@@ -28,8 +28,7 @@ const path = require("path")
  * ------------------------------------------------------------------------- */
 
 module.exports = karma => {
-  const viewport = require(
-    path.resolve(__dirname, "config/default.json"))
+  const webpack = require("../webpack.config.js")()
 
   /* Common configuration (single run and watch mode) */
   const config = {
@@ -37,41 +36,44 @@ module.exports = karma => {
 
     /* Frameworks to be used */
     frameworks: [
+      "fixture",
       "jasmine",
-      "jasmine-diff",
-      "viewport"
+      "jasmine-diff"
     ],
 
-    /* Watch sources and include tests */
+    /* Include fixtures and tests */
     files: [
+      "fixtures/**/*",
       "index.js"
     ],
 
     /* Preprocess fixtures for tests */
     preprocessors: {
 
+      /* HTML fixtures */
+      "fixtures/**/*.html": ["html2js"],
+
       /* Single entrypoint for tests in order for istanbul code coverage to
          work properly in conjunction with Babel */
       "index.js": ["webpack", "sourcemap"]
     },
 
-    /* Viewport configuration */
-    viewport,
+    /* Webpack configuration */
+    webpack,
 
     /* Test reporters */
-    reporters: ["spec"],
-
-    /* Configuration for spec reporter */
-    specReporter: {
-      suppressSkipped: true
-    }
+    reporters: ["spec"]
   }
-
-  /* Register this plugin with karma */
-  karma.plugins.push(require.resolve("../dist"))
 
   /* Configuration for single run */
   if (karma.singleRun) {
+
+    /* Load webpack config and add istanbul loader for code coverage */
+    webpack.module.rules.push({
+      test: /\.js$/,
+      loader: "istanbul-instrumenter-loader?+esModules",
+      include: path.resolve(__dirname, "../src")
+    })
 
     /* Enable short reports and code coverage */
     config.reporters = [

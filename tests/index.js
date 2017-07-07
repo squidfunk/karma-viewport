@@ -34,3 +34,7 @@ const tests = require.context("./", true, /\.spec\.js$/)
 tests.keys()
   .sort((a, b) => name(a).localeCompare(name(b)))
   .forEach(tests)
+
+/* Load all sources */
+const sources = require.context("../src", true, /\.js$/)
+sources.keys().forEach(sources)
