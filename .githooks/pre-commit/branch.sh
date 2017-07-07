@@ -1,4 +1,6 @@
-# Copyright (c) 2017 Martin Donath <martin.donath@squidfunk.com>
+#!/bin/bash
+
+# Copyright (c) 2016-2017 Martin Donath <martin.donath@squidfunk.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to
@@ -18,32 +20,17 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-language: node_js
-sudo: false
+# Determine current branch
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+MESSAGE="Commits on master are only allowed via Pull Requests. Aborting."
 
-# Node.js version and necessary services
-node_js: 5
+# If we're on master, abort commit
+# if [[ "$BRANCH" == "master" ]]; then
+#   echo -e "\x1B[31m✗\x1B[0m Branch: $BRANCH - \x1B[31m$MESSAGE\x1B[0m"
+# 	exit 1
+# else
+#   echo -e "\x1B[32m✓\x1B[0m Branch: $BRANCH"
+# fi
 
-# Limit clone depth to 5, to speed up build
-git:
-  depth: 5
-
-# Cache dependencies
-cache:
-  yarn: true
-  directories:
-    - node_modules
-
-# Perform build, tests and release
-script:
-  - yarn run travis
-
-# Release specification
-deploy:
-  provider: npm
-  email: $NPM_EMAIL
-  api_key: $NPM_TOKEN
-  on:
-    branch: master
-    tags: true
-  skip_cleanup: true
+# We're good
+exit 0

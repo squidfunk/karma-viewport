@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Copyright (c) 2017 Martin Donath <martin.donath@squidfunk.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -18,32 +20,43 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-language: node_js
-sudo: false
+# Patch file to store unindexed changes
+PATCH_FILE=".working-tree.patch"
+MESSAGE="Terminated with errors"
 
-# Node.js version and necessary services
-node_js: 5
+# Revert changes that have been registered in the patch file
+function cleanup {
+  EXIT_CODE=$?
+  if [ -f "$PATCH_FILE" ]; then
+    git apply "$PATCH_FILE" 2> /dev/null
+    rm "$PATCH_FILE"
+  fi
+  exit $EXIT_CODE
+}
 
-# Limit clone depth to 5, to speed up build
-git:
-  depth: 5
+# Register signal handlers
+trap cleanup EXIT SIGINT SIGHUP
 
-# Cache dependencies
-cache:
-  yarn: true
-  directories:
-    - node_modules
+# Cancel any changes to the working tree that are not going to be committed
+git diff > "$PATCH_FILE"
+git checkout -- .
 
-# Perform build, tests and release
-script:
-  - yarn run travis
+# Filter relevant files for linting
+FILES=$(git diff --cached --name-only --diff-filter=ACMR | \
+  grep "\.js$")
 
-# Release specification
-deploy:
-  provider: npm
-  email: $NPM_EMAIL
-  api_key: $NPM_TOKEN
-  on:
-    branch: master
-    tags: true
-  skip_cleanup: true
+# Run check and print indicator
+if [ "$FILES" ]; then
+
+  # If linter terminated with errors, abort commit
+  npm run lint
+  if [ $? -gt 0 ]; then
+    echo -e "\x1B[31m✗\x1B[0m Linter - \x1B[31m$MESSAGE\x1B[0m"
+    exit 1
+  else
+    echo -e "\x1B[32m✓\x1B[0m Linter"
+  fi
+fi
+
+# We're good
+exit 0

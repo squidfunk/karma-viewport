@@ -1,4 +1,6 @@
-# Copyright (c) 2017 Martin Donath <martin.donath@squidfunk.com>
+#!/bin/bash
+
+# Copyright (c) 2016-2017 Martin Donath <martin.donath@squidfunk.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to
@@ -18,32 +20,11 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-language: node_js
-sudo: false
+# Check, if all changes are added to the index
+CHANGED="$(git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD)"
 
-# Node.js version and necessary services
-node_js: 5
-
-# Limit clone depth to 5, to speed up build
-git:
-  depth: 5
-
-# Cache dependencies
-cache:
-  yarn: true
-  directories:
-    - node_modules
-
-# Perform build, tests and release
-script:
-  - yarn run travis
-
-# Release specification
-deploy:
-  provider: npm
-  email: $NPM_EMAIL
-  api_key: $NPM_TOKEN
-  on:
-    branch: master
-    tags: true
-  skip_cleanup: true
+# Perform install and prune of NPM dependencies if package.json changed
+if $(echo "$CHANGED" | grep --quiet package.json); then
+  echo -e "\x1B[33m!\x1B[0m Updating dependencies"
+  npm install
+fi

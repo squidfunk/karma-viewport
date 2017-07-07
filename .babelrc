@@ -2,13 +2,5 @@
   "presets": ["es2015"],
   "plugins": [
     "root-import"
-  ],
-  "env": {
-    "test": {
-      "presets": [
-        ["es2015", { "modules": "umd" }]
-      ],
-      "plugins": ["istanbul"]
-    }
-  }
+  ]
 }

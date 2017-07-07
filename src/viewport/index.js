@@ -30,7 +30,7 @@ import Viewport from "./viewport"
 
 /* Retrieve context and breakpoints */
 const context = parent.document.getElementById("context")
-const options = window.__viewport__
+const options = window.__viewport__ // eslint-disable-line no-underscore-dangle
 
-// eslint-disable-next-line no-underscore-dangle
+/* Initialize global instance */
 window.viewport = new Viewport(context, options)
