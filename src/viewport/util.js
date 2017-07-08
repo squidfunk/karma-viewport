@@ -40,7 +40,7 @@ export const inspect = value => {
   else if (typeof value === "string")
     return `'${value}'`
   else
-    /* eslint-disable prefer-template */
+    // eslint-disable-next-line prefer-template
     return ("" + value).replace(/\s+/g, " ")
 }
 
