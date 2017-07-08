@@ -30,21 +30,12 @@ if [[ ! -d "$(npm bin)" ]]; then
   exit 1
 fi
 
-# Lint sources
-"$(npm bin)"/eslint --max-warnings 0 .
-
 # Copy ES5-compatible files directly
 "$(npm bin)"/copyfiles --up 1 src/index.js src/config/** dist
 
 # Build library for production
 "$(npm bin)"/cross-env NODE_ENV=production \
-  "$(npm bin)"/webpack
+  "$(npm bin)"/webpack "$@"
 
-# Unit and integration tests
-"$(npm bin)"/karma start tests/karma.conf.js --single-run
-
-# Smoke test
-"$(npm bin)"/karma start tests/smoke/karma.conf.js --single-run
-
-# Upload coverage reports
-"$(npm bin)"/codecov
+# Start test runner
+"$(npm bin)"/karma start tests/smoke/karma.conf.js --single-run "$@"

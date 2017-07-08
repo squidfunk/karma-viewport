@@ -51,8 +51,10 @@ const pattern = file => {
  * @param {Object} config - Karma configuration
  */
 const framework = config => {
-  config.files.push("./config/default.json")
-  config.files.push("./viewport/index.js")
+  ;["viewport/index.js", "config/default.json"] // order matters
+    .forEach(file => {
+      config.files.unshift(pattern(path.resolve(__dirname, file)))
+    })
 
   /* Register preprocessor for viewport configuration */
   config.preprocessors = config.preprocessors || {}

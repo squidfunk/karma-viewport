@@ -62,7 +62,7 @@ describe("Viewport", () => {
       ]
     })
 
-    /* Setup fixtures */
+    /* Retrieve context */
     beforeEach(function() {
       this.context = parent.document.getElementById("context")
     })
@@ -128,7 +128,7 @@ describe("Viewport", () => {
 function setShouldSetWidth() {
   new Viewport(this.context).set(150)
   expect(this.context.style.width)
-    .toEqual(`${150}px`)
+    .toEqual("150px")
   expect(this.context.style.height)
     .toBe("")
 }
@@ -137,9 +137,9 @@ function setShouldSetWidth() {
 function setShouldSetWidthAndHeight() {
   new Viewport(this.context).set(150, 175)
   expect(this.context.style.width)
-    .toEqual(`${150}px`)
+    .toEqual("150px")
   expect(this.context.style.height)
-    .toEqual(`${175}px`)
+    .toEqual("175px")
 }
 
 /* Test: #set should resolve and set breakpoint */

@@ -4,7 +4,7 @@
   },
   "globals": {
     "fixture": true,
-    "spyOnProperty": true
+    "viewport": true
   },
   "plugins": [
     "jasmine"

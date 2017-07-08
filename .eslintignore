@@ -27,4 +27,5 @@
 # Configuration files in ES5
 /src/index.js
 /tests/karma.conf.js
+/tests/smoke/karma.conf.js
 /webpack.config.js
