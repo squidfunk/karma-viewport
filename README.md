@@ -26,11 +26,7 @@ npm install karma-viewport
 
 ### Basic configuration
 
-First, check that karma executes your tests inside an `iframe`, which is the
-default. See the section on `client.useIframe` in the [configuration guide][1]
-for more information. If you haven't set this option, you're probably good to
-go. Next, add `viewport` to the list of frameworks to use inside your
-karma configuration:
+Add `viewport` to the list of frameworks inside your karma configuration:
 
 ``` js
 // karma.conf.js
@@ -41,8 +37,8 @@ module.exports = function(config) {
 }
 ```
 
-This plugin exposes a global variable called `viewport` inside your tests
-which allows setting the viewport dynamically, e.g.:
+This will expose the global variable `viewport` which allows setting the
+dimensions of the viewport within tests, e.g.:
 
 ``` js
 // Set to 320px x 100%
@@ -55,14 +51,22 @@ viewport.set(320, 480)
 viewport.reset()
 ```
 
-Remember to call `reset()` after each test.
+Remember to call `viewport.reset()` after each test, e.g. for [Jasmine][1] or
+[Mocha][2]:
 
-  [1]: http://karma-runner.github.io/1.0/config/configuration-file.html
+``` js
+afterEach(() => {
+  viewport.reset()
+})
+```
+
+  [1]: https://jasmine.github.io
+  [2]: https://mochajs.org/
 
 ### Advanced configuration
 
-Besides explicitly setting the widths and heights, named breakpoints can be
-defined directly inside the karma configuration using the `viewport` member:
+Named breakpoints can be defined directly inside the karma configuration using
+the `viewport` key:
 
 ``` js
 // karma.conf.js
@@ -100,7 +104,7 @@ module.exports = function(config) {
 }
 ```
 
-As breakpoints have names, we can now write:
+The viewport dimensions can then be set using the names of the breakpoints:
 
 ``` js
 // Set to 320px x 480px
@@ -137,7 +141,19 @@ viewport.between("tablet", "screen", name => {
 })
 ```
 
+After iteration, `viewport.reset()` is called internally.
+
+### Limitations
+
+This plugin relies on karma executing your test inside an `iframe`, which is the
+default. See the section on `client.useIframe` in the [configuration guide][3]
+for more information.
+
+  [3]: http://karma-runner.github.io/1.0/config/configuration-file.html
+
 ## License
+
+**MIT License**
 
 Copyright (c) 2017 Martin Donath
 
