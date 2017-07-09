@@ -10,7 +10,7 @@ please read the following guidelines.
 For quick questions there's no need to open an issue as you can reach us on
 [gitter.im][1].
 
-  [1]: https://gitter.im/karma-viewport/general
+  [1]: https://gitter.im/squidfunk/karma-viewport
 
 ### Found a bug?
 
