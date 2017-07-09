@@ -40,9 +40,9 @@ describe("Viewport", () => {
       viewport.reset()
     })
 
-    /* Test: should be present */
-    it("should be present",
-      shouldBePresent
+    /* Test: should be defined */
+    it("should be defined",
+      shouldBeDefined
     )
 
     /* Test: should set viewport */
@@ -66,10 +66,10 @@ describe("Viewport", () => {
  * Definitions
  * ------------------------------------------------------------------------- */
 
-/* Test: should be present */
-function shouldBePresent() {
+/* Test: should be defined */
+function shouldBeDefined() {
   expect(viewport)
-    .not.toBe(undefined)
+    .toEqual(jasmine.any(Object))
 }
 
 /* Test: should set viewport */
