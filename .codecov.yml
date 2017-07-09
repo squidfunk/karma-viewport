@@ -19,10 +19,46 @@
 # IN THE SOFTWARE.
 
 coverage:
-  notify:
 
-    # Gitter notifications
+  # Notifications
+  notify:
     gitter:
       default:
         url: "https://webhooks.gitter.im/e/367bc2fb02eff6708471"
         threshold: 1%
+
+  # Coverage status
+  status:
+
+    # Overall project status
+    project:
+      default:
+        enabled: yes
+        target: auto
+        threshold: 1%
+        if_no_uploads: error
+        if_not_found: success
+        if_ci_failed: error
+
+    # Pull request coverage diff
+    patch:
+      default:
+        enabled: yes
+        target: 95%
+        threshold: 1%
+        if_no_uploads: error
+        if_not_found: success
+        if_ci_failed: error
+
+    # Unexpected changes
+    changes:
+      default:
+        enabled: yes
+        if_no_uploads: error
+        if_not_found: success
+        if_ci_failed: error
+
+# Comments inside pull requests
+comment:
+  layout: "reach, diff, flags, files"
+  behavior: default
