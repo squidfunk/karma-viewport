@@ -40,10 +40,8 @@ fi
 "$(npm bin)"/cross-env NODE_ENV=production \
   "$(npm bin)"/webpack
 
-# Unit and integration tests
+# Unit, integration and smoke tests
 "$(npm bin)"/karma start tests/karma.conf.js --single-run
-
-# Smoke test
 "$(npm bin)"/karma start tests/smoke/karma.conf.js --single-run
 
 # Upload coverage reports
