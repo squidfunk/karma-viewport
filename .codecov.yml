@@ -20,13 +20,6 @@
 
 coverage:
 
-  # Notifications
-  notify:
-    gitter:
-      default:
-        url: "https://webhooks.gitter.im/e/367bc2fb02eff6708471"
-        threshold: 1%
-
   # Coverage status
   status:
 
@@ -60,5 +53,8 @@ coverage:
 
 # Comments inside pull requests
 comment:
-  layout: "reach, diff, flags, files"
+  layout: header, tree, changes, files
   behavior: default
+  paths:
+    - src
+    - tests
