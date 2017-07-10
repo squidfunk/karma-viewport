@@ -35,7 +35,7 @@ fi
 
 # Build library for production
 "$(npm bin)"/cross-env NODE_ENV=production \
-  "$(npm bin)"/webpack "$@"
+  "$(npm bin)"/webpack
 
 # Start test runner in watch mode
 "$(npm bin)"/karma start tests/karma.conf.js "$@"

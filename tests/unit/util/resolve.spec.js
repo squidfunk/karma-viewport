@@ -20,7 +20,7 @@
  * IN THE SOFTWARE.
  */
 
-import { inspect, resolve } from "~/src/viewport/util"
+import resolve from "~/src/viewport/util/resolve"
 
 /* ----------------------------------------------------------------------------
  * Declarations
@@ -28,45 +28,6 @@ import { inspect, resolve } from "~/src/viewport/util"
 
 /* util */
 describe("util", () => {
-
-  /* .inspect */
-  describe(".inspect", () => {
-
-    /* Test: should handle null */
-    it("should handle null",
-      inspectShouldHandleNull
-    )
-
-    /* Test: should handle undefined */
-    it("should handle undefined",
-      inspectShouldHandleUndefined
-    )
-
-    /* Test: should handle number */
-    it("should handle number",
-      inspectShouldHandleNumber
-    )
-
-    /* Test: should handle string */
-    it("should handle string",
-      inspectShouldHandleString
-    )
-
-    /* Test: should handle empty string */
-    it("should handle empty string",
-      inspectShouldHandleEmptyString
-    )
-
-    /* Test: should handle object */
-    it("should handle object",
-      inspectShouldHandleObject
-    )
-
-    /* Test: should handle function */
-    it("should handle function",
-      inspectShouldHandleFunction
-    )
-  })
 
   /* .resolve */
   describe(".resolve", () => {
@@ -144,52 +105,6 @@ describe("util", () => {
     )
   })
 })
-
-/* ----------------------------------------------------------------------------
- * Definitions: .inspect
- * ------------------------------------------------------------------------- */
-
-/* Test: .inspect should handle undefined */
-function inspectShouldHandleUndefined() {
-  expect(inspect(undefined))
-    .toEqual("undefined")
-}
-
-/* Test: .inspect should handle null */
-function inspectShouldHandleNull() {
-  expect(inspect(null))
-    .toEqual("null")
-}
-
-/* Test: .inspect should handle number */
-function inspectShouldHandleNumber() {
-  expect(inspect(1337))
-    .toEqual("1337")
-}
-
-/* Test: .inspect should handle string */
-function inspectShouldHandleString() {
-  expect(inspect("neurofunk"))
-    .toEqual("'neurofunk'")
-}
-
-/* Test: .inspect should handle empty string */
-function inspectShouldHandleEmptyString() {
-  expect(inspect(""))
-    .toEqual("''")
-}
-
-/* Test: .inspect should handle object */
-function inspectShouldHandleObject() {
-  expect(inspect({ data: true }))
-    .toEqual("{ \"data\": true }")
-}
-
-/* Test: .inspect should handle function */
-function inspectShouldHandleFunction() {
-  expect(inspect((a, b) => a + b))
-    .toEqual("function (a, b) { return a + b; }")
-}
 
 /* ----------------------------------------------------------------------------
  * Definitions: .resolve

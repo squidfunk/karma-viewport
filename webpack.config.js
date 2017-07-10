@@ -83,9 +83,13 @@ module.exports = function() {
     config.plugins.push(
       new webpack.optimize.UglifyJsPlugin({
         beautify: true,
-        comments: false,
         compress: false,
-        mangle: false
+        mangle: false,
+        output: {
+          comments: false,
+          indent_level: 2,
+          width: 80
+        }
       }))
   }
 

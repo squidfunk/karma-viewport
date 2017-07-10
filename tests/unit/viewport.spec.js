@@ -276,7 +276,7 @@ function setShouldSetWidth() {
   expect(this.el.style.width)
     .toEqual(`${width}px`)
   expect(this.el.style.height)
-    .toBe(undefined)
+    .toBeUndefined()
 }
 
 /* Test: #set should set width and height */
