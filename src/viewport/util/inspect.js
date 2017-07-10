@@ -34,7 +34,7 @@
  *
  * @return {string} Stringified value
  */
-export const inspect = value => {
+export default value => {
   if (typeof value === "object")
     return JSON.stringify(value, null, 2).replace(/\s+/g, " ")
   else if (typeof value === "string")
@@ -42,30 +42,4 @@ export const inspect = value => {
   else
     // eslint-disable-next-line prefer-template
     return ("" + value).replace(/\s+/g, " ")
-}
-
-/**
- * Resolve relevant breakpoints
- *
- * @param {Array<Object>} breakpoints - Breakpoints
- * @param {string} first - First breakpoint name
- * @param {string} [last] - Last breakpoint name
- *
- * @return {Array<Object>} Selected breakpoints
- */
-export const resolve = (breakpoints, first, last = first) => {
-  const [from, to] = [first, last].map(name => {
-    if (typeof name !== "string" || !name.length)
-      throw new TypeError(`Invalid breakpoint: ${inspect(name)}`)
-
-    /* Find the offset of the specified breakpoint */
-    const index = breakpoints.findIndex(
-      breakpoint => breakpoint.name === name)
-    if (index === -1)
-      throw new ReferenceError(`Invalid breakpoint: ${inspect(name)}`)
-    return index
-  })
-
-  /* Return relevant breakpoints */
-  return breakpoints.slice(from, to + 1)
 }

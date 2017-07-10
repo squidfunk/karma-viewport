@@ -20,7 +20,8 @@
  * IN THE SOFTWARE.
  */
 
-import { inspect, resolve } from "./util"
+import inspect from "./util/inspect"
+import resolve from "./util/resolve"
 
 /* ----------------------------------------------------------------------------
  * Constants

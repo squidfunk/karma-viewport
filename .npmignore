@@ -25,6 +25,7 @@
 /node_modules
 /npm-debug.log*
 /yarn-error.log
+yarn.lock
 
 # Source files
 /scripts
@@ -36,6 +37,7 @@
 
 # Configuration
 .babelrc
+.codecov.yml
 .editorconfig
 .eslintignore
 .eslintrc
@@ -44,6 +46,6 @@
 .travis.yml
 webpack.config.js
 
-# Git hooks
+# Git-related
 /.githooks
 /.github

@@ -38,4 +38,4 @@ rm -rf dist
 
 # Build library for production
 "$(npm bin)"/cross-env NODE_ENV=production \
-  "$(npm bin)"/webpack "$@"
+  "$(npm bin)"/webpack
