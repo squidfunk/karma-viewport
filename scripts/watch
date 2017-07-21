@@ -33,9 +33,5 @@ fi
 # Copy ES5-compatible files directly
 "$(npm bin)"/copyfiles --up 1 src/index.js src/config/** dist
 
-# Build library for production
-"$(npm bin)"/cross-env NODE_ENV=production \
-  "$(npm bin)"/webpack
-
 # Start test runner in watch mode
 "$(npm bin)"/karma start tests/karma.conf.js "$@"

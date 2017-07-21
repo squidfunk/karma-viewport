@@ -27,90 +27,90 @@ import inspect from "~/src/viewport/util/inspect"
  * ------------------------------------------------------------------------- */
 
 /* util */
-describe("util", () => {
+describe("util/", () => {
 
-  /* .inspect */
-  describe(".inspect", () => {
+  /* inspect */
+  describe("inspect", () => {
 
     /* Test: should handle null */
     it("should handle null",
-      inspectShouldHandleNull
+      defaultShouldHandleNull
     )
 
     /* Test: should handle undefined */
     it("should handle undefined",
-      inspectShouldHandleUndefined
+      defaultShouldHandleUndefined
     )
 
     /* Test: should handle number */
     it("should handle number",
-      inspectShouldHandleNumber
+      defaultShouldHandleNumber
     )
 
     /* Test: should handle string */
     it("should handle string",
-      inspectShouldHandleString
+      defaultShouldHandleString
     )
 
     /* Test: should handle empty string */
     it("should handle empty string",
-      inspectShouldHandleEmptyString
+      defaultShouldHandleEmptyString
     )
 
     /* Test: should handle object */
     it("should handle object",
-      inspectShouldHandleObject
+      defaultShouldHandleObject
     )
 
     /* Test: should handle function */
     it("should handle function",
-      inspectShouldHandleFunction
+      defaultShouldHandleFunction
     )
   })
 })
 
 /* ----------------------------------------------------------------------------
- * Definitions: .inspect
+ * Definitions: .default
  * ------------------------------------------------------------------------- */
 
-/* Test: .inspect should handle undefined */
-function inspectShouldHandleUndefined() {
+/* Test: .default should handle undefined */
+function defaultShouldHandleUndefined() {
   expect(inspect(undefined))
     .toEqual("undefined")
 }
 
-/* Test: .inspect should handle null */
-function inspectShouldHandleNull() {
+/* Test: .default should handle null */
+function defaultShouldHandleNull() {
   expect(inspect(null))
     .toEqual("null")
 }
 
-/* Test: .inspect should handle number */
-function inspectShouldHandleNumber() {
+/* Test: .default should handle number */
+function defaultShouldHandleNumber() {
   expect(inspect(1337))
     .toEqual("1337")
 }
 
-/* Test: .inspect should handle string */
-function inspectShouldHandleString() {
+/* Test: .default should handle string */
+function defaultShouldHandleString() {
   expect(inspect("neurofunk"))
     .toEqual("'neurofunk'")
 }
 
-/* Test: .inspect should handle empty string */
-function inspectShouldHandleEmptyString() {
+/* Test: .default should handle empty string */
+function defaultShouldHandleEmptyString() {
   expect(inspect(""))
     .toEqual("''")
 }
 
-/* Test: .inspect should handle object */
-function inspectShouldHandleObject() {
+/* Test: .default should handle object */
+function defaultShouldHandleObject() {
   expect(inspect({ data: true }))
     .toEqual("{ \"data\": true }")
 }
 
-/* Test: .inspect should handle function */
-function inspectShouldHandleFunction() {
+/* Test: .default should handle function */
+function defaultShouldHandleFunction() {
   expect(inspect((a, b) => a + b))
     .toEqual("function (a, b) { return a + b; }")
 }
