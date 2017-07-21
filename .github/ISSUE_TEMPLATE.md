@@ -12,8 +12,8 @@
 
 ### Steps to reproduce the bug
 
-1. [first step]
-2. [second step]
+1. [First step]
+2. [Second step]
 3. [and so on...]
 
 ### Package versions
