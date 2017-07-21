@@ -27,10 +27,10 @@ import resolve from "~/src/viewport/util/resolve"
  * ------------------------------------------------------------------------- */
 
 /* util */
-describe("util", () => {
+describe("util/", () => {
 
-  /* .resolve */
-  describe(".resolve", () => {
+  /* resolve */
+  describe("resolve", () => {
 
     /* Initialize breakpoints */
     beforeAll(function() {
@@ -61,57 +61,57 @@ describe("util", () => {
 
     /* Test: should return first breakpoint */
     it("should return first breakpoint",
-      resolveShouldReturnFirstBreakpoint
+      defaultShouldReturnFirstBreakpoint
     )
 
     /* Test: should return middle breakpoint */
     it("should return middle breakpoint",
-      resolveShouldReturnMiddleBreakpoint
+      defaultShouldReturnMiddleBreakpoint
     )
 
     /* Test: should return last breakpoint */
     it("should return last breakpoint",
-      resolveShouldReturnLastBreakpoint
+      defaultShouldReturnLastBreakpoint
     )
 
     /* Test: should return first to first breakpoint */
     it("should return first to first breakpoint",
-      resolveShouldReturnFirstToFirstBreakpoint
+      defaultShouldReturnFirstToFirstBreakpoint
     )
 
     /* Test: should return first to last breakpoint */
     it("should return first to last breakpoint",
-      resolveShouldReturnFirstToLastBreakpoint
+      defaultShouldReturnFirstToLastBreakpoint
     )
 
     /* Test: should return last to last breakpoint */
     it("should return last to last breakpoint",
-      resolveShouldReturnLastToLastBreakpoint
+      defaultShouldReturnLastToLastBreakpoint
     )
 
     /* Test: should throw on empty name */
     it("should throw on empty name",
-      resolveShouldThrowOnEmptyName
+      defaultShouldThrowOnEmptyName
     )
 
     /* Test: should throw on invalid name */
     it("should throw on invalid name",
-      resolveShouldThrowOnInvalidName
+      defaultShouldThrowOnInvalidName
     )
 
     /* Test: should throw on invalid breakpoint */
     it("should throw on invalid breakpoint",
-      resolveShouldThrowOnInvalidBreakpoint
+      defaultShouldThrowOnInvalidBreakpoint
     )
   })
 })
 
 /* ----------------------------------------------------------------------------
- * Definitions: .resolve
+ * Definitions: .default
  * ------------------------------------------------------------------------- */
 
-/* Test: .resolve should return first breakpoint */
-function resolveShouldReturnFirstBreakpoint() {
+/* Test: .default should return first breakpoint */
+function defaultShouldReturnFirstBreakpoint() {
   const breakpoints = resolve(this.breakpoints, "mobile")
   expect(breakpoints)
     .toEqual(jasmine.any(Array))
@@ -121,8 +121,8 @@ function resolveShouldReturnFirstBreakpoint() {
     .toEqual(this.breakpoints[0])
 }
 
-/* Test: .resolve should return middle breakpoint */
-function resolveShouldReturnMiddleBreakpoint() {
+/* Test: .default should return middle breakpoint */
+function defaultShouldReturnMiddleBreakpoint() {
   const breakpoints = resolve(this.breakpoints, "tablet")
   expect(breakpoints)
     .toEqual(jasmine.any(Array))
@@ -132,8 +132,8 @@ function resolveShouldReturnMiddleBreakpoint() {
     .toEqual(this.breakpoints[1])
 }
 
-/* Test: .resolve should return first breakpoint */
-function resolveShouldReturnLastBreakpoint() {
+/* Test: .default should return first breakpoint */
+function defaultShouldReturnLastBreakpoint() {
   const breakpoints = resolve(this.breakpoints, "screen")
   expect(breakpoints)
     .toEqual(jasmine.any(Array))
@@ -143,8 +143,8 @@ function resolveShouldReturnLastBreakpoint() {
     .toEqual(this.breakpoints[2])
 }
 
-/* Test: .resolve should return first to first breakpoint */
-function resolveShouldReturnFirstToFirstBreakpoint() {
+/* Test: .default should return first to first breakpoint */
+function defaultShouldReturnFirstToFirstBreakpoint() {
   const breakpoints = resolve(this.breakpoints, "mobile", "mobile")
   expect(breakpoints)
     .toEqual(jasmine.any(Array))
@@ -154,8 +154,8 @@ function resolveShouldReturnFirstToFirstBreakpoint() {
     .toEqual(this.breakpoints[0])
 }
 
-/* Test: .resolve should return first to last breakpoint */
-function resolveShouldReturnFirstToLastBreakpoint() {
+/* Test: .default should return first to last breakpoint */
+function defaultShouldReturnFirstToLastBreakpoint() {
   const breakpoints = resolve(this.breakpoints, "mobile", "screen")
   expect(breakpoints)
     .toEqual(jasmine.any(Array))
@@ -165,8 +165,8 @@ function resolveShouldReturnFirstToLastBreakpoint() {
     .toEqual(this.breakpoints)
 }
 
-/* Test: .resolve should return last to last breakpoint */
-function resolveShouldReturnLastToLastBreakpoint() {
+/* Test: .default should return last to last breakpoint */
+function defaultShouldReturnLastToLastBreakpoint() {
   const breakpoints = resolve(this.breakpoints, "screen", "screen")
   expect(breakpoints)
     .toEqual(jasmine.any(Array))
@@ -176,24 +176,24 @@ function resolveShouldReturnLastToLastBreakpoint() {
     .toEqual(this.breakpoints[2])
 }
 
-/* Test: .resolve should throw on empty name */
-function resolveShouldThrowOnEmptyName() {
+/* Test: .default should throw on empty name */
+function defaultShouldThrowOnEmptyName() {
   expect(() => {
     resolve([], "")
   }).toThrow(
     new TypeError("Invalid breakpoint: ''"))
 }
 
-/* Test: .resolve should throw on invalid name */
-function resolveShouldThrowOnInvalidName() {
+/* Test: .default should throw on invalid name */
+function defaultShouldThrowOnInvalidName() {
   expect(() => {
     resolve([], null)
   }).toThrow(
     new TypeError("Invalid breakpoint: null"))
 }
 
-/* Test: .resolve should throw on invalid breakpoint */
-function resolveShouldThrowOnInvalidBreakpoint() {
+/* Test: .default should throw on invalid breakpoint */
+function defaultShouldThrowOnInvalidBreakpoint() {
   expect(() => {
     resolve([], "invalid")
   }).toThrow(
