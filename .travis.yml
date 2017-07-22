@@ -36,7 +36,10 @@ cache:
 
 # Perform build, tests and release
 script:
-  - yarn run travis
+  - yarn run lint
+  - yarn run build
+  - yarn run test
+  - yarn run smoke
 
 # Release specification
 deploy:

@@ -23,12 +23,5 @@
 # Exit, if one command fails
 set -e
 
-# Check if "npm install" was executed
-if [[ ! -d "$(npm bin)" ]]; then
-  echo "\"node_modules\" not found:"
-  echo "npm install"
-  exit 1
-fi
-
 # Lint sources
 "$(npm bin)"/eslint --max-warnings 0 .

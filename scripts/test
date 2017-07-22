@@ -23,15 +23,10 @@
 # Exit, if one command fails
 set -e
 
-# Check if "npm install" was executed
-if [[ ! -d "$(npm bin)" ]]; then
-  echo "\"node_modules\" not found:"
-  echo "npm install"
-  exit 1
-fi
-
-# Copy ES5-compatible files directly
-"$(npm bin)"/copyfiles --up 1 src/index.js src/config/** dist
-
 # Start test runner
 "$(npm bin)"/karma start tests/karma.conf.js --single-run
+
+# Upload coverage reports in CI environment
+if [ "$TRAVIS" == true ]; then
+  "$(npm bin)"/codecov
+fi

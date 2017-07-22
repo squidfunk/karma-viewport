@@ -32,7 +32,6 @@
     "lint": "scripts/lint",
     "smoke": "scripts/smoke",
     "test": "scripts/test",
-    "travis": "scripts/travis",
     "watch": "scripts/watch"
   },
   "dependencies": {
