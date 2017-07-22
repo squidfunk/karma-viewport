@@ -20,7 +20,7 @@
  * IN THE SOFTWARE.
  */
 
-import inspect from "~/src/viewport/util/inspect"
+import inspect from "~/src/adapter/util/inspect"
 
 /* ----------------------------------------------------------------------------
  * Declarations

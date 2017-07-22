@@ -72,7 +72,7 @@ module.exports = karma => {
     webpack.module.rules.push({
       test: /\.js$/,
       loader: "istanbul-instrumenter-loader?+esModules",
-      include: path.resolve(__dirname, "../src/viewport")
+      include: path.resolve(__dirname, "../src/adapter")
     })
 
     /* Enable short reports and code coverage */
