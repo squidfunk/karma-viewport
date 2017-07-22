@@ -20,7 +20,7 @@
  * IN THE SOFTWARE.
  */
 
-import resolve from "~/src/viewport/util/resolve"
+import resolve from "~/src/adapter/util/resolve"
 
 /* ----------------------------------------------------------------------------
  * Declarations

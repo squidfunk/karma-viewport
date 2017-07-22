@@ -20,7 +20,7 @@
  * IN THE SOFTWARE.
  */
 
-import Viewport from "~/src/viewport/viewport"
+import Viewport from "~/src/adapter/viewport"
 
 /* ----------------------------------------------------------------------------
  * Declarations

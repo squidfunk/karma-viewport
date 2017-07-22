@@ -34,7 +34,7 @@ module.exports = function() {
 
     /* Entrypoint */
     entry: [
-      path.resolve(__dirname, "src/viewport/index.js")
+      path.resolve(__dirname, "src/adapter/index.js")
     ],
 
     /* Loaders */
@@ -50,7 +50,7 @@ module.exports = function() {
 
     /* Export class constructor as entrypoint */
     output: {
-      path: path.resolve(__dirname, "dist/viewport"),
+      path: path.resolve(__dirname, "dist/adapter"),
       pathinfo: true,
       filename: "index.js",
       libraryTarget: "window"
