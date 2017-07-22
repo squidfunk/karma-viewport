@@ -23,19 +23,12 @@
 # Exit, if one command fails
 set -e
 
-# Check if "npm install" was executed
-if [[ ! -d "$(npm bin)" ]]; then
-  echo "\"node_modules\" not found:"
-  echo "npm install"
+# Check if build was executed
+if [[ ! -d "dist" ]]; then
+  echo "\"dist\" not found, run build first:"
+  echo "npm run build"
   exit 1
 fi
-
-# Copy ES5-compatible files directly
-"$(npm bin)"/copyfiles --up 1 src/index.js src/config/** dist
-
-# Build library for production
-"$(npm bin)"/cross-env NODE_ENV=production \
-  "$(npm bin)"/webpack
 
 # Start test runner
 "$(npm bin)"/karma start tests/smoke/karma.conf.js --single-run
