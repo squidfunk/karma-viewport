@@ -28,9 +28,9 @@ import Viewport from "./viewport"
  * Initialization
  * ------------------------------------------------------------------------- */
 
-/* Retrieve context and breakpoints */
-const context = parent.document.getElementById("context")
-const options = window.__viewport__ // eslint-disable-line no-underscore-dangle
+((window, options) => {
+  const context = parent.document.getElementById("context")
+  window.viewport = new Viewport(context, options)
 
-/* Initialize global instance */
-window.viewport = new Viewport(context, options)
+// eslint-disable-next-line no-underscore-dangle
+})(window, window.__viewport__)

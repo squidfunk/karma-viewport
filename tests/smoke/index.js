@@ -45,19 +45,19 @@ describe("Viewport", () => {
       shouldBeDefined
     )
 
-    /* Test: should set viewport */
-    it("should set viewport",
-      shouldSetViewport
+    /* Test: should set width and height */
+    it("should set width and height",
+      shouldSetWidthAndHeight
     )
 
-    /* Test: should set viewport by breakpoint */
-    it("should set viewport by breakpoint",
-      shouldSetViewportByBreakpoint
+    /* Test: should resolve and set breakpoint */
+    it("should resolve and set breakpoint",
+      shouldResolveAndSetBreakpoint
     )
 
-    /* Test: should reset viewport */
-    it("should reset viewport",
-      shouldResetViewport
+    /* Test: should reset width and height */
+    it("should reset width and height",
+      shouldResetWidthAndHeight
     )
   })
 })
@@ -72,8 +72,8 @@ function shouldBeDefined() {
     .toEqual(jasmine.any(Object))
 }
 
-/* Test: should set viewport */
-function shouldSetViewport() {
+/* Test: should set width and height */
+function shouldSetWidthAndHeight() {
   viewport.set(320, 480)
   expect(this.context.style.width)
     .toEqual("320px")
@@ -81,8 +81,8 @@ function shouldSetViewport() {
     .toEqual("480px")
 }
 
-/* Test: should set viewport */
-function shouldSetViewportByBreakpoint() {
+/* Test: should resolve and set breakpoint */
+function shouldResolveAndSetBreakpoint() {
   viewport.set("tablet")
   expect(this.context.style.width)
     .toEqual("768px")
@@ -90,8 +90,8 @@ function shouldSetViewportByBreakpoint() {
     .toEqual("1024px")
 }
 
-/* Test: should reset viewport */
-function shouldResetViewport() {
+/* Test: should reset width and height */
+function shouldResetWidthAndHeight() {
   viewport.set(320, 480)
   viewport.reset()
   expect(this.context.style.width)

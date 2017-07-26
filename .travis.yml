@@ -38,8 +38,8 @@ cache:
 script:
   - yarn run lint
   - yarn run build
-  - yarn run test
   - yarn run smoke
+  - yarn run test
 
 # Release specification
 deploy:

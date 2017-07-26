@@ -34,7 +34,7 @@ describe("Viewport", () => {
 
     /* Set fixture base path and initialize breakpoints */
     beforeAll(function() {
-      fixture.setBase("fixtures/viewport")
+      fixture.setBase("fixtures")
 
       /* Initialize breakpoints */
       this.breakpoints = [
@@ -109,7 +109,7 @@ describe("Viewport", () => {
 
       /* Load fixtures */
       beforeEach(() => {
-        fixture.load("each.html")
+        fixture.load("default.html")
       })
 
       /* Test: should invoke callback on breakpoints */
