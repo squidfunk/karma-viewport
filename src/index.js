@@ -30,7 +30,7 @@ const validate = require("jsonschema").validate
  * ------------------------------------------------------------------------- */
 
 /**
- * Return the specification for the file server/watcher
+ * Return specification for file server/watcher
  *
  * @param {string} file - File
  *
@@ -46,7 +46,7 @@ const pattern = file => {
 }
 
 /**
- * Inject viewport logic and default configuration
+ * Inject adapter and default configuration
  *
  * @param {Object} config - Karma configuration
  */
@@ -63,9 +63,9 @@ const framework = config => {
 framework.$inject = ["config"]
 
 /**
- * Inject custom viewport configuration
+ * Inject custom configuration
  *
- * @param {Object} [viewport] Viewport configuration
+ * @param {Object} [viewport] - Viewport configuration
  *
  * @return {Function} Preprocessor function
  */

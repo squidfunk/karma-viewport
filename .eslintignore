@@ -24,7 +24,7 @@
 # Coverage reports
 /coverage
 
-# Configuration files in ES5
+# ES5 files
 /src/index.js
 /tests/karma.conf.js
 /tests/smoke/karma.conf.js
