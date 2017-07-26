@@ -31,4 +31,4 @@ if [[ ! -d "dist" ]]; then
 fi
 
 # Start test runner
-"$(npm bin)"/karma start tests/karma.smoke.conf.js --single-run
+"$(npm bin)"/karma start tests/karma.smoke.conf.js --single-run "$@"

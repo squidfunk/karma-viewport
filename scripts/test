@@ -24,7 +24,7 @@
 set -e
 
 # Start test runner
-"$(npm bin)"/karma start tests/karma.conf.js --single-run
+"$(npm bin)"/karma start tests/karma.conf.js --single-run "$@"
 
 # Upload coverage reports in CI environment
 if [ "$TRAVIS" == true ]; then
