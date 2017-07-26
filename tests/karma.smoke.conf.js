@@ -20,8 +20,6 @@
  * IN THE SOFTWARE.
  */
 
-"use strict"
-
 const moniker = require("moniker")
 
 /* ----------------------------------------------------------------------------
@@ -40,7 +38,7 @@ module.exports = karma => {
 
     /* Include tests */
     files: [
-      "index.js"
+      "smoke/*.js"
     ],
 
     /* Viewport configuration */
@@ -78,7 +76,7 @@ module.exports = karma => {
   }
 
   /* Register this plugin with karma */
-  karma.plugins.push(require.resolve("../.."))
+  karma.plugins.push(require.resolve(".."))
 
   /* Additional configuration for continuous integration */
   if (process.env.CI || process.env.SAUCE) {
