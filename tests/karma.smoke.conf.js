@@ -78,7 +78,7 @@ module.exports = karma => {
   /* Register this plugin with karma */
   karma.plugins.push(require.resolve(".."))
 
-  /* Additional configuration for continuous integration */
+  /* Travis and SauceLabs integration */
   if (process.env.CI || process.env.SAUCE) {
     if (!process.env.SAUCE_USERNAME ||
         !process.env.SAUCE_ACCESS_KEY)
@@ -86,7 +86,7 @@ module.exports = karma => {
         "SauceConnect: please provide SAUCE_USERNAME " +
         "and SAUCE_ACCESS_KEY")
 
-    /* it should be sufficient to run the smoke test on only one browser */
+    /* It should be sufficient to run the smoke test on only one browser */
     const browsers = {
       chrome: {
         base: "SauceLabs",
