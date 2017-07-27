@@ -61,46 +61,17 @@ module.exports = karma => {
     /* Webpack configuration */
     webpack,
 
-    /* Test reporters */
-    reporters: ["spec"]
-  }
+    /* Reporters (set below) */
+    reporters: [],
 
-  /* Configuration for single run */
-  if (karma.singleRun) {
-
-    /* Load webpack config and add istanbul loader for code coverage */
-    webpack.module.rules.push({
-      test: /\.js$/,
-      loader: "istanbul-instrumenter-loader?+esModules",
-      include: path.resolve(__dirname, "../src/adapter")
-    })
-
-    /* Enable short reports and code coverage */
-    config.reporters = [
-      process.env.CI || process.env.SAUCE
-        ? "summary"
-        : "spec",
-      "coverage-istanbul"
-    ]
-
-    /* Configuration for code coverage */
-    config.coverageIstanbulReporter = {
-      reports: [
-        "text-summary",
-        "html"
-      ]
+    /* Configuration for spec reporter */
+    specReporter: {
+      suppressSkipped: true
     }
-
-    /* Automatically launch local Chrome */
-    config.browsers = ["Chrome"]
-
-  /* Configuration for watch mode */
-  } else {
-    config.reporters.unshift("clear-screen")
   }
 
-  /* Additional configuration for continuous integration */
-  if (process.env.CI || process.env.SAUCE) {
+  /* Travis and SauceLabs integration */
+  if (process.env.TRAVIS || process.env.SAUCE) {
     if (!process.env.SAUCE_USERNAME ||
         !process.env.SAUCE_ACCESS_KEY)
       throw new Error(
@@ -153,6 +124,15 @@ module.exports = karma => {
         browserName: "opera",
         version: "latest",
         platform: "Windows 2008",
+        screenResolution: "1280x1024"
+      },
+
+      /* Edge 15 */
+      edge15: {
+        base: "SauceLabs",
+        browserName: "MicrosoftEdge",
+        version: "15",
+        platform: "Windows 10",
         screenResolution: "1280x1024"
       },
 
@@ -216,13 +196,50 @@ module.exports = karma => {
       recordScreenshots: false
     }
 
-    /* Configuration for code coverage */
-    config.coverageIstanbulReporter.reports = ["lcovonly"]
-
-    /* Set reporters and browsers */
-    config.reporters.push("saucelabs")
+    /* Set browsers */
     config.browsers = Object.keys(browsers)
     config.customLaunchers = browsers
+
+    /* Set reporters */
+    if (karma.singleRun) {
+      config.reporters.push("summary")
+    } else {
+      config.reporters.push("spec")
+      config.specReporter.suppressPassed = true
+    }
+
+  /* Local environment */
+  } else {
+
+    /* Set reporters and browsers */
+    config.reporters.push("clear-screen", "spec")
+    config.browsers = ["Chrome"]
+  }
+
+  /* Determine code coverage in single run */
+  if (karma.singleRun) {
+
+    /* Load webpack config and add istanbul loader for code coverage */
+    webpack.module.rules.push({
+      test: /\.js$/,
+      loader: "istanbul-instrumenter-loader?+esModules",
+      include: path.resolve(__dirname, "../src")
+    })
+
+    /* Enable code coverage */
+    config.reporters.push("coverage-istanbul")
+    config.coverageIstanbulReporter = {
+      reports: [
+        "html",
+        "text-summary"
+      ]
+    }
+
+    /* Continous integration reporters */
+    if (process.env.TRAVIS || process.env.SAUCE) {
+      config.reporters.push("saucelabs")
+      config.coverageIstanbulReporter.reports = ["lcovonly"]
+    }
   }
 
   /* We're good to go */
