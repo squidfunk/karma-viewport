@@ -47,15 +47,13 @@ module.exports = karma => {
       "index.js"
     ],
 
-    /* Preprocess fixtures for tests */
+    /* Preprocessors */
     preprocessors: {
-
-      /* HTML fixtures */
       "fixtures/**/*.html": ["html2js"],
-
-      /* Single entrypoint for tests in order for istanbul code coverage to
-         work properly in conjunction with Babel */
-      "index.js": ["webpack", "sourcemap"]
+      "index.js": [
+        "webpack",
+        "sourcemap"
+      ]
     },
 
     /* Webpack configuration */
@@ -91,7 +89,7 @@ module.exports = karma => {
         screenResolution: "1280x1024"
       },
 
-      /* Chrome 57 - latest - 1 doesn't work here */
+      /* Chrome 58 - latest - 1 doesn't work here */
       chrome1: {
         base: "SauceLabs",
         browserName: "chrome",
@@ -235,7 +233,7 @@ module.exports = karma => {
       ]
     }
 
-    /* Continous integration reporters */
+    /* Continuous integration reporters */
     if (process.env.TRAVIS || process.env.SAUCE) {
       config.reporters.push("saucelabs")
       config.coverageIstanbulReporter.reports = ["lcovonly"]
