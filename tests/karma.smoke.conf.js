@@ -68,14 +68,14 @@ module.exports = karma => {
       ]
     },
 
-    /* Test reporters */
+    /* Reporters */
     reporters: ["spec"],
 
     /* Set browsers */
     browsers: ["Chrome"]
   }
 
-  /* Register this plugin with karma */
+  /* Register this plugin with Karma */
   karma.plugins.push(require.resolve(".."))
 
   /* Travis and SauceLabs integration */

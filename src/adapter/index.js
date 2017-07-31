@@ -20,8 +20,6 @@
  * IN THE SOFTWARE.
  */
 
-import "array-findindex-polyfill"
-
 import Viewport from "./viewport"
 
 /* ----------------------------------------------------------------------------
