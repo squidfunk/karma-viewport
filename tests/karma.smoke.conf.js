@@ -20,6 +20,8 @@
  * IN THE SOFTWARE.
  */
 
+"use strict"
+
 const moniker = require("moniker")
 
 /* ----------------------------------------------------------------------------

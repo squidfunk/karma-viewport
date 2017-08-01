@@ -22,7 +22,9 @@
 
 "use strict"
 
+const fs = require("fs")
 const path = require("path")
+const url = require("url")
 const validate = require("jsonschema").validate
 
 /* ----------------------------------------------------------------------------
@@ -46,15 +48,24 @@ const pattern = file => {
 }
 
 /**
- * Inject adapter and default configuration
+ * Setup framework configuration
  *
  * @param {Object} config - Karma configuration
  */
 const framework = config => {
+  if (!config.client.useIframe)
+    throw new Error("Invalid configuration: " +
+      "client.useIframe must be set to true for karma-viewport to function")
+
+  /* Inject adapter and configuration */
   config.files.push(
     pattern(path.resolve(__dirname, "config/default.json")),
     pattern(path.resolve(__dirname, "adapter/index.js"))
   )
+
+  /* Register middleware before Karma's own middleware */
+  config.beforeMiddleware = config.beforeMiddleware || []
+  config.beforeMiddleware.push("viewport")
 
   /* Register preprocessor for viewport configuration */
   config.preprocessors = config.preprocessors || {}
@@ -63,6 +74,47 @@ const framework = config => {
 
 /* Dependency injection */
 framework.$inject = ["config"]
+
+/**
+ * Initialize and configure middleware that runs before Karma's middleware
+ *
+ * karma-viewport relies on the context iframe being present. This is not true
+ * for the debug context, so we need to patch it. If the requested file is just
+ * the plain `debug.html` without the embed parameter (which is introduced by
+ * this library) we just serve our monkey patched context iframe including the
+ * actual debug context, which is served by Karma's own file server.
+ *
+ * The %X_UA_COMPATIBLE% placeholder must be replaced with the respective query
+ * parameter, as Karma somehow relies on it.
+ *
+ * @return {Function} Connect-compatible middleware
+ */
+const middleware = () => {
+  return (req, res, next) => {
+    const uri = url.parse(req.url, true)
+    if (uri.pathname !== "/debug.html" ||
+        typeof uri.query.embed !== "undefined")
+      return next()
+
+    /* Serve the surrounding debug context */
+    const debug = path.resolve(__dirname, "static/debug.html")
+    fs.readFile(debug, (err, data) => {
+      if (err)
+        return next(err)
+
+      /* Replace placeholder (copied from Karma's source) and serve */
+      res.writeHead(200, { "Content-Type": "text/html" })
+      res.end(data.toString()
+        .replace("%X_UA_COMPATIBLE%",
+          '<meta http-equiv="X-UA-Compatible" content="' +
+            query["x-ua-compatible"] +
+          '" />'), "utf-8")
+    })
+  }
+}
+
+/* Dependency injection */
+middleware.$inject = []
 
 /**
  * Inject custom configuration
@@ -100,5 +152,6 @@ preprocessor.$inject = ["config.viewport"]
 
 module.exports = {
   "framework:viewport": ["factory", framework],
+  "middleware:viewport": ["factory", middleware],
   "preprocessor:viewport": ["factory", preprocessor]
 }
