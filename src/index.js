@@ -107,7 +107,7 @@ const middleware = () => {
       res.end(data.toString()
         .replace("%X_UA_COMPATIBLE%",
           '<meta http-equiv="X-UA-Compatible" content="' +
-            query["x-ua-compatible"] +
+            uri.query["x-ua-compatible"] +
           '" />'), "utf-8")
     })
   }
