@@ -1,3 +1,7 @@
+karma-viewport-0.2.1 (2017-08-01)
+
+  * Fixed undefined variable in middleware
+
 karma-viewport-0.2.0 (2017-08-01)
 
   * Added iframe usage as a prerequisite
