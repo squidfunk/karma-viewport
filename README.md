@@ -26,7 +26,7 @@ npm install karma-viewport
 
 ### Basic configuration
 
-Add `viewport` to the list of frameworks inside your karma configuration:
+Add `viewport` to the list of frameworks inside your Karma configuration:
 
 ``` js
 // karma.conf.js
@@ -65,7 +65,7 @@ afterEach(() => {
 
 ### Advanced configuration
 
-Named breakpoints can be defined directly inside the karma configuration using
+Named breakpoints can be defined directly inside the Karma configuration using
 the `viewport` key:
 
 ``` js
@@ -145,9 +145,13 @@ After iteration, `viewport.reset()` is called internally.
 
 ### Limitations
 
-This plugin relies on karma executing your test inside an `iframe`, which is the
-default. See the section on `client.useIframe` in the [configuration guide][3]
-for more information.
+This plugin relies on Karma executing all tests inside an `iframe`, which is
+enabled by default through `client.useIframe`. See the section in the
+[configuration guide][3] for more information.
+
+Furthermore, the `debug` context is patched and wrapped inside an `iframe`, so
+debugging works as well. This may interfere with code that relies on running
+within the parent window.
 
   [3]: http://karma-runner.github.io/1.0/config/configuration-file.html
 
