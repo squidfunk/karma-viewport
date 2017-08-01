@@ -91,8 +91,9 @@ framework.$inject = ["config"]
  */
 const middleware = () => {
   return (req, res, next) => {
-    const { pathname, query } = url.parse(req.url, true)
-    if (pathname !== "/debug.html" || typeof query.embed !== "undefined")
+    const uri = url.parse(req.url, true)
+    if (uri.pathname !== "/debug.html" ||
+        typeof uri.query.embed !== "undefined")
       return next()
 
     /* Serve the surrounding debug context */
