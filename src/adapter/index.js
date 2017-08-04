@@ -26,9 +26,9 @@ import Viewport from "./viewport"
  * Initialization
  * ------------------------------------------------------------------------- */
 
-((window, options) => {
+((window, config) => {
   const context = parent.document.getElementById("context")
-  window.viewport = new Viewport(context, options)
+  window.viewport = new Viewport(context, config)
 
 // eslint-disable-next-line no-underscore-dangle
 })(window, window.__viewport__)

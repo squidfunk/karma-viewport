@@ -69,7 +69,7 @@ module.exports = function() {
         __dirname,
         path.resolve(__dirname, "node_modules")
       ],
-      extensions: [".js"]
+      extensions: [".js", ".json"]
     },
 
     /* Enable sourcemaps */

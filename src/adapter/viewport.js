@@ -23,18 +23,7 @@
 import inspect from "./util/inspect"
 import resolve from "./util/resolve"
 
-/* ----------------------------------------------------------------------------
- * Constants
- * ------------------------------------------------------------------------- */
-
-/**
- * Default options passed to constructor
- *
- * @type {Object}
- */
-const OPTIONS = {
-  breakpoints: []
-}
+import CONFIG_DEFAULT from "../config/default"
 
 /* ----------------------------------------------------------------------------
  * Class
@@ -48,23 +37,23 @@ export default class Viewport {
    * @constructor
    *
    * @property {HTMLIFrameElement} context_ - Viewport context
-   * @property {Object} options_ - Options
+   * @property {Object} config_ - Configuration
    *
    * @param {HTMLIFrameElement} context - Viewport context
-   * @param {Object} [options] - Options
+   * @param {Object} [config] - Configuration
    */
-  constructor(context, options = OPTIONS) {
-    if (!context) // strangely, checking for instanceof always returns false
+  constructor(context, config = CONFIG_DEFAULT) {
+    if (!context)
       throw new TypeError(`Invalid context: ${context}`)
-    if (typeof options !== "object")
-      throw new TypeError(`Invalid options: ${inspect(options)}`)
-    if (!(options.breakpoints instanceof Array))
+    if (typeof config !== "object")
+      throw new TypeError(`Invalid config: ${inspect(config)}`)
+    if (!(config.breakpoints instanceof Array))
       throw new TypeError(
-        `Invalid breakpoints: ${inspect(options.breakpoints)}`)
+        `Invalid breakpoints: ${inspect(config.breakpoints)}`)
 
-    /* Initialize options and context */
-    this.options_ = options
+    /* Initialize context and configuration */
     this.context_ = context
+    this.config_  = config
   }
 
   /**
@@ -84,7 +73,7 @@ export default class Viewport {
         /* Set width and height */
         this.context_.style.width = `${width}px`
       } else {
-        const [breakpoint] = resolve(this.options_.breakpoints, args[0])
+        const [breakpoint] = resolve(this.config_.breakpoints, args[0])
         this.set(breakpoint.size.width, breakpoint.size.height)
       }
 
@@ -137,9 +126,9 @@ export default class Viewport {
       throw new TypeError("Invalid callback")
 
     /* Resolve breakpoints and execute callback after resizing */
-    resolve(this.options_.breakpoints, first, last).forEach(breakpoint => {
+    resolve(this.config_.breakpoints, first, last).forEach(breakpoint => {
       this.set(breakpoint.size.width, breakpoint.size.height)
-      cb(breakpoint.name)
+      cb(breakpoint.name) // TODO: chain/return promises for async code!
     })
 
     /* Reset viewport */
@@ -157,8 +146,8 @@ export default class Viewport {
    * @param {Function} cb - Callback to execute after resizing
    */
   each(cb) {
-    this.between(this.options_.breakpoints[0].name, this.options_.breakpoints[
-      this.options_.breakpoints.length - 1
+    this.between(this.config_.breakpoints[0].name, this.config_.breakpoints[
+      this.config_.breakpoints.length - 1
     ].name, cb)
   }
 
@@ -174,8 +163,8 @@ export default class Viewport {
    * @param {Function} cb - Callback to execute after resizing
    */
   from(first, cb) {
-    this.between(first, this.options_.breakpoints[
-      this.options_.breakpoints.length - 1
+    this.between(first, this.config_.breakpoints[
+      this.config_.breakpoints.length - 1
     ].name, cb)
   }
 
@@ -191,7 +180,7 @@ export default class Viewport {
    * @param {Function} cb - Callback to execute after resizing
    */
   to(last, cb) {
-    this.between(this.options_.breakpoints[0].name, last, cb)
+    this.between(this.config_.breakpoints[0].name, last, cb)
   }
 
   /**
@@ -204,11 +193,11 @@ export default class Viewport {
   }
 
   /**
-   * Retrieve options
+   * Retrieve configuration
    *
-   * @return {Object} Options
+   * @return {Object} Configuration
    */
-  get options() {
-    return this.options_
+  get config() {
+    return this.config_
   }
 }
