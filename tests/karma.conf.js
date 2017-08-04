@@ -91,11 +91,11 @@ module.exports = karma => {
         screenResolution: "1280x1024"
       },
 
-      /* Chrome 58 - latest - 1 doesn't work here */
+      /* Chrome (latest - 1) */
       chrome1: {
         base: "SauceLabs",
         browserName: "chrome",
-        version: "58",
+        version: "latest-1",
         platform: "Windows 7",
         screenResolution: "1280x1024"
       },
