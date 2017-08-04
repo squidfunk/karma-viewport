@@ -72,14 +72,14 @@ describe("Viewport", () => {
       constructorShouldSetContext
     )
 
-    /* Test: should set options */
-    it("should set options",
-      constructorShouldSetOptions
+    /* Test: should set configuration */
+    it("should set configuration",
+      constructorShouldSetConfiguration
     )
 
-    /* Test: should use default options */
-    it("should use default options",
-      constructorShouldUseDefaultOptions
+    /* Test: should use default configuration */
+    it("should use default configuration",
+      constructorShouldUseDefaultConfiguration
     )
 
     /* Test: should throw on invalid context */
@@ -87,9 +87,9 @@ describe("Viewport", () => {
       constructorShouldThrowOnInvalidContext
     )
 
-    /* Test: should throw on invalid options */
-    it("should throw on invalid options",
-      constructorShouldThrowOnInvalidOptions
+    /* Test: should throw on invalid configuration */
+    it("should throw on invalid configuration",
+      constructorShouldThrowOnInvalidConfiguration
     )
 
     /* Test: should throw on invalid breakpoints */
@@ -228,16 +228,16 @@ function constructorShouldSetContext() {
     .toBe(this.el)
 }
 
-/* Test: #constructor should set options */
-function constructorShouldSetOptions() {
-  const options = { breakpoints: ["irrelevant"] }
-  expect(new Viewport(this.el, options).options)
-    .toBe(options)
+/* Test: #constructor should set configuration */
+function constructorShouldSetConfiguration() {
+  const config = { breakpoints: ["irrelevant"] }
+  expect(new Viewport(this.el, config).config)
+    .toBe(config)
 }
 
-/* Test: #constructor should use default options */
-function constructorShouldUseDefaultOptions() {
-  expect(new Viewport(this.el).options)
+/* Test: #constructor should use default configuration */
+function constructorShouldUseDefaultConfiguration() {
+  expect(new Viewport(this.el).config)
     .toEqual({ breakpoints: [] })
 }
 
@@ -249,12 +249,12 @@ function constructorShouldThrowOnInvalidContext() {
     new TypeError("Invalid context: null"))
 }
 
-/* Test: #constructor should throw on invalid options */
-function constructorShouldThrowOnInvalidOptions() {
+/* Test: #constructor should throw on invalid configuration */
+function constructorShouldThrowOnInvalidConfiguration() {
   expect(() => {
     new Viewport(this.el, "")
   }).toThrow(
-    new TypeError("Invalid options: ''"))
+    new TypeError("Invalid config: ''"))
 }
 
 /* Test: #constructor should throw on invalid breakpoints */
