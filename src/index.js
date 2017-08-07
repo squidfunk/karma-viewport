@@ -130,7 +130,7 @@ const preprocessor = viewport => {
   /* Return preprocessor function */
   return (content, file, done) => {
     const schema = require("./config/schema.json")
-    const config = viewport || JSON.parse(content)
+    const config = Object.assign(JSON.parse(content), viewport)
 
     /* Validate viewport configuration */
     const result = validate(config, schema)

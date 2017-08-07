@@ -32,7 +32,7 @@ describe("Viewport", () => {
 
     /* Retrieve context */
     beforeEach(function() {
-      this.context = parent.document.getElementById("context")
+      this.el = window.parent.document.getElementById("context")
     })
 
     /* Reset viewport */
@@ -75,18 +75,18 @@ function shouldBeDefined() {
 /* Test: should set width and height */
 function shouldSetWidthAndHeight() {
   viewport.set(320, 480)
-  expect(this.context.style.width)
+  expect(this.el.style.width)
     .toEqual("320px")
-  expect(this.context.style.height)
+  expect(this.el.style.height)
     .toEqual("480px")
 }
 
 /* Test: should resolve and set breakpoint */
 function shouldResolveAndSetBreakpoint() {
   viewport.set("tablet")
-  expect(this.context.style.width)
+  expect(this.el.style.width)
     .toEqual("768px")
-  expect(this.context.style.height)
+  expect(this.el.style.height)
     .toEqual("1024px")
 }
 
@@ -94,8 +94,8 @@ function shouldResolveAndSetBreakpoint() {
 function shouldResetWidthAndHeight() {
   viewport.set(320, 480)
   viewport.reset()
-  expect(this.context.style.width)
+  expect(this.el.style.width)
     .toEqual("")
-  expect(this.context.style.height)
+  expect(this.el.style.height)
     .toEqual("")
 }

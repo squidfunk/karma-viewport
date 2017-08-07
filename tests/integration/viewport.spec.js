@@ -32,48 +32,73 @@ describe("Viewport", () => {
   /* Integration tests */
   describe("_integration", () => {
 
-    /* Set fixture base path and initialize breakpoints */
+    /* Setup configuration and fixtures */
     beforeAll(function() {
       fixture.setBase("fixtures")
 
-      /* Initialize breakpoints */
-      this.breakpoints = [
-        {
-          name: "mobile",
-          size: {
-            width: 320,
-            height: 480
+      /* Setup configuration */
+      this.config = {
+        selector: "#viewport",
+        breakpoints: [
+          {
+            name: "mobile",
+            size: {
+              width: 320,
+              height: 480
+            }
+          },
+          {
+            name: "tablet",
+            size: {
+              width: 768,
+              height: 1024
+            }
+          },
+          {
+            name: "screen",
+            size: {
+              width: 1440,
+              height: 900
+            }
           }
-        },
-        {
-          name: "tablet",
-          size: {
-            width: 768,
-            height: 1024
-          }
-        },
-        {
-          name: "screen",
-          size: {
-            width: 1440,
-            height: 900
-          }
-        }
-      ]
+        ]
+      }
+      this.el = document.createElement("iframe")
+      this.el.id = "viewport"
+      document.body.appendChild(this.el)
     })
 
-    /* Retrieve context */
+    /* Cleanup document */
+    afterAll(function() {
+      document.body.removeChild(this.el)
+    })
+
+    /* Set references */
     beforeEach(function() {
-      this.context = parent.document.getElementById("context")
+      this.context = window
     })
 
-    /* Cleanup fixtures and reset context */
+    /* Cleanup fixtures and reset viewport element */
     afterEach(function() {
       fixture.cleanup()
 
-      /* Reset context */
-      this.context.style.width = ""
-      this.context.style.height = ""
+      /* Reset viewport element */
+      this.el.style.width = ""
+      this.el.style.height = ""
+    })
+
+    /* Cleanup document */
+    afterAll(function() {
+      document.body.removeChild(this.el)
+    })
+
+    /* #constructor */
+    describe("#constructor", () => {
+
+      /* Test: should resolve selector */
+      it("should resolve selector",
+        constructorShouldResolveSelector
+      )
     })
 
     /* #set */
@@ -121,34 +146,44 @@ describe("Viewport", () => {
 })
 
 /* ----------------------------------------------------------------------------
+ * Definitions: #constructor
+ * ------------------------------------------------------------------------- */
+
+/* Test: #constructor should resolve selector */
+function constructorShouldResolveSelector() {
+  expect(new Viewport(this.config, this.context).element)
+    .toBe(this.el)
+}
+
+/* ----------------------------------------------------------------------------
  * Definitions: #set
  * ------------------------------------------------------------------------- */
 
 /* Test: #set should set width */
 function setShouldSetWidth() {
-  new Viewport(this.context).set(150)
-  expect(this.context.style.width)
+  new Viewport(this.config, this.context).set(150)
+  expect(this.el.style.width)
     .toEqual("150px")
-  expect(this.context.style.height)
+  expect(this.el.style.height)
     .toBe("")
 }
 
 /* Test: #set should set width and height */
 function setShouldSetWidthAndHeight() {
-  new Viewport(this.context).set(150, 175)
-  expect(this.context.style.width)
+  new Viewport(this.config, this.context).set(150, 175)
+  expect(this.el.style.width)
     .toEqual("150px")
-  expect(this.context.style.height)
+  expect(this.el.style.height)
     .toEqual("175px")
 }
 
 /* Test: #set should resolve and set breakpoint */
 function setShouldResolveAndSetBreakpoint() {
-  new Viewport(this.context, { breakpoints: this.breakpoints }).set("tablet")
-  expect(this.context.style.width)
-    .toEqual(`${this.breakpoints[1].size.width}px`)
-  expect(this.context.style.height)
-    .toEqual(`${this.breakpoints[1].size.height}px`)
+  new Viewport(this.config, this.context).set("tablet")
+  expect(this.el.style.width)
+    .toEqual(`${this.config.breakpoints[1].size.width}px`)
+  expect(this.el.style.height)
+    .toEqual(`${this.config.breakpoints[1].size.height}px`)
 }
 
 /* ----------------------------------------------------------------------------
@@ -157,12 +192,12 @@ function setShouldResolveAndSetBreakpoint() {
 
 /* Test: #reset should reset width and height */
 function resetShouldResetWidthAndHeight() {
-  const viewport = new Viewport(this.context)
+  const viewport = new Viewport(this.config, this.context)
   viewport.set(150, 175)
   viewport.reset()
-  expect(this.context.style.width)
+  expect(this.el.style.width)
     .toEqual("")
-  expect(this.context.style.height)
+  expect(this.el.style.height)
     .toEqual("")
 }
 
@@ -181,7 +216,10 @@ function eachShouldInvokeCallbackOnBreakpoints() {
           screen: "12px"
         }[name])
     })
-  new Viewport(this.context, { breakpoints: this.breakpoints }).each(cb)
+  new Viewport({
+    selector: "#context",
+    breakpoints: this.config.breakpoints
+  }, this.context).each(cb)
   expect(cb.calls.count())
     .toEqual(3)
 }

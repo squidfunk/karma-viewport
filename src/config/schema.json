@@ -2,11 +2,16 @@
   "$schema": "http://json-schema.org/draft-04/schema",
   "type": "object",
   "required": [
+    "selector",
     "breakpoints"
   ],
   "properties": {
+    "selector": {
+      "description": "Selector",
+      "type": "string"
+    },
     "breakpoints": {
-      "description": "Breakpoint specification",
+      "description": "Breakpoints",
       "type": "array",
       "items": {
         "type": "object",

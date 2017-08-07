@@ -29,62 +29,67 @@ import Viewport from "~/src/adapter/viewport"
 /* Viewport */
 describe("Viewport", () => {
 
-  /* Initialize breakpoints */
+  /* Setup configuration */
   beforeAll(function() {
-    this.breakpoints = [
-      {
-        name: "mobile",
-        size: {
-          width: 320,
-          height: 480
+    this.config = {
+      selector: "#viewport",
+      breakpoints: [
+        {
+          name: "mobile",
+          size: {
+            width: 320,
+            height: 480
+          }
+        },
+        {
+          name: "tablet",
+          size: {
+            width: 768,
+            height: 1024
+          }
+        },
+        {
+          name: "screen",
+          size: {
+            width: 1440,
+            height: 900
+          }
         }
-      },
-      {
-        name: "tablet",
-        size: {
-          width: 768,
-          height: 1024
-        }
-      },
-      {
-        name: "screen",
-        size: {
-          width: 1440,
-          height: 900
-        }
-      }
-    ]
+      ]
+    }
+    this.el = document.createElement("iframe")
+    this.el.id = "viewport"
+    document.body.appendChild(this.el)
   })
 
-  /* Setup fixtures */
+  /* Cleanup document */
+  afterAll(function() {
+    document.body.removeChild(this.el)
+  })
+
+  /* Register spies */
   beforeEach(function() {
-    this.el = {
-      getBoundingClientRect: jasmine.createSpy("getBoundingClientRect"),
-      style: {}
-    }
+    this.context = window
+    spyOn(this.context.document, "querySelector")
+      .and.callFake(selector => {
+        return selector !== ".no-match"
+          ? this.el
+          : null
+      })
+    spyOn(this.el, "getBoundingClientRect")
   })
 
   /* #constructor */
   describe("#constructor", () => {
-
-    /* Test: should set context */
-    it("should set context",
-      constructorShouldSetContext
-    )
 
     /* Test: should set configuration */
     it("should set configuration",
       constructorShouldSetConfiguration
     )
 
-    /* Test: should use default configuration */
-    it("should use default configuration",
-      constructorShouldUseDefaultConfiguration
-    )
-
-    /* Test: should throw on invalid context */
-    it("should throw on invalid context",
-      constructorShouldThrowOnInvalidContext
+    /* Test: should resolve selector */
+    it("should resolve selector",
+      constructorShouldResolveSelector
     )
 
     /* Test: should throw on invalid configuration */
@@ -92,9 +97,24 @@ describe("Viewport", () => {
       constructorShouldThrowOnInvalidConfiguration
     )
 
+    /* Test: should throw on empty selector */
+    it("should throw on empty selector",
+      constructorShouldThrowOnEmptySelector
+    )
+
+    /* Test: should throw on invalid selector */
+    it("should throw on invalid selector",
+      constructorShouldThrowOnInvalidSelector
+    )
+
     /* Test: should throw on invalid breakpoints */
     it("should throw on invalid breakpoints",
       constructorShouldThrowOnInvalidBreakpoints
+    )
+
+    /* Test: should throw on invalid context */
+    it("should throw on invalid context",
+      constructorShouldThrowOnInvalidContext
     )
   })
 
@@ -222,47 +242,58 @@ describe("Viewport", () => {
  * Definitions: #constructor
  * ------------------------------------------------------------------------- */
 
-/* Test: #constructor should set context */
-function constructorShouldSetContext() {
-  expect(new Viewport(this.el).context)
-    .toBe(this.el)
-}
-
 /* Test: #constructor should set configuration */
 function constructorShouldSetConfiguration() {
-  const config = { breakpoints: ["irrelevant"] }
-  expect(new Viewport(this.el, config).config)
-    .toBe(config)
+  expect(new Viewport(this.config, this.context).config)
+    .toBe(this.config)
 }
 
-/* Test: #constructor should use default configuration */
-function constructorShouldUseDefaultConfiguration() {
-  expect(new Viewport(this.el).config)
-    .toEqual({ breakpoints: [] })
-}
-
-/* Test: #constructor should throw on invalid context */
-function constructorShouldThrowOnInvalidContext() {
-  expect(() => {
-    new Viewport(null)
-  }).toThrow(
-    new TypeError("Invalid context: null"))
+/* Test: #constructor should resolve selector */
+function constructorShouldResolveSelector() {
+  expect(new Viewport(this.config, this.context).element)
+    .toBe(this.el)
+  expect(this.context.document.querySelector)
+    .toHaveBeenCalledWith(this.config.selector)
 }
 
 /* Test: #constructor should throw on invalid configuration */
 function constructorShouldThrowOnInvalidConfiguration() {
   expect(() => {
-    new Viewport(this.el, "")
+    new Viewport("")
   }).toThrow(
     new TypeError("Invalid config: ''"))
+}
+
+/* Test: #constructor should throw on empty selector */
+function constructorShouldThrowOnEmptySelector() {
+  expect(() => {
+    new Viewport({ selector: "" })
+  }).toThrow(
+    new TypeError("Invalid config.selector: ''"))
+}
+
+/* Test: #constructor should throw on invalid selector */
+function constructorShouldThrowOnInvalidSelector() {
+  expect(() => {
+    new Viewport({ selector: ".no-match", breakpoints: [] }, this.context)
+  }).toThrow(
+    new TypeError("No match for selector: '.no-match'"))
 }
 
 /* Test: #constructor should throw on invalid breakpoints */
 function constructorShouldThrowOnInvalidBreakpoints() {
   expect(() => {
-    new Viewport(this.el, { breakpoints: "" })
+    new Viewport({ selector: "irrelevant", breakpoints: "" })
   }).toThrow(
-    new TypeError("Invalid breakpoints: ''"))
+    new TypeError("Invalid config.breakpoints: ''"))
+}
+
+/* Test: #constructor should throw on invalid context */
+function constructorShouldThrowOnInvalidContext() {
+  expect(() => {
+    new Viewport(this.config)
+  }).toThrow(
+    new TypeError("Invalid context: undefined"))
 }
 
 /* ----------------------------------------------------------------------------
@@ -272,18 +303,18 @@ function constructorShouldThrowOnInvalidBreakpoints() {
 /* Test: #set should set width */
 function setShouldSetWidth() {
   const width = Math.floor(Math.random() * 200) + 100
-  new Viewport(this.el).set(width)
+  new Viewport(this.config, this.context).set(width)
   expect(this.el.style.width)
     .toEqual(`${width}px`)
   expect(this.el.style.height)
-    .toBeUndefined()
+    .toEqual("")
 }
 
 /* Test: #set should set width and height */
 function setShouldSetWidthAndHeight() {
   const width = Math.floor(Math.random() * 200) + 100
   const height = Math.floor(Math.random() * 200) + 100
-  new Viewport(this.el).set(width, height)
+  new Viewport(this.config, this.context).set(width, height)
   expect(this.el.style.width)
     .toEqual(`${width}px`)
   expect(this.el.style.height)
@@ -292,16 +323,16 @@ function setShouldSetWidthAndHeight() {
 
 /* Test: #set should resolve and set breakpoint */
 function setShouldResolveAndSetBreakpoint() {
-  new Viewport(this.el, { breakpoints: this.breakpoints }).set("tablet")
+  new Viewport(this.config, this.context).set("tablet")
   expect(this.el.style.width)
-    .toEqual(`${this.breakpoints[1].size.width}px`)
+    .toEqual(`${this.config.breakpoints[1].size.width}px`)
   expect(this.el.style.height)
-    .toEqual(`${this.breakpoints[1].size.height}px`)
+    .toEqual(`${this.config.breakpoints[1].size.height}px`)
 }
 
 /* Test: #set should force layout */
 function setShouldForceLayout() {
-  new Viewport(this.el).set(150)
+  new Viewport(this.config, this.context).set(150)
   expect(this.el.getBoundingClientRect)
     .toHaveBeenCalled()
 }
@@ -309,7 +340,7 @@ function setShouldForceLayout() {
 /* Test: #set should throw on missing argument */
 function setShouldThrowOnMissingArgument() {
   expect(() => {
-    new Viewport(this.el).set()
+    new Viewport(this.config, this.context).set()
   }).toThrow(
     new Error("Invalid arguments: expected 1 or 2 parameters"))
 }
@@ -317,7 +348,7 @@ function setShouldThrowOnMissingArgument() {
 /* Test: #set should throw on invalid breakpoint */
 function setShouldThrowOnInvalidBreakpoint() {
   expect(() => {
-    new Viewport(this.el).set("invalid")
+    new Viewport(this.config, this.context).set("invalid")
   }).toThrow(
     new ReferenceError("Invalid breakpoint: 'invalid'"))
 }
@@ -325,7 +356,7 @@ function setShouldThrowOnInvalidBreakpoint() {
 /* Test: #set should throw on invalid width (one argument) */
 function setShouldThrowOnInvalidWidthOneArgument() {
   expect(() => {
-    new Viewport(this.el).set(-150)
+    new Viewport(this.config, this.context).set(-150)
   }).toThrow(
     new TypeError("Invalid breakpoint width: -150"))
 }
@@ -333,7 +364,7 @@ function setShouldThrowOnInvalidWidthOneArgument() {
 /* Test: #set should throw on invalid width */
 function setShouldThrowOnInvalidWidth() {
   expect(() => {
-    new Viewport(this.el).set(-150, 150)
+    new Viewport(this.config, this.context).set(-150, 150)
   }).toThrow(
     new TypeError("Invalid breakpoint width: -150"))
 }
@@ -341,7 +372,7 @@ function setShouldThrowOnInvalidWidth() {
 /* Test: #set should throw on invalid height */
 function setShouldThrowOnInvalidHeight() {
   expect(() => {
-    new Viewport(this.el).set(150, -150)
+    new Viewport(this.config, this.context).set(150, -150)
   }).toThrow(
     new TypeError("Invalid breakpoint height: -150"))
 }
@@ -352,7 +383,7 @@ function setShouldThrowOnInvalidHeight() {
 
 /* Test: #reset should reset width and height */
 function resetShouldResetWidthAndHeight() {
-  const viewport = new Viewport(this.el)
+  const viewport = new Viewport(this.config, this.context)
   viewport.set(150, 175)
   viewport.reset()
   expect(this.el.style.width)
@@ -363,7 +394,7 @@ function resetShouldResetWidthAndHeight() {
 
 /* Test: #reset should force layout */
 function resetShouldForceLayout() {
-  new Viewport(this.el).reset()
+  new Viewport(this.config, this.context).reset()
   expect(this.el.getBoundingClientRect)
     .toHaveBeenCalled()
 }
@@ -375,7 +406,7 @@ function resetShouldForceLayout() {
 /* Test: #between should invoke callback on breakpoints */
 function betweenShouldInvokeCallbackOnBreakpoints() {
   const cb = jasmine.createSpy("callback")
-  new Viewport(this.el, { breakpoints: this.breakpoints })
+  new Viewport(this.config, this.context)
     .between("mobile", "tablet", cb)
   expect(cb)
     .toHaveBeenCalledWith("mobile")
@@ -388,7 +419,7 @@ function betweenShouldInvokeCallbackOnBreakpoints() {
 /* Test: #between should throw on invalid callback */
 function betweenShouldThrowOnInvalidCallback() {
   expect(() => {
-    new Viewport(this.el, { breakpoints: this.breakpoints })
+    new Viewport(this.config, this.context)
       .between("irrelevant", "irrelevant", null)
   }).toThrow(
     new TypeError("Invalid callback"))
@@ -401,7 +432,7 @@ function betweenShouldThrowOnInvalidCallback() {
 /* Test: #each should invoke callback on breakpoints */
 function eachShouldInvokeCallbackOnBreakpoints() {
   const cb = jasmine.createSpy("callback")
-  new Viewport(this.el, { breakpoints: this.breakpoints }).each(cb)
+  new Viewport(this.config, this.context).each(cb)
   expect(cb)
     .toHaveBeenCalledWith("mobile")
   expect(cb)
@@ -415,7 +446,7 @@ function eachShouldInvokeCallbackOnBreakpoints() {
 /* Test: #each should throw on invalid callback */
 function eachShouldThrowOnInvalidCallback() {
   expect(() => {
-    new Viewport(this.el, { breakpoints: this.breakpoints }).each(null)
+    new Viewport(this.config, this.context).each(null)
   }).toThrow(
     new TypeError("Invalid callback"))
 }
@@ -427,7 +458,7 @@ function eachShouldThrowOnInvalidCallback() {
 /* Test: #from should invoke callback on breakpoints */
 function fromShouldInvokeCallbackOnBreakpoints() {
   const cb = jasmine.createSpy("callback")
-  new Viewport(this.el, { breakpoints: this.breakpoints })
+  new Viewport(this.config, this.context)
     .from("tablet", cb)
   expect(cb)
     .toHaveBeenCalledWith("tablet")
@@ -440,7 +471,7 @@ function fromShouldInvokeCallbackOnBreakpoints() {
 /* Test: #from should throw on invalid callback */
 function fromShouldThrowOnInvalidCallback() {
   expect(() => {
-    new Viewport(this.el, { breakpoints: this.breakpoints })
+    new Viewport(this.config, this.context)
       .from("irrelevant", null)
   }).toThrow(
     new TypeError("Invalid callback"))
@@ -453,7 +484,7 @@ function fromShouldThrowOnInvalidCallback() {
 /* Test: #to should invoke callback on breakpoints */
 function toShouldInvokeCallbackOnBreakpoints() {
   const cb = jasmine.createSpy("callback")
-  new Viewport(this.el, { breakpoints: this.breakpoints })
+  new Viewport(this.config, this.context)
     .to("tablet", cb)
   expect(cb)
     .toHaveBeenCalledWith("mobile")
@@ -466,7 +497,7 @@ function toShouldInvokeCallbackOnBreakpoints() {
 /* Test: #to should throw on invalid callback */
 function toShouldThrowOnInvalidCallback() {
   expect(() => {
-    new Viewport(this.el, { breakpoints: this.breakpoints })
+    new Viewport(this.config, this.context)
       .to("irrelevant", null)
   }).toThrow(
     new TypeError("Invalid callback"))
