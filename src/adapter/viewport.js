@@ -23,8 +23,6 @@
 import inspect from "./util/inspect"
 import resolve from "./util/resolve"
 
-import CONFIG_DEFAULT from "../config/default"
-
 /* ----------------------------------------------------------------------------
  * Class
  * ------------------------------------------------------------------------- */
@@ -36,24 +34,40 @@ export default class Viewport {
    *
    * @constructor
    *
-   * @property {HTMLIFrameElement} context_ - Viewport context
    * @property {Object} config_ - Configuration
+   * @property {HTMLIFrameElement} el_ - Viewport element
    *
-   * @param {HTMLIFrameElement} context - Viewport context
-   * @param {Object} [config] - Configuration
+   * @param {Object} config - Configuration
+   * @param {string} config.selector - Selector
+   * @param {Array<Object>} config.breakpoints - Breakpoints
+   * @param {Window} context - Initialization context
    */
-  constructor(context, config = CONFIG_DEFAULT) {
-    if (!context)
-      throw new TypeError(`Invalid context: ${context}`)
+  constructor(config, context) {
     if (typeof config !== "object")
       throw new TypeError(`Invalid config: ${inspect(config)}`)
+    if (typeof config.selector !== "string" || !config.selector.length)
+      throw new TypeError(
+        `Invalid config.selector: ${inspect(config.selector)}`)
     if (!(config.breakpoints instanceof Array))
       throw new TypeError(
-        `Invalid breakpoints: ${inspect(config.breakpoints)}`)
+        `Invalid config.breakpoints: ${inspect(config.breakpoints)}`)
+    if (!context || !(context instanceof Window))
+      throw new TypeError(`Invalid context: ${inspect(context)}`)
 
-    /* Initialize context and configuration */
-    this.context_ = context
+    /* Retrieve viewport element travelling up */
+    let current = context,
+        el = context.document.querySelector(config.selector)
+    while (!el && current !== current.parent) {
+      current = current.parent
+      el = current.document.querySelector(config.selector)
+    }
+    if (!(el instanceof current.HTMLIFrameElement))
+      throw new ReferenceError(
+        `No match for selector: ${inspect(config.selector)}`)
+
+    /* Set configuration and viewport element */
     this.config_  = config
+    this.el_ = el
   }
 
   /**
@@ -71,7 +85,8 @@ export default class Viewport {
           throw new TypeError(`Invalid breakpoint width: ${width}`)
 
         /* Set width and height */
-        this.context_.style.width = `${width}px`
+        this.el_.style.width = `${width}px`
+        this.el_.style.height = ""
       } else {
         const [breakpoint] = resolve(this.config_.breakpoints, args[0])
         this.set(breakpoint.size.width, breakpoint.size.height)
@@ -86,8 +101,8 @@ export default class Viewport {
         throw new TypeError(`Invalid breakpoint height: ${height}`)
 
       /* Set width and height */
-      this.context_.style.width = `${width}px`
-      this.context_.style.height = `${height}px`
+      this.el_.style.width = `${width}px`
+      this.el_.style.height = `${height}px`
 
     /* Too few or too many arguments */
     } else {
@@ -95,18 +110,18 @@ export default class Viewport {
     }
 
     /* Force layout, so styles are sure to propagate */
-    this.context_.getBoundingClientRect()
+    this.el_.getBoundingClientRect()
   }
 
   /**
    * Reset viewport
    */
   reset() {
-    this.context_.style.width = ""
-    this.context_.style.height = ""
+    this.el_.style.width = ""
+    this.el_.style.height = ""
 
     /* Force layout, so styles are sure to propagate */
-    this.context_.getBoundingClientRect()
+    this.el_.getBoundingClientRect()
   }
 
   /**
@@ -184,20 +199,20 @@ export default class Viewport {
   }
 
   /**
-   * Retrieve viewport context
-   *
-   * @return {HTMLIFrameElement} Viewport context
-   */
-  get context() {
-    return this.context_
-  }
-
-  /**
    * Retrieve configuration
    *
    * @return {Object} Configuration
    */
   get config() {
     return this.config_
+  }
+
+  /**
+   * Retrieve viewport element
+   *
+   * @return {HTMLIFrameElement} Viewport element
+   */
+  get element() {
+    return this.el_
   }
 }
