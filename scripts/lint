@@ -24,4 +24,4 @@
 set -e
 
 # Lint sources
-"$(npm bin)"/eslint --max-warnings 0 .
+"$(npm bin)"/eslint --max-warnings 0 . "$@"

@@ -53,11 +53,6 @@ const pattern = file => {
  * @param {Object} config - Karma configuration
  */
 const framework = config => {
-  if (!config.client.useIframe)
-    throw new Error("Invalid configuration: " +
-      "client.useIframe must be set to true for karma-viewport to function")
-
-  /* Inject adapter and configuration */
   config.files.push(
     pattern(path.resolve(__dirname, "config/default.json")),
     pattern(path.resolve(__dirname, "adapter/index.js"))
@@ -69,7 +64,9 @@ const framework = config => {
 
   /* Register preprocessor for viewport configuration */
   config.preprocessors = config.preprocessors || {}
-  config.preprocessors["**/config/default.json"] = ["viewport"]
+  config.preprocessors[
+    path.resolve(__dirname, "config/default.json")
+  ] = ["viewport"]
 }
 
 /* Dependency injection */
@@ -119,17 +116,18 @@ middleware.$inject = []
 /**
  * Inject custom configuration
  *
- * @param {Object} [viewport] - Viewport configuration
+ * @param {Object} viewport - Viewport configuration
+ * @param {Object} client - Client configuration
  *
  * @return {Function} Preprocessor function
  */
-const preprocessor = viewport => {
+const preprocessor = (viewport, client) => {
   if (viewport && typeof viewport !== "object")
     throw new TypeError(`Invalid viewport configuration: ${viewport}`)
 
   /* Return preprocessor function */
   return (content, file, done) => {
-    const schema = require("./config/schema.json")
+    const schema = require("./config/schema")
     const config = Object.assign(JSON.parse(content), viewport)
 
     /* Validate viewport configuration */
@@ -138,13 +136,18 @@ const preprocessor = viewport => {
       throw new TypeError(
         `Invalid viewport configuration: ${result.errors[0].stack}`)
 
+    /* Karma must run inside an iframe, if the context defaults */
+    if (config.selector === "#context" && !client.useIframe)
+      throw new Error("Invalid configuration: " +
+        "client.useIframe must be set to true for karma-viewport to function")
+
     /* Store viewport configuration globally */
     done(`window.__viewport__ = ${JSON.stringify(config)}`)
   }
 }
 
 /* Dependency injection */
-preprocessor.$inject = ["config.viewport"]
+preprocessor.$inject = ["config.viewport", "config.client"]
 
 /* ----------------------------------------------------------------------------
  * Export with ES5 compatibility
