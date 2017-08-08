@@ -85,7 +85,7 @@ module.exports = karma => {
     },
 
     /* Reporters */
-    reporters: ["spec"],
+    reporters: ["summary"],
 
     /* Set browsers */
     browsers: ["Chrome"]
