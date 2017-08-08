@@ -102,12 +102,23 @@ module.exports = karma => {
         "SauceConnect: please provide SAUCE_USERNAME " +
         "and SAUCE_ACCESS_KEY")
 
-    /* It should be sufficient to run the smoke test on only one browser */
+    /* Run tests in latest Chrome and IE9 */
     const browsers = {
+
+      /* Chrome (latest) */
       chrome: {
         base: "SauceLabs",
         browserName: "chrome",
         version: "latest",
+        platform: "Windows 7",
+        screenResolution: "1280x1024"
+      },
+
+      /* Internet Explorer 9 */
+      ie9: {
+        base: "SauceLabs",
+        browserName: "internet explorer",
+        version: "9",
         platform: "Windows 7",
         screenResolution: "1280x1024"
       }
