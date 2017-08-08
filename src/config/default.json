@@ -1,4 +1,4 @@
 {
-  "selector": "#context",
+  "context": "#context",
   "breakpoints": []
 }

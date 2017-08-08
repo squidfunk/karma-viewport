@@ -2,12 +2,12 @@
   "$schema": "http://json-schema.org/draft-04/schema",
   "type": "object",
   "required": [
-    "selector",
+    "context",
     "breakpoints"
   ],
   "properties": {
-    "selector": {
-      "description": "Selector",
+    "context": {
+      "description": "Context element selector",
       "type": "string"
     },
     "breakpoints": {
