@@ -65,7 +65,7 @@ afterEach(() => {
 
 ### Advanced configuration
 
-#### `config.viewport.selector`
+#### `config.viewport.context`
 
 By default, `viewport` will target the default `iframe#context` of Karma,
 which is enabled through `client.useIframe` (see the [configuration guide][3]).
@@ -81,7 +81,7 @@ module.exports = function(config) {
 
     // Viewport configuration
     viewport: {
-      selector: "#viewport"
+      context: "#viewport"
     }
   })
 }

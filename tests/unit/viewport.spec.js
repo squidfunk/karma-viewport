@@ -32,7 +32,7 @@ describe("Viewport", () => {
   /* Setup configuration */
   beforeAll(function() {
     this.config = {
-      selector: "#viewport",
+      context: "#viewport",
       breakpoints: [
         {
           name: "mobile",
@@ -87,9 +87,9 @@ describe("Viewport", () => {
       constructorShouldSetConfiguration
     )
 
-    /* Test: should resolve selector */
-    it("should resolve selector",
-      constructorShouldResolveSelector
+    /* Test: should resolve context selector */
+    it("should resolve context selector",
+      constructorShouldResolveContextSelector
     )
 
     /* Test: should throw on invalid configuration */
@@ -97,14 +97,14 @@ describe("Viewport", () => {
       constructorShouldThrowOnInvalidConfiguration
     )
 
-    /* Test: should throw on empty selector */
-    it("should throw on empty selector",
-      constructorShouldThrowOnEmptySelector
+    /* Test: should throw on empty context selector */
+    it("should throw on empty context selector",
+      constructorShouldThrowOnEmptyContextSelector
     )
 
-    /* Test: should throw on invalid selector */
-    it("should throw on invalid selector",
-      constructorShouldThrowOnInvalidSelector
+    /* Test: should throw on invalid context selector */
+    it("should throw on invalid context selector",
+      constructorShouldThrowOnInvalidContextSelector
     )
 
     /* Test: should throw on invalid breakpoints */
@@ -248,12 +248,12 @@ function constructorShouldSetConfiguration() {
     .toBe(this.config)
 }
 
-/* Test: #constructor should resolve selector */
-function constructorShouldResolveSelector() {
+/* Test: #constructor should resolve context selector */
+function constructorShouldResolveContextSelector() {
   expect(new Viewport(this.config, this.context).element)
     .toBe(this.el)
   expect(this.context.document.querySelector)
-    .toHaveBeenCalledWith(this.config.selector)
+    .toHaveBeenCalledWith(this.config.context)
 }
 
 /* Test: #constructor should throw on invalid configuration */
@@ -264,26 +264,26 @@ function constructorShouldThrowOnInvalidConfiguration() {
     new TypeError("Invalid config: ''"))
 }
 
-/* Test: #constructor should throw on empty selector */
-function constructorShouldThrowOnEmptySelector() {
+/* Test: #constructor should throw on empty context selector */
+function constructorShouldThrowOnEmptyContextSelector() {
   expect(() => {
-    new Viewport({ selector: "" })
+    new Viewport({ context: "" })
   }).toThrow(
-    new TypeError("Invalid config.selector: ''"))
+    new TypeError("Invalid config.context: ''"))
 }
 
-/* Test: #constructor should throw on invalid selector */
-function constructorShouldThrowOnInvalidSelector() {
+/* Test: #constructor should throw on invalid context selector */
+function constructorShouldThrowOnInvalidContextSelector() {
   expect(() => {
-    new Viewport({ selector: ".no-match", breakpoints: [] }, this.context)
+    new Viewport({ context: ".no-match", breakpoints: [] }, this.context)
   }).toThrow(
-    new TypeError("No match for selector: '.no-match'"))
+    new TypeError("No match for context selector: '.no-match'"))
 }
 
 /* Test: #constructor should throw on invalid breakpoints */
 function constructorShouldThrowOnInvalidBreakpoints() {
   expect(() => {
-    new Viewport({ selector: "irrelevant", breakpoints: "" })
+    new Viewport({ context: "irrelevant", breakpoints: "" })
   }).toThrow(
     new TypeError("Invalid config.breakpoints: ''"))
 }

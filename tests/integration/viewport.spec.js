@@ -38,7 +38,7 @@ describe("Viewport", () => {
 
       /* Setup configuration */
       this.config = {
-        selector: "#viewport",
+        context: "#viewport",
         breakpoints: [
           {
             name: "mobile",
@@ -95,9 +95,9 @@ describe("Viewport", () => {
     /* #constructor */
     describe("#constructor", () => {
 
-      /* Test: should resolve selector */
-      it("should resolve selector",
-        constructorShouldResolveSelector
+      /* Test: should resolve context selector */
+      it("should resolve context selector",
+        constructorShouldResolveContextSelector
       )
     })
 
@@ -149,8 +149,8 @@ describe("Viewport", () => {
  * Definitions: #constructor
  * ------------------------------------------------------------------------- */
 
-/* Test: #constructor should resolve selector */
-function constructorShouldResolveSelector() {
+/* Test: #constructor should resolve context selector */
+function constructorShouldResolveContextSelector() {
   expect(new Viewport(this.config, this.context).element)
     .toBe(this.el)
 }
@@ -217,7 +217,7 @@ function eachShouldInvokeCallbackOnBreakpoints() {
         }[name])
     })
   new Viewport({
-    selector: "#context",
+    context: "#context",
     breakpoints: this.config.breakpoints
   }, this.context).each(cb)
   expect(cb.calls.count())

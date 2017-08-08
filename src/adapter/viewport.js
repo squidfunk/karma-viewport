@@ -38,16 +38,16 @@ export default class Viewport {
    * @property {HTMLIFrameElement} el_ - Viewport element
    *
    * @param {Object} config - Configuration
-   * @param {string} config.selector - Selector
+   * @param {string} config.context - Context selector
    * @param {Array<Object>} config.breakpoints - Breakpoints
    * @param {Window} context - Initialization context
    */
   constructor(config, context) {
     if (typeof config !== "object")
       throw new TypeError(`Invalid config: ${inspect(config)}`)
-    if (typeof config.selector !== "string" || !config.selector.length)
+    if (typeof config.context !== "string" || !config.context.length)
       throw new TypeError(
-        `Invalid config.selector: ${inspect(config.selector)}`)
+        `Invalid config.context: ${inspect(config.context)}`)
     if (!(config.breakpoints instanceof Array))
       throw new TypeError(
         `Invalid config.breakpoints: ${inspect(config.breakpoints)}`)
@@ -56,14 +56,14 @@ export default class Viewport {
 
     /* Retrieve viewport element travelling up */
     let current = context,
-        el = context.document.querySelector(config.selector)
+        el = context.document.querySelector(config.context)
     while (!el && current !== current.parent) {
       current = current.parent
-      el = current.document.querySelector(config.selector)
+      el = current.document.querySelector(config.context)
     }
     if (!(el instanceof current.HTMLIFrameElement))
       throw new ReferenceError(
-        `No match for selector: ${inspect(config.selector)}`)
+        `No match for context selector: ${inspect(config.context)}`)
 
     /* Set configuration and viewport element */
     this.config_  = config
