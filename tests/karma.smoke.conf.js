@@ -102,7 +102,7 @@ module.exports = karma => {
         "SauceConnect: please provide SAUCE_USERNAME " +
         "and SAUCE_ACCESS_KEY")
 
-    /* Run tests in latest Chrome and IE9 */
+    /* Run smoke test at both ends of the spectrum */
     const browsers = {
 
       /* Chrome (latest) */

@@ -32,7 +32,7 @@ const path = require("path")
 module.exports = karma => {
   const webpack = require("../webpack.config.js")()
 
-  /* Common configuration (single run and watch mode) */
+  /* Common configuration */
   const config = {
     basePath: __dirname,
 
