@@ -91,7 +91,7 @@ module.exports = karma => {
     browsers: ["Chrome"]
   }
 
-  /* Register this plugin with karma */
+  /* Register this plugin with Karma */
   karma.plugins.push(require.resolve(".."))
 
   /* Travis and SauceLabs integration */

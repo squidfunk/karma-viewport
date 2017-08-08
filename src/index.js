@@ -58,7 +58,7 @@ const framework = config => {
     pattern(path.resolve(__dirname, "adapter/index.js"))
   )
 
-  /* Register debug context middleware, if karma's iframe should be used */
+  /* Register debug context middleware, if Karma's iframe should be used */
   if (config.context === "#context" && client.useIframe) {
     config.beforeMiddleware = config.beforeMiddleware || []
     config.beforeMiddleware.push("viewport")
@@ -75,16 +75,16 @@ const framework = config => {
 framework.$inject = ["config"]
 
 /**
- * Initialize and configure middleware that runs before karma's middleware
+ * Initialize and configure middleware that runs before Karma's middleware
  *
- * By default, karma's own context iframe is used for the viewport logic, but
+ * By default, Karma's own context iframe is used for the viewport logic, but
  * the debug context doesn't include an iframe by default. If the requested
  * file is just the plain `debug.html` without the embed parameter (which is
  * introduced by this library) we just serve our monkey patched context iframe
- * including the actual debug context, served by karma's own file server.
+ * including the actual debug context, served by Karma's own file server.
  *
  * The %X_UA_COMPATIBLE% placeholder must be replaced with the respective query
- * parameter, as karma somehow relies on it.
+ * parameter, as Karma somehow relies on it.
  *
  * @return {Function} Connect-compatible middleware
  */
@@ -101,7 +101,7 @@ const middleware = () => {
       if (err)
         return next(err)
 
-      /* Replace placeholder (copied from karma's source) and serve */
+      /* Replace placeholder (copied from Karma's source) and serve */
       res.writeHead(200, { "Content-Type": "text/html" })
       res.end(data.toString()
         .replace("%X_UA_COMPATIBLE%",
