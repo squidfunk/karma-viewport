@@ -65,8 +65,36 @@ afterEach(() => {
 
 ### Advanced configuration
 
-Named breakpoints can be defined directly inside the Karma configuration using
-the `viewport` key:
+#### `config.viewport.selector`
+
+By default, `viewport` will target the default `iframe#context` of Karma,
+which is enabled through `client.useIframe` (see the [configuration guide][3]).
+This will also wrap the `debug` context to run inside the `iframe#context`.
+
+To run tests within a custom, separate context, e.g. `iframe#viewport`:
+
+``` js
+// karma.conf.js
+module.exports = function(config) {
+  config.set({
+    frameworks: ["viewport"]
+
+    // Viewport configuration
+    viewport: {
+      selector: "#viewport"
+    }
+  })
+}
+```
+
+Note that the `iframe#viewport` element must be present in the `context.html`
+and `debug.html` files that are served by Karma.
+
+  [3]: http://karma-runner.github.io/1.0/config/configuration-file.html
+
+#### `config.viewport.breakpoints`
+
+For easier, and less repetitive testing, named breakpoints can be easily set:
 
 ``` js
 // karma.conf.js
@@ -142,18 +170,6 @@ viewport.between("tablet", "screen", name => {
 ```
 
 After iteration, `viewport.reset()` is called internally.
-
-### Limitations
-
-This plugin relies on Karma executing all tests inside an `iframe`, which is
-enabled by default through `client.useIframe`. See the section in the
-[configuration guide][3] for more information.
-
-Furthermore, the `debug` context is patched and wrapped inside an `iframe`, so
-debugging works as well. This may interfere with code that relies on running
-within the parent window.
-
-  [3]: http://karma-runner.github.io/1.0/config/configuration-file.html
 
 ## License
 

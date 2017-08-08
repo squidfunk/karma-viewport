@@ -58,9 +58,11 @@ const framework = config => {
     pattern(path.resolve(__dirname, "adapter/index.js"))
   )
 
-  /* Register middleware before Karma's own middleware */
-  config.beforeMiddleware = config.beforeMiddleware || []
-  config.beforeMiddleware.push("viewport")
+  /* Register debug context middleware, if Karma's iframe should be used */
+  if (config.selector === "#context" && client.useIframe) {
+    config.beforeMiddleware = config.beforeMiddleware || []
+    config.beforeMiddleware.push("viewport")
+  }
 
   /* Register preprocessor for viewport configuration */
   config.preprocessors = config.preprocessors || {}
@@ -75,11 +77,11 @@ framework.$inject = ["config"]
 /**
  * Initialize and configure middleware that runs before Karma's middleware
  *
- * karma-viewport relies on the context iframe being present. This is not true
- * for the debug context, so we need to patch it. If the requested file is just
- * the plain `debug.html` without the embed parameter (which is introduced by
- * this library) we just serve our monkey patched context iframe including the
- * actual debug context, which is served by Karma's own file server.
+ * By default, Karma's own context iframe is used for the viewport logic, but
+ * the debug context doesn't include an iframe by default. If the requested
+ * file is just the plain `debug.html` without the embed parameter (which is
+ * introduced by this library) we just serve our monkey patched context iframe
+ * including the actual debug context, served by Karma's own file server.
  *
  * The %X_UA_COMPATIBLE% placeholder must be replaced with the respective query
  * parameter, as Karma somehow relies on it.
@@ -138,8 +140,8 @@ const preprocessor = (viewport, client) => {
 
     /* Karma must run inside an iframe, if the context defaults */
     if (config.selector === "#context" && !client.useIframe)
-      throw new Error("Invalid configuration: " +
-        "client.useIframe must be set to true for karma-viewport to function")
+      throw new Error("Invalid configuration: client.useIframe " +
+        "must be set to true or a different selector must be given")
 
     /* Store viewport configuration globally */
     done(`window.__viewport__ = ${JSON.stringify(config)}`)
