@@ -1,6 +1,6 @@
 {
   "name": "karma-viewport",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Karma viewport resizer",
   "keywords": [
     "breakpoint",
