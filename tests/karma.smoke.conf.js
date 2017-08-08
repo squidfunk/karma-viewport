@@ -29,6 +29,9 @@ const moniker = require("moniker")
  * ------------------------------------------------------------------------- */
 
 module.exports = karma => {
+  const webpack = require("../webpack.config.js")()
+
+  /* Common configuration */
   const config = {
     basePath: __dirname,
 
@@ -42,6 +45,17 @@ module.exports = karma => {
     files: [
       "smoke/*.js"
     ],
+
+    /* Preprocessors */
+    preprocessors: {
+      "smoke/*.js": [
+        "webpack",
+        "sourcemap"
+      ]
+    },
+
+    /* Webpack configuration */
+    webpack,
 
     /* Viewport configuration */
     viewport: {
