@@ -54,7 +54,7 @@ export default class Viewport {
     if (!context || !(context instanceof Window))
       throw new TypeError(`Invalid context: ${inspect(context)}`)
 
-    /* Retrieve viewport element travelling up */
+    /* Retrieve context element travelling up */
     let current = context,
         el = context.document.querySelector(config.context)
     while (!el && current !== current.parent) {
@@ -65,8 +65,8 @@ export default class Viewport {
       throw new ReferenceError(
         `No match for context selector: ${inspect(config.context)}`)
 
-    /* Set configuration and viewport element */
-    this.config_  = config
+    /* Set configuration and context element */
+    this.config_ = config
     this.el_ = el
   }
 
@@ -228,9 +228,9 @@ export default class Viewport {
   }
 
   /**
-   * Retrieve viewport element
+   * Retrieve context element
    *
-   * @return {HTMLIFrameElement} Viewport element
+   * @return {HTMLIFrameElement} context element
    */
   get element() {
     return this.el_
