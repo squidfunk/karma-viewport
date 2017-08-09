@@ -101,6 +101,15 @@ describe("Viewport", () => {
       )
     })
 
+    /* #load */
+    describe("#load", () => {
+
+      /* Test: should invoke callback */
+      it("should invoke callback",
+        loadShouldInvokeCallback
+      )
+    })
+
     /* #set */
     describe("#set", () => {
 
@@ -153,6 +162,16 @@ describe("Viewport", () => {
 function constructorShouldResolveContextSelector() {
   expect(new Viewport(this.config, this.context).element)
     .toBe(this.el)
+}
+
+/* ----------------------------------------------------------------------------
+ * Definitions: #load
+ * ------------------------------------------------------------------------- */
+
+/* Test: #load should invoke callback */
+function loadShouldInvokeCallback(done) {
+  new Viewport(this.config, this.context)
+    .load("/debug.html", done)
 }
 
 /* ----------------------------------------------------------------------------

@@ -118,6 +118,30 @@ describe("Viewport", () => {
     )
   })
 
+  /* #load */
+  describe("#load", () => {
+
+    /* Test: should set context location */
+    it("should set context location",
+      loadShouldSetContextLocation
+    )
+
+    /* Test: should throw on empty URL */
+    it("should throw on empty URL",
+      loadShouldThrowOnEmptyURL
+    )
+
+    /* Test: should throw on invalid URL */
+    it("should throw on invalid URL",
+      loadShouldThrowOnInvalidURL
+    )
+
+    /* Test: should throw on invalid callback */
+    it("should throw on invalid callback",
+      loadShouldThrowOnInvalidCallback
+    )
+  })
+
   /* #set */
   describe("#set", () => {
 
@@ -297,6 +321,45 @@ function constructorShouldThrowOnInvalidContext() {
 }
 
 /* ----------------------------------------------------------------------------
+ * Definitions: #load
+ * ------------------------------------------------------------------------- */
+
+/* Test: #load should set context location */
+function loadShouldSetContextLocation() {
+  new Viewport(this.config, this.context)
+    .load("/debug.html", () => {})
+  expect(this.el.src)
+    .toContain("/debug.html")
+}
+
+/* Test: #load should throw on empty URL */
+function loadShouldThrowOnEmptyURL() {
+  expect(() => {
+    new Viewport(this.config, this.context)
+      .load("", () => {})
+  }).toThrow(
+    new TypeError("Invalid URL: ''"))
+}
+
+/* Test: #load should throw on invalid URL */
+function loadShouldThrowOnInvalidURL() {
+  expect(() => {
+    new Viewport(this.config, this.context)
+      .load(null, () => {})
+  }).toThrow(
+    new TypeError("Invalid URL: null"))
+}
+
+/* Test: #load should throw on invalid callback */
+function loadShouldThrowOnInvalidCallback() {
+  expect(() => {
+    new Viewport(this.config, this.context)
+      .load("irrelevant", null)
+  }).toThrow(
+    new TypeError("Invalid callback"))
+}
+
+/* ----------------------------------------------------------------------------
  * Definitions: #set
  * ------------------------------------------------------------------------- */
 
@@ -412,8 +475,6 @@ function betweenShouldInvokeCallbackOnBreakpoints() {
     .toHaveBeenCalledWith("mobile")
   expect(cb)
     .toHaveBeenCalledWith("tablet")
-  expect(cb.calls.count())
-    .toEqual(2)
 }
 
 /* Test: #between should throw on invalid callback */
@@ -439,8 +500,6 @@ function eachShouldInvokeCallbackOnBreakpoints() {
     .toHaveBeenCalledWith("tablet")
   expect(cb)
     .toHaveBeenCalledWith("screen")
-  expect(cb.calls.count())
-    .toEqual(3)
 }
 
 /* Test: #each should throw on invalid callback */
@@ -464,8 +523,6 @@ function fromShouldInvokeCallbackOnBreakpoints() {
     .toHaveBeenCalledWith("tablet")
   expect(cb)
     .toHaveBeenCalledWith("screen")
-  expect(cb.calls.count())
-    .toEqual(2)
 }
 
 /* Test: #from should throw on invalid callback */
@@ -490,8 +547,6 @@ function toShouldInvokeCallbackOnBreakpoints() {
     .toHaveBeenCalledWith("mobile")
   expect(cb)
     .toHaveBeenCalledWith("tablet")
-  expect(cb.calls.count())
-    .toEqual(2)
 }
 
 /* Test: #to should throw on invalid callback */
