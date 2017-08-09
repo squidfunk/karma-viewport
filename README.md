@@ -88,7 +88,14 @@ module.exports = function(config) {
 ```
 
 Note that the `iframe#viewport` element must be present in the `context.html`
-and `debug.html` files that are served by Karma.
+and `debug.html` files that are served by Karma. Using a separate, custom
+context makes it possible to load entire webpages for testing:
+
+``` js
+beforeEach(done => {
+  viewport.load("/path/to/fixture.html", done)
+})
+```
 
   [3]: http://karma-runner.github.io/1.0/config/configuration-file.html
 
