@@ -71,6 +71,26 @@ export default class Viewport {
   }
 
   /**
+   * Load and embed document into viewport
+   *
+   * @param {string} url - URL of document to load
+   * @param {Function} cb - Callback to execute after document was loaded
+   */
+  load(url, cb) {
+    if (typeof url !== "string" || !url.length)
+      throw new TypeError(`Invalid URL: ${inspect(url)}`)
+    if (typeof cb !== "function")
+      throw new TypeError("Invalid callback")
+
+    /* Only execute callback once */
+    this.el_.onload = () => {
+      this.el_.onload = null
+      cb()
+    }
+    this.el_.src = url
+  }
+
+  /**
    * Set viewport to breakpoint identifier, number or array
    *
    * @param {...(string|number|Array<number>)} args - Arguments
@@ -143,7 +163,7 @@ export default class Viewport {
     /* Resolve breakpoints and execute callback after resizing */
     resolve(this.config_.breakpoints, first, last).forEach(breakpoint => {
       this.set(breakpoint.size.width, breakpoint.size.height)
-      cb(breakpoint.name) // TODO: chain/return promises for async code!
+      cb(breakpoint.name)
     })
 
     /* Reset viewport */
