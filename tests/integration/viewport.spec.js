@@ -78,11 +78,11 @@ describe("Viewport", () => {
       this.context = window
     })
 
-    /* Cleanup fixtures and reset viewport element */
+    /* Cleanup fixtures and reset viewport */
     afterEach(function() {
       fixture.cleanup()
 
-      /* Reset viewport element */
+      /* Reset viewport */
       this.el.style.width = ""
       this.el.style.height = ""
     })
