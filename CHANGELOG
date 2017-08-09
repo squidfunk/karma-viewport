@@ -1,3 +1,7 @@
+karma-viewport-0.4.1 (2017-08-09)
+
+  * Added support to load documents in iframe
+
 karma-viewport-0.4.0 (2017-08-08)
 
   * Renamed configuration option selector into context
