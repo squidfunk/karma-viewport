@@ -70,7 +70,7 @@ const framework = config => {
 }
 
 /* Dependency injection */
-framework.$inject = ["config", "client"]
+framework.$inject = ["config"]
 
 /**
  * Initialize and configure middleware that runs before Karma's middleware
