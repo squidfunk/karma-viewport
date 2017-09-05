@@ -58,11 +58,9 @@ const framework = config => {
     pattern(path.resolve(__dirname, "adapter/index.js"))
   )
 
-  /* Register debug context middleware, if Karma's iframe should be used */
-  if (config.context === "#context" && client.useIframe) {
-    config.beforeMiddleware = config.beforeMiddleware || []
-    config.beforeMiddleware.push("viewport")
-  }
+  /* Register debug context middleware */
+  config.beforeMiddleware = config.beforeMiddleware || []
+  config.beforeMiddleware.push("viewport")
 
   /* Register preprocessor for viewport configuration */
   config.preprocessors = config.preprocessors || {}
@@ -72,14 +70,14 @@ const framework = config => {
 }
 
 /* Dependency injection */
-framework.$inject = ["config"]
+framework.$inject = ["config", "client"]
 
 /**
  * Initialize and configure middleware that runs before Karma's middleware
  *
  * By default, Karma's own context iframe is used for the viewport logic, but
  * the debug context doesn't include an iframe by default. If the requested
- * file is just the plain `debug.html` without the embed parameter (which is
+ * file is just the plain `debug.html` without the `embed` parameter (which is
  * introduced by this library) we just serve our monkey patched context iframe
  * including the actual debug context, served by Karma's own file server.
  *
