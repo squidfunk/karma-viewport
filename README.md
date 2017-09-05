@@ -176,7 +176,7 @@ viewport.between("tablet", "screen", name => {
 })
 ```
 
-After iteration, `viewport.reset()` is called internally.
+After breakpoint iteration, `viewport.reset()` is called internally.
 
 ## License
 

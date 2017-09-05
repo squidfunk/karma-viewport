@@ -1,3 +1,7 @@
+karma-viewport-0.4.2 (2017-09-05)
+
+  * Fixed debug context middleware not being registered
+
 karma-viewport-0.4.1 (2017-08-09)
 
   * Added support to load documents in iframe
