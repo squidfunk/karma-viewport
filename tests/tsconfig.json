@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "alwaysStrict": true,
+    "baseUrl": ".",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "lib": [
+      "dom",
+      "es6",
+      "esnext"
+    ],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "outDir": "dist",
+    "paths": {
+      "~/*": ["../src/adapter/*"],
+      "_/*": ["./*"]
+    },
+    "preserveConstEnums": true,
+    "removeComments": true,
+    "sourceMap": true,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "stripInternal": true,
+    "target": "es5"
+  },
+  "include": [
+    ".",
+    "../typings"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

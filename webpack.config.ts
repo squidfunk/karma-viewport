@@ -20,17 +20,24 @@
  * IN THE SOFTWARE.
  */
 
-"use strict"
+import * as path from "path"
+import {
+  Configuration,
+  NoEmitOnErrorsPlugin,
+  optimize
+} from "webpack"
 
-const path = require("path")
-const webpack = require("webpack")
+/* Webpack plugins */
+const {
+  UglifyJsPlugin
+} = optimize
 
 /* ----------------------------------------------------------------------------
  * Configuration
  * ------------------------------------------------------------------------- */
 
-module.exports = function() {
-  const config = {
+export default (env?: { prod?: boolean }) => {
+  const config: Configuration = {
 
     /* Entrypoint */
     entry: [
@@ -40,10 +47,19 @@ module.exports = function() {
     /* Loaders */
     module: {
       rules: [
+
+        /* Babel ES6 transformations */
         {
           test: /\.js$/,
           use: "babel-loader",
-          exclude: /(\/node_modules\/|\/dist\/)/
+          exclude: /(\/node_modules\/|\/dist\/)/                                // TODO: remove later
+        },
+
+        /* TypeScript */
+        {
+          test: /\.ts$/,
+          use: ["babel-loader", "ts-loader"],
+          exclude: /\/node_modules\//
         }
       ]
     },
@@ -60,7 +76,7 @@ module.exports = function() {
     plugins: [
 
       /* Don't emit assets if there were errors */
-      new webpack.NoEmitOnErrorsPlugin()
+      new NoEmitOnErrorsPlugin()
     ],
 
     /* Module resolver */
@@ -69,27 +85,33 @@ module.exports = function() {
         __dirname,
         path.resolve(__dirname, "node_modules")
       ],
-      extensions: [".js", ".json"]
+      extensions: [".ts", ".js", ".json"]
     },
 
-    /* Enable sourcemaps */
-    devtool: "inline-source-map"
+    /* Sourcemaps */
+    devtool: "source-map"
   }
 
   /* Build for production environment */
-  if (process.env.NODE_ENV === "production") {
+  if (env && env.prod) {
 
-    /* Beautify sources */
-    config.plugins.push(
-      new webpack.optimize.UglifyJsPlugin({
-        beautify: true,
-        compress: false,
-        mangle: false,
-        output: {
-          comments: false,
-          indent_level: 2,
-          width: 80
-        }
+    /* Uglify sources */
+    config.plugins!.push(
+      new UglifyJsPlugin({
+        comments: false,
+        compress: {
+          warnings: false,
+          screw_ie8: true,
+          conditionals: true,
+          unused: true,
+          comparisons: true,
+          sequences: true,
+          dead_code: true,
+          evaluate: true,
+          if_return: true,
+          join_vars: true
+        },
+        sourceMap: true
       }))
   }
 

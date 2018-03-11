@@ -21,11 +21,9 @@
 # macOS internals
 .DS_Store
 
-# NPM
+# NPM-related
 /node_modules
 /npm-debug.log*
-/yarn-error.log
-yarn.lock
 
 # Source files
 /scripts
@@ -44,6 +42,7 @@ yarn.lock
 .gitignore
 .npmignore
 .travis.yml
+package-lock.json
 webpack.config.js
 
 # Git-related

@@ -20,26 +20,13 @@
  * IN THE SOFTWARE.
  */
 
+import { Chance } from "chance"
+
 /* ----------------------------------------------------------------------------
- * Functions
+ * Variables
  * ------------------------------------------------------------------------- */
 
 /**
- * Super-lightweight value inspection
- *
- * util.inspect for the poor. However, it works reasonably well and does not
- * blow up the size of the build by 15kb.
- *
- * @param {*} value - Value
- *
- * @return {string} Stringified value
+ * Chance.js instance to generate random values
  */
-export default value => {
-  if (typeof value === "object")
-    return JSON.stringify(value, null, 2).replace(/\s+/g, " ")
-  else if (typeof value === "string")
-    return `'${value}'`
-  else
-    // eslint-disable-next-line prefer-template
-    return ("" + value).replace(/\s+/g, " ")
-}
+export const chance = new Chance()

@@ -21,10 +21,9 @@
 # macOS internals
 .DS_Store
 
-# NPM
+# NPM-related
 /node_modules
 /npm-debug.log*
-/yarn-error.log
 
 # Distribution files
 /dist
@@ -32,3 +31,6 @@
 
 # Coverage reports
 /coverage
+
+# Generated typings
+src/**/*.d.ts
