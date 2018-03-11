@@ -22,7 +22,7 @@ language: node_js
 sudo: false
 
 # Node.js version and necessary services
-node_js: 5
+node_js: 8
 
 # Limit clone depth to 5, to speed up build
 git:
@@ -30,16 +30,15 @@ git:
 
 # Cache dependencies
 cache:
-  yarn: true
   directories:
     - node_modules
 
 # Perform build, tests and release
 script:
-  - yarn run lint
-  - yarn run build
-  - yarn run smoke
-  - yarn run test
+  - npm run lint
+  - npm run build
+  - npm run smoke
+  - npm run test
 
 # Release specification
 deploy:
