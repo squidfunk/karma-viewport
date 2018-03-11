@@ -20,58 +20,64 @@
  * IN THE SOFTWARE.
  */
 
-import { inspect } from "~/adapter/util/inspect"
+import { Schema as Configuration } from "~/config/schema"
 
 import { chance } from "_/helpers"
 
 /* ----------------------------------------------------------------------------
- * Tests
+ * Values
  * ------------------------------------------------------------------------- */
 
-/* Utility functions */
-describe("util/", () => {
+/**
+ * Viewport context selector
+ */
+const id = chance.string({ pool: "abcdefghijklmnopqrstuvwxyz" })
 
-  /* inspect */
-  describe("inspect", () => {
+/* ----------------------------------------------------------------------------
+ * Mocks
+ * ------------------------------------------------------------------------- */
 
-    /* Test: should handle undefined */
-    it("should handle undefined", () => {
-      expect(inspect(undefined)).toEqual("undefined")
-    })
+/**
+ * Mock viewport configuration
+ *
+ * @return Viewport configuration
+ */
+export function mockViewportConfiguration(): Readonly<Configuration> {
+  return {
+    context: `#${id}`,
+    breakpoints: [
+      {
+        name: "mobile",
+        size: {
+          width: 320,
+          height: 480
+        }
+      },
+      {
+        name: "tablet",
+        size: {
+          width: 768,
+          height: 1024
+        }
+      },
+      {
+        name: "screen",
+        size: {
+          width: 1440,
+          height: 900
+        }
+      }
+    ]
+  }
+}
 
-    /* Test: should handle null */
-    it("should handle null", () => {
-      // tslint:disable-next-line no-null-keyword
-      expect(inspect(null)).toEqual("null")
-    })
-
-    /* Test: should handle number */
-    it("should handle number", () => {
-      const value = chance.integer()
-      expect(inspect(value)).toEqual(`${value}`)
-    })
-
-    /* Test: should handle string */
-    it("should handle string", () => {
-      const value = chance.string()
-      expect(inspect(value)).toEqual(`'${value}'`)
-    })
-
-    /* Test: should handle empty string */
-    it("should handle empty string", () => {
-      expect(inspect("")).toEqual("''")
-    })
-
-    /* Test: should handle object */
-    it("should handle object", () => {
-      expect(inspect({ data: true }))
-        .toEqual("{ \"data\": true }")
-    })
-
-    /* Test: should handle function */
-    it("should handle function", () => {
-      expect(inspect((x: any, y: any) => x + y))
-        .toEqual("function (x, y) { return x + y; }")
-    })
-  })
-})
+/**
+ * Mock viewport context
+ *
+ * @return Viewport context
+ */
+export function mockViewportContext(): Readonly<HTMLIFrameElement> {
+  const context = document.createElement("iframe")
+  context.id = id
+  return context
+}

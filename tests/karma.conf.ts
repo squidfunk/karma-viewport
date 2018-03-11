@@ -49,7 +49,7 @@ export default (config: KarmaConfig & KarmaConfigOptions) => {
     module: {
       rules: [
         {
-          test: /\.ts?$/,
+          test: /\.ts$/,
           use: ["babel-loader", "ts-loader"],
           exclude: /\/node_modules\//
         }
@@ -61,7 +61,7 @@ export default (config: KarmaConfig & KarmaConfigOptions) => {
       ],
       extensions: [".js", ".ts"],
       alias: {
-        "~": path.resolve(__dirname, "../src/adapter"),
+        "~": path.resolve(__dirname, "../src"),
         "_": __dirname
       }
     },
@@ -79,13 +79,14 @@ export default (config: KarmaConfig & KarmaConfigOptions) => {
           stats.startTime -= 10000
         }
       })
-    ]
+    ],
+    devtool: "source-map"
   }
 
   /* Instrumentation for code coverage */
   if (config.singleRun)
     (webpack.module as WebpackNewModule).rules.push({
-      test: /\.tsx?$/,
+      test: /\.ts$/,
       use: "istanbul-instrumenter-loader?+esModules",
       include: path.resolve(__dirname, "../src"),
       enforce: "post"

@@ -19,7 +19,7 @@
     "noUnusedLocals": true,
     "outDir": "dist",
     "paths": {
-      "~/*": ["../src/adapter/*"],
+      "~/*": ["../src/*"],
       "_/*": ["./*"]
     },
     "preserveConstEnums": true,

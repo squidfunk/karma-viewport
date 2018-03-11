@@ -36,7 +36,7 @@ import {
   Injectable
 } from "karma"
 
-import { Schema as Viewport } from "./config/schema"
+import { Schema as ViewportConfiguration } from "./config/schema"
 
 /* ----------------------------------------------------------------------------
  * Functions
@@ -49,14 +49,12 @@ import { Schema as Viewport } from "./config/schema"
  *
  * @return File pattern
  */
-const pattern = (file: string): FilePattern => {
-  return {
-    pattern: file,
-    included: true,
-    served: true,
-    watched: false
-  }
-}
+const pattern = (file: string): FilePattern => ({
+  pattern: file,
+  included: true,
+  served: true,
+  watched: false
+})
 
 /**
  * Setup framework configuration
@@ -131,33 +129,35 @@ middleware.$inject = []                                                         
  *
  * @return Preprocessor function
  */
-const processor: Injectable = (viewport: Viewport, client: ClientOptions) => {
-  if (viewport && typeof viewport !== "object")
-    throw new TypeError(`Invalid viewport configuration: ${viewport}`)
+const preprocessor: Injectable =
+  (viewport: ViewportConfiguration, client: ClientOptions) => {
+    if (viewport && typeof viewport !== "object")
+      throw new TypeError(`Invalid viewport configuration: ${viewport}`)
 
-  /* Return preprocessor function */
-  return (content: string, file: string, done: (result: string) => void) => {
-    const schema = require("./config/schema")
-    const config = Object.assign(JSON.parse(content), viewport)
+    /* Return preprocessor function */
+    return (content: string, file: string, done: (result: string) => void) => {
+      const schema = require("./config/schema")
+      const config: ViewportConfiguration =
+        Object.assign(JSON.parse(content), viewport)
 
-    /* Validate viewport configuration */
-    const result = validate(config, schema)
-    if (result.errors.length)
-      throw new TypeError(
-        `Invalid viewport configuration: ${result.errors[0].stack}`)
+      /* Validate viewport configuration */
+      const result = validate(config, schema)
+      if (result.errors.length)
+        throw new TypeError(
+          `Invalid viewport configuration: ${result.errors[0].stack}`)
 
-    /* Karma must run inside an iframe, if the context defaults */
-    if (config.context === "#context" && !client.useIframe)
-      throw new Error("Invalid configuration: client.useIframe " +
-        "must be set to true or a different context selector must be given")
+      /* Karma must run inside an iframe, if the context defaults */
+      if (config.context === "#context" && !client.useIframe)
+        throw new Error("Invalid configuration: client.useIframe " +
+          "must be set to true or a different context selector must be given")
 
-    /* Store viewport configuration globally */
-    done(`window.__viewport__ = ${JSON.stringify(config)}`)
+      /* Store viewport configuration globally */
+      done(`window.__viewport__ = ${JSON.stringify(config, undefined, 2)}`)
+    }
   }
-}
 
 /* Dependency injection */
-processor.$inject = ["config.viewport", "config.client"]
+preprocessor.$inject = ["config.viewport", "config.client"]
 
 /* ----------------------------------------------------------------------------
  * Export with ES5 compatibility
@@ -166,5 +166,5 @@ processor.$inject = ["config.viewport", "config.client"]
 module.exports = {
   "framework:viewport": ["factory", framework],
   "middleware:viewport": ["factory", middleware],
-  "preprocessor:viewport": ["factory", processor]
+  "preprocessor:viewport": ["factory", preprocessor]
 }
