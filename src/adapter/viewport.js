@@ -52,7 +52,7 @@ export default class Viewport {
       throw new TypeError(
         `Invalid config.breakpoints: ${inspect(config.breakpoints)}`)
     if (!context || !(context instanceof Window))
-      throw new TypeError(`Invalid context: ${inspect(context)}`)
+      throw new TypeError(`Invalid context: ${inspect(context)}`)               // TODO: only do typings here
 
     /* Retrieve context element travelling up */
     let current = context,
@@ -133,6 +133,9 @@ export default class Viewport {
     this.el_.getBoundingClientRect()
   }
 
+  // TODO: add typings! "Breakpoint" should be a type and referenced in karma
+  // and exposed through typings!
+
   /**
    * Reset viewport
    */
@@ -163,7 +166,7 @@ export default class Viewport {
     /* Resolve breakpoints and execute callback after resizing */
     resolve(this.config_.breakpoints, first, last).forEach(breakpoint => {
       this.set(breakpoint.size.width, breakpoint.size.height)
-      cb(breakpoint.name)
+      cb(breakpoint.name)                                                       // TODO: async callback!? async await? promise?
     })
 
     /* Reset viewport */

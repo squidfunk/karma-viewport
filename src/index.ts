@@ -20,12 +20,23 @@
  * IN THE SOFTWARE.
  */
 
-"use strict"
+import * as fs from "fs"
+import * as path from "path"
+import * as url from "url"
 
-const fs = require("fs")
-const path = require("path")
-const url = require("url")
-const validate = require("jsonschema").validate
+import {
+  ServerRequest,
+  ServerResponse
+} from "http"
+import { validate } from "jsonschema"
+import {
+  ClientOptions,
+  ConfigOptions,
+  FilePattern,
+  Injectable
+} from "karma"
+
+import { Schema as Viewport } from "./config/schema"
 
 /* ----------------------------------------------------------------------------
  * Functions
@@ -34,11 +45,11 @@ const validate = require("jsonschema").validate
 /**
  * Return specification for file server/watcher
  *
- * @param {string} file - File
+ * @param file - File
  *
- * @return {Object} Specification
+ * @return File pattern
  */
-const pattern = file => {
+const pattern = (file: string): FilePattern => {
   return {
     pattern: file,
     included: true,
@@ -50,10 +61,10 @@ const pattern = file => {
 /**
  * Setup framework configuration
  *
- * @param {Object} config - Karma configuration
+ * @param config - Karma configuration
  */
-const framework = config => {
-  config.files.push(
+const framework: Injectable = (config: ConfigOptions) => {
+  config.files!.push(
     pattern(path.resolve(__dirname, "config/default.json")),
     pattern(path.resolve(__dirname, "adapter/index.js"))
   )
@@ -84,11 +95,11 @@ framework.$inject = ["config"]
  * The %X_UA_COMPATIBLE% placeholder must be replaced with the respective query
  * parameter, as Karma somehow relies on it.
  *
- * @return {Function} Connect-compatible middleware
+ * @return Connect-compatible middleware
  */
-const middleware = () => {
-  return (req, res, next) => {
-    const uri = url.parse(req.url, true)
+const middleware: Injectable = () =>
+  (req: ServerRequest, res: ServerResponse, next: (err?: Error) => void) => {
+    const uri = url.parse(req.url!, true)
     if (uri.pathname !== "/debug.html" ||
         typeof uri.query.embed !== "undefined")
       return next()
@@ -108,25 +119,24 @@ const middleware = () => {
           '" />'), "utf-8")
     })
   }
-}
 
 /* Dependency injection */
-middleware.$inject = []
+middleware.$inject = []                                                         // TODO: necessary?
 
 /**
  * Inject custom configuration
  *
- * @param {Object} viewport - Viewport configuration
- * @param {Object} client - Client configuration
+ * @param viewport - Viewport configuration
+ * @param client - Client configuration
  *
- * @return {Function} Preprocessor function
+ * @return Preprocessor function
  */
-const preprocessor = (viewport, client) => {
+const processor: Injectable = (viewport: Viewport, client: ClientOptions) => {
   if (viewport && typeof viewport !== "object")
     throw new TypeError(`Invalid viewport configuration: ${viewport}`)
 
   /* Return preprocessor function */
-  return (content, file, done) => {
+  return (content: string, file: string, done: (result: string) => void) => {
     const schema = require("./config/schema")
     const config = Object.assign(JSON.parse(content), viewport)
 
@@ -147,7 +157,7 @@ const preprocessor = (viewport, client) => {
 }
 
 /* Dependency injection */
-preprocessor.$inject = ["config.viewport", "config.client"]
+processor.$inject = ["config.viewport", "config.client"]
 
 /* ----------------------------------------------------------------------------
  * Export with ES5 compatibility
@@ -156,5 +166,5 @@ preprocessor.$inject = ["config.viewport", "config.client"]
 module.exports = {
   "framework:viewport": ["factory", framework],
   "middleware:viewport": ["factory", middleware],
-  "preprocessor:viewport": ["factory", preprocessor]
+  "preprocessor:viewport": ["factory", processor]
 }
