@@ -20,7 +20,7 @@
  * IN THE SOFTWARE.
  */
 
-import { Viewport } from "~/adapter/viewport"
+import { resolve, Viewport } from "~/adapter/viewport"
 
 import { chance } from "_/helpers"
 import {
@@ -50,6 +50,66 @@ describe("Viewport", () => {
     document.body.removeChild(context)
   })
 
+  /* resolve */
+  describe("resolve", () => {
+
+    /* Test: should return first breakpoint */
+    it("should return first breakpoint", () => {
+      const breakpoints = resolve(config.breakpoints, "mobile")
+      expect(breakpoints).toEqual(jasmine.any(Array))
+      expect(breakpoints.length).toEqual(1)
+      expect(breakpoints[0]).toEqual(config.breakpoints[0])
+    })
+
+    /* Test: should return middle breakpoint */
+    it("should return middle breakpoint", () => {
+      const breakpoints = resolve(config.breakpoints, "tablet")
+      expect(breakpoints).toEqual(jasmine.any(Array))
+      expect(breakpoints.length).toEqual(1)
+      expect(breakpoints[0]).toEqual(config.breakpoints[1])
+    })
+
+    /* Test: should return last breakpoint */
+    it("should return last breakpoint", () => {
+      const breakpoints = resolve(config.breakpoints, "screen")
+      expect(breakpoints).toEqual(jasmine.any(Array))
+      expect(breakpoints.length).toEqual(1)
+      expect(breakpoints[0]).toEqual(config.breakpoints[2])
+    })
+
+    /* Test: should return first to first breakpoint */
+    it("should return first to first breakpoint", () => {
+      const breakpoints = resolve(config.breakpoints, "mobile", "mobile")
+      expect(breakpoints).toEqual(jasmine.any(Array))
+      expect(breakpoints.length).toEqual(1)
+      expect(breakpoints[0]).toEqual(config.breakpoints[0])
+    })
+
+    /* Test: should return first to last breakpoint */
+    it("should return first to last breakpoint", () => {
+      const breakpoints = resolve(config.breakpoints, "mobile", "screen")
+      expect(breakpoints).toEqual(jasmine.any(Array))
+      expect(breakpoints.length).toEqual(3)
+      expect(breakpoints).toEqual(config.breakpoints)
+    })
+
+    /* Test: should return last to last breakpoint */
+    it("should return last to last breakpoint", () => {
+      const breakpoints = resolve(config.breakpoints, "screen", "screen")
+      expect(breakpoints).toEqual(jasmine.any(Array))
+      expect(breakpoints.length).toEqual(1)
+      expect(breakpoints[0]).toEqual(config.breakpoints[2])
+    })
+
+    /* Test: should throw on invalid breakpoint */
+    it("should throw on invalid breakpoint", () => {
+      expect(() => {
+        resolve([], "invalid")
+      }).toThrow(
+        new ReferenceError("Invalid breakpoint: 'invalid'"))
+    })
+  })
+
   /* #constructor */
   describe("#constructor", () => {
 
@@ -63,7 +123,7 @@ describe("Viewport", () => {
     it("should resolve context", () => {
       const querySelector = mockQuerySelector(context)
       const viewport = new Viewport(config, window)
-      expect(viewport.element).toBe(context)
+      expect(viewport.context).toBe(context)
       expect(querySelector)
         .toHaveBeenCalledWith(config.context)
     })
@@ -74,8 +134,7 @@ describe("Viewport", () => {
       mockQuerySelector(null)
       expect(() => {
         new Viewport(config, window)
-      }).toThrow(
-        new TypeError(`No match for selector: '${config.context}'`))
+      }).toThrow(new TypeError(`No match for selector: '${config.context}'`))
     })
   })
 
@@ -114,8 +173,8 @@ describe("Viewport", () => {
       expect(context.style.height).toEqual(`${height}px`)
     })
 
-    /* Test: should resolve and set breakpoint */
-    it("should resolve and set breakpoint", () => {
+    /* Test: should set width and height of breakpoint */
+    it("should set width and height of breakpoint", () => {
       const viewport = new Viewport(config, window)
       viewport.set("tablet")
       expect(context.style.width)
@@ -139,8 +198,7 @@ describe("Viewport", () => {
       const viewport = new Viewport(config, window)
       expect(() => {
         viewport.set("invalid")
-      }).toThrow(
-        new ReferenceError("Invalid breakpoint: 'invalid'"))
+      }).toThrow(new ReferenceError("Invalid breakpoint: 'invalid'"))
     })
 
     /* Test: should throw on invalid width */
@@ -149,8 +207,7 @@ describe("Viewport", () => {
       const width = chance.integer({ min: -400, max: -100 })
       expect(() => {
         viewport.set(width)
-      }).toThrow(
-        new TypeError(`Invalid breakpoint width: ${width}`))
+      }).toThrow(new TypeError(`Invalid breakpoint width: ${width}`))
     })
 
     /* Test: should throw on invalid width and height */
@@ -160,8 +217,7 @@ describe("Viewport", () => {
       const height = chance.integer({ min: -400, max: -100 })
       expect(() => {
         viewport.set(width, height)
-      }).toThrow(
-        new TypeError(`Invalid breakpoint width: ${width}`))
+      }).toThrow(new TypeError(`Invalid breakpoint width: ${width}`))
     })
 
     /* Test: should throw on invalid width */
@@ -171,8 +227,7 @@ describe("Viewport", () => {
       const height = chance.integer({ min: -400, max: -100 })
       expect(() => {
         viewport.set(width, height)
-      }).toThrow(
-        new TypeError(`Invalid breakpoint height: ${height}`))
+      }).toThrow(new TypeError(`Invalid breakpoint height: ${height}`))
     })
   })
 

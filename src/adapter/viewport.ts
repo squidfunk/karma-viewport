@@ -23,14 +23,47 @@
 import { Schema as Configuration } from "../config/schema"
 import { inspect } from "./util/inspect"
 
-import resolve from "./util/resolve"
-
 /* ----------------------------------------------------------------------------
  * Types
  * ------------------------------------------------------------------------- */
 
+/**
+ * Extend window element with queried custom type
+ *
+ * This is necessary, because every context (iframe) provides a separate window
+ * instance and comparing for instance of doesn't match across nested windows.
+ */
 interface WindowExt extends Window {
   HTMLIFrameElement?: typeof HTMLIFrameElement
+}
+
+/* ----------------------------------------------------------------------------
+ * Functions
+ * ------------------------------------------------------------------------- */
+
+/**
+ * Resolve relevant breakpoints
+ *
+ * @param breakpoints - Breakpoints
+ * @param first - First breakpoint name
+ * @param last - Last breakpoint name
+ *
+ * @return Selected breakpoints
+ */
+export function resolve(
+  breakpoints: Configuration["breakpoints"],
+  first: string, last: string = first
+) {
+  const [from, to] = [first, last].map(name => {
+    const index = breakpoints.findIndex(
+      breakpoint => breakpoint.name === name)
+    if (index === -1)
+      throw new ReferenceError(`Invalid breakpoint: ${inspect(name)}`)
+    return index
+  })
+
+  /* Return relevant breakpoints */
+  return breakpoints.slice(from, to + 1)
 }
 
 /* ----------------------------------------------------------------------------
@@ -236,7 +269,7 @@ export class Viewport {
    *
    * @return {HTMLIFrameElement} context element    // TODO: rename this into viewport.context
    */
-  public get element() {
+  public get context() {
     return this.context_
   }
 }

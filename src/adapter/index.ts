@@ -20,36 +20,12 @@
  * IN THE SOFTWARE.
  */
 
-import "array-findindex-polyfill"
-
-import { inspect } from "./inspect"
+import { Viewport } from "./viewport"
 
 /* ----------------------------------------------------------------------------
- * Functions
+ * Initialization
  * ------------------------------------------------------------------------- */
 
-/**
- * Resolve relevant breakpoints
- *
- * @param {Array<Object>} breakpoints - Breakpoints
- * @param {string} first - First breakpoint name
- * @param {string} [last] - Last breakpoint name
- *
- * @return {Array<Object>} Selected breakpoints
- */
-export default (breakpoints, first, last = first) => {
-  const [from, to] = [first, last].map(name => {
-    if (typeof name !== "string" || !name.length)
-      throw new TypeError(`Invalid breakpoint: ${inspect(name)}`)
-
-    /* Find the offset of the specified breakpoint */
-    const index = breakpoints.findIndex(
-      breakpoint => breakpoint.name === name)
-    if (index === -1)
-      throw new ReferenceError(`Invalid breakpoint: ${inspect(name)}`)
-    return index
-  })
-
-  /* Return relevant breakpoints */
-  return breakpoints.slice(from, to + 1)
-}
+((window, karma, config) => {
+  window.viewport = new Viewport(config, window)
+})(window, window.__karma__, window.__viewport__)
