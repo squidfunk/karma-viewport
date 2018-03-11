@@ -20,14 +20,34 @@
  * IN THE SOFTWARE.
  */
 
-import inspect from "./util/inspect"
+import { Schema as Configuration } from "../config/schema"
+import { inspect } from "./util/inspect"
+
 import resolve from "./util/resolve"
+
+/* ----------------------------------------------------------------------------
+ * Types
+ * ------------------------------------------------------------------------- */
+
+interface WindowExt extends Window {
+  HTMLIFrameElement?: typeof HTMLIFrameElement
+}
 
 /* ----------------------------------------------------------------------------
  * Class
  * ------------------------------------------------------------------------- */
 
-export default class Viewport {
+export class Viewport {
+
+  /**
+   * Viewport configuration
+   */
+  protected config_: Configuration
+
+  /**
+   * Viewport context
+   */
+  protected context_: HTMLIFrameElement
 
   /**
    * Create viewport resizer
@@ -35,59 +55,42 @@ export default class Viewport {
    * @constructor
    *
    * @property {Object} config_ - Configuration
-   * @property {HTMLIFrameElement} el_ - Viewport element
+   * @property {HTMLIFrameElement} context_ - Viewport element
    *
-   * @param {Object} config - Configuration
-   * @param {string} config.context - Context selector
-   * @param {Array<Object>} config.breakpoints - Breakpoints
-   * @param {Window} context - Initialization context
+   * @param config - Configuration
+   * @param parent - Initialization context
    */
-  constructor(config, context) {
-    if (typeof config !== "object")
-      throw new TypeError(`Invalid config: ${inspect(config)}`)
-    if (typeof config.context !== "string" || !config.context.length)
-      throw new TypeError(
-        `Invalid config.context: ${inspect(config.context)}`)
-    if (!(config.breakpoints instanceof Array))
-      throw new TypeError(
-        `Invalid config.breakpoints: ${inspect(config.breakpoints)}`)
-    if (!context || !(context instanceof Window))
-      throw new TypeError(`Invalid context: ${inspect(context)}`)               // TODO: only do typings here
+  public constructor(config: Configuration, parent: WindowExt) { // TODO: this must be renamed!!!!!!!!
 
     /* Retrieve context element travelling up */
-    let current = context,
-        el = context.document.querySelector(config.context)
+    let current = parent
+    let el = parent.document.querySelector(config.context)
     while (!el && current !== current.parent) {
-      current = current.parent
+      current = current.parent as WindowExt
       el = current.document.querySelector(config.context)
     }
-    if (!(el instanceof current.HTMLIFrameElement))
+    if (!(el instanceof current.HTMLIFrameElement!))
       throw new ReferenceError(
-        `No match for context selector: ${inspect(config.context)}`)
+        `No match for selector: ${inspect(config.context)}`)
 
     /* Set configuration and context element */
     this.config_ = config
-    this.el_ = el
+    this.context_ = el // TODO: context! el = viewport element which is resized
   }
 
   /**
    * Load and embed document into viewport
    *
-   * @param {string} url - URL of document to load
-   * @param {Function} cb - Callback to execute after document was loaded
+   * @param url - URL of document to load
+   * @param done - Callback to execute after document was loaded
    */
-  load(url, cb) {
-    if (typeof url !== "string" || !url.length)
-      throw new TypeError(`Invalid URL: ${inspect(url)}`)
-    if (typeof cb !== "function")
-      throw new TypeError("Invalid callback")
-
-    /* Only execute callback once */
-    this.el_.onload = () => {
-      this.el_.onload = null
-      cb()
+  public load(url: string, done: (err?: Error) => void) {
+    const load = () => {
+      this.context_.removeEventListener("load", load)
+      done()
     }
-    this.el_.src = url
+    this.context_.addEventListener("load", load)
+    this.context_.src = url
   }
 
   /**
@@ -95,7 +98,9 @@ export default class Viewport {
    *
    * @param {...(string|number|Array<number>)} args - Arguments
    */
-  set(...args) {
+  public set(width: number, height?: number): void
+  public set(breakpoint: string): void
+  public set(...args: any[]) {
 
     /* Width or breakpoint name */
     if (args.length === 1) {
@@ -105,15 +110,15 @@ export default class Viewport {
           throw new TypeError(`Invalid breakpoint width: ${width}`)
 
         /* Set width and height */
-        this.el_.style.width = `${width}px`
-        this.el_.style.height = ""
+        this.context_.style.width = `${width}px`
+        this.context_.style.height = ""
       } else {
         const [breakpoint] = resolve(this.config_.breakpoints, args[0])
         this.set(breakpoint.size.width, breakpoint.size.height)
       }
 
     /* Explicit width and height */
-    } else if (args.length === 2) {
+    } else {
       const [width, height] = args
       if (typeof width !== "number" || width <= 0)
         throw new TypeError(`Invalid breakpoint width: ${width}`)
@@ -121,16 +126,13 @@ export default class Viewport {
         throw new TypeError(`Invalid breakpoint height: ${height}`)
 
       /* Set width and height */
-      this.el_.style.width = `${width}px`
-      this.el_.style.height = `${height}px`
-
-    /* Too few or too many arguments */
-    } else {
-      throw new Error("Invalid arguments: expected 1 or 2 parameters")
+      this.context_.style.width = `${width}px`
+      this.context_.style.height = `${height}px`
     }
 
-    /* Force layout, so styles are sure to propagate */
-    this.el_.getBoundingClientRect()
+    /* Force layout, so styles are sure to propagate */ // TODO: request animation frame with promise!
+    // await viewport.set(250)
+    this.context_.getBoundingClientRect()
   }
 
   // TODO: add typings! "Breakpoint" should be a type and referenced in karma
@@ -139,12 +141,12 @@ export default class Viewport {
   /**
    * Reset viewport
    */
-  reset() {
-    this.el_.style.width = ""
-    this.el_.style.height = ""
+  public reset() {
+    this.context_.style.width = ""
+    this.context_.style.height = ""
 
     /* Force layout, so styles are sure to propagate */
-    this.el_.getBoundingClientRect()
+    this.context_.getBoundingClientRect()
   }
 
   /**
@@ -159,14 +161,13 @@ export default class Viewport {
    * @param {string} last - Last breakpoint name
    * @param {Function} cb - Callback to execute after resizing
    */
-  between(first, last, cb) {
-    if (typeof cb !== "function")
-      throw new TypeError("Invalid callback")
+  public between(first: string, last: string, cb: (name: string) => {}) {
 
     /* Resolve breakpoints and execute callback after resizing */
-    resolve(this.config_.breakpoints, first, last).forEach(breakpoint => {
+    resolve(this.config_.breakpoints, first, last).forEach((breakpoint: any) => {
       this.set(breakpoint.size.width, breakpoint.size.height)
-      cb(breakpoint.name)                                                       // TODO: async callback!? async await? promise?
+      cb(breakpoint.name)
+      // TODO: async callback!? async await? promise?
     })
 
     /* Reset viewport */
@@ -183,7 +184,7 @@ export default class Viewport {
    *
    * @param {Function} cb - Callback to execute after resizing
    */
-  each(cb) {
+  public each(cb: () => {}) {
     this.between(this.config_.breakpoints[0].name, this.config_.breakpoints[
       this.config_.breakpoints.length - 1
     ].name, cb)
@@ -200,7 +201,7 @@ export default class Viewport {
    * @param {string} first - First breakpoint name
    * @param {Function} cb - Callback to execute after resizing
    */
-  from(first, cb) {
+  public from(first: string, cb: () => {}) {
     this.between(first, this.config_.breakpoints[
       this.config_.breakpoints.length - 1
     ].name, cb)
@@ -217,7 +218,7 @@ export default class Viewport {
    * @param {string} last - Last breakpoint name
    * @param {Function} cb - Callback to execute after resizing
    */
-  to(last, cb) {
+  public to(last: string, cb: () => {}) {
     this.between(this.config_.breakpoints[0].name, last, cb)
   }
 
@@ -226,16 +227,16 @@ export default class Viewport {
    *
    * @return {Object} Configuration
    */
-  get config() {
+  public get config() {
     return this.config_
   }
 
   /**
    * Retrieve context element
    *
-   * @return {HTMLIFrameElement} context element
+   * @return {HTMLIFrameElement} context element    // TODO: rename this into viewport.context
    */
-  get element() {
-    return this.el_
+  public get element() {
+    return this.context_
   }
 }

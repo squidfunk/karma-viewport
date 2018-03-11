@@ -20,36 +20,16 @@
  * IN THE SOFTWARE.
  */
 
-import "array-findindex-polyfill"
-
-import { inspect } from "./inspect"
-
 /* ----------------------------------------------------------------------------
- * Functions
+ * Mocks
  * ------------------------------------------------------------------------- */
 
 /**
- * Resolve relevant breakpoints
+ * Mock document.querySelector returning the provided element or null
  *
- * @param {Array<Object>} breakpoints - Breakpoints
- * @param {string} first - First breakpoint name
- * @param {string} [last] - Last breakpoint name
- *
- * @return {Array<Object>} Selected breakpoints
+ * @return Viewport element
  */
-export default (breakpoints, first, last = first) => {
-  const [from, to] = [first, last].map(name => {
-    if (typeof name !== "string" || !name.length)
-      throw new TypeError(`Invalid breakpoint: ${inspect(name)}`)
-
-    /* Find the offset of the specified breakpoint */
-    const index = breakpoints.findIndex(
-      breakpoint => breakpoint.name === name)
-    if (index === -1)
-      throw new ReferenceError(`Invalid breakpoint: ${inspect(name)}`)
-    return index
-  })
-
-  /* Return relevant breakpoints */
-  return breakpoints.slice(from, to + 1)
+export function mockQuerySelector(el: HTMLElement | null): jasmine.Spy {
+  return spyOn(document, "querySelector")
+    .and.returnValue(el)
 }

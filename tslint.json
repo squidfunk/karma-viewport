@@ -82,6 +82,12 @@
         "variable-declaration": "onespace"
       }
     ],
+    "variable-name": [
+      true,
+      "allow-trailing-underscore",
+      "ban-keywords",
+      "check-format"
+    ],
     "whitespace": [
       true,
       "check-branch",
