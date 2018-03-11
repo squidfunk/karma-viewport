@@ -49,8 +49,8 @@ export default (config: KarmaConfig & KarmaConfigOptions) => {
     module: {
       rules: [
         {
-          test: /\.tsx?$/,
-          use: "ts-loader",
+          test: /\.ts?$/,
+          use: ["babel-loader", "ts-loader"],
           exclude: /\/node_modules\//
         }
       ]
@@ -105,13 +105,13 @@ export default (config: KarmaConfig & KarmaConfigOptions) => {
     /* Include fixtures and tests */
     files: [
       "fixtures/**/*",
-      "index.js"
+      "index.ts"
     ],
 
     /* Preprocessors */
     preprocessors: {
       "fixtures/**/*.html": ["html2js"],
-      "index.js": [
+      "index.ts": [
         "webpack",
         "sourcemap"
       ]

@@ -24,7 +24,17 @@
  * Entrypoint
  * ------------------------------------------------------------------------- */
 
-/* Load and execute tests */
-const tests = require.context("./", true, /\.spec\.ts$/)
-tests.keys()
-  .forEach(tests)
+/* Scoped to avoid name clashes */
+(() => {
+
+  /* Split according to test type */
+  const regexp = new RegExp("(unit|integration)")
+  const name = (file: string) => file
+    .split(regexp)[2] + ["unit", "integration"].indexOf(file.split(regexp)[1])
+
+  /* Load unit tests per component first, then integration tests */
+  const tests = require.context("./", true, /\.spec\.ts$/)
+  tests.keys()
+    .sort((a, b) => name(a).localeCompare(name(b)))
+    .forEach(tests)
+})()
