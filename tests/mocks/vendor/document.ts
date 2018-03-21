@@ -20,64 +20,16 @@
  * IN THE SOFTWARE.
  */
 
-import { ViewportConfiguration } from "~/adapter/viewport"
-
-import { chance } from "_/helpers"
-
-/* ----------------------------------------------------------------------------
- * Values
- * ------------------------------------------------------------------------- */
-
-/**
- * Viewport context selector
- */
-const id = chance.string({ pool: "abcdefghijklmnopqrstuvwxyz" })
-
 /* ----------------------------------------------------------------------------
  * Mocks
  * ------------------------------------------------------------------------- */
 
 /**
- * Mock viewport configuration
+ * Mock document.querySelector returning the provided element or null
  *
- * @return Viewport configuration
+ * @return document.querySelector spy
  */
-export function mockViewportConfiguration(): Readonly<ViewportConfiguration> {
-  return {
-    context: `#${id}`,
-    breakpoints: [
-      {
-        name: "mobile",
-        size: {
-          width: 320,
-          height: 480
-        }
-      },
-      {
-        name: "tablet",
-        size: {
-          width: 768,
-          height: 1024
-        }
-      },
-      {
-        name: "screen",
-        size: {
-          width: 1440,
-          height: 900
-        }
-      }
-    ]
-  }
-}
-
-/**
- * Mock viewport context
- *
- * @return Viewport context
- */
-export function mockViewportContext(): Readonly<HTMLIFrameElement> {
-  const context = document.createElement("iframe")
-  context.id = id
-  return context
+export function mockQuerySelector(el: HTMLElement | null): jasmine.Spy {
+  return spyOn(document, "querySelector")
+    .and.returnValue(el)
 }

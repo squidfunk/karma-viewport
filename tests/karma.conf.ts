@@ -20,79 +20,19 @@
  * IN THE SOFTWARE.
  */
 
-// import * as moniker from "moniker"
-import * as path from "path"
-
 import {
   Config as KarmaConfig,
   ConfigOptions as KarmaConfigOptions
 } from "karma"
-import {
-  Configuration as WebpackConfig,
-  NewModule as WebpackNewModule
-} from "webpack"
 
-/* ----------------------------------------------------------------------------
- * Plugins
- * ------------------------------------------------------------------------- */
-
-import EventHooksPlugin = require("event-hooks-webpack-plugin")
+import * as browsers from "./karma/browsers/unit.json"
+import { saucelabs, webpack } from "./karma/common"
 
 /* ----------------------------------------------------------------------------
  * Configuration
  * ------------------------------------------------------------------------- */
 
 export default (config: KarmaConfig & KarmaConfigOptions) => {
-
-  /* Webpack configuration */
-  const webpack: Partial<WebpackConfig> = {
-    module: {
-      rules: [
-        {
-          test: /\.ts$/,
-          use: ["babel-loader", "ts-loader"],
-          exclude: /\/node_modules\//
-        }
-      ]
-    },
-    resolve: {
-      modules: [
-        path.resolve(__dirname, "../node_modules")
-      ],
-      extensions: [".js", ".ts"],
-      alias: {
-        "~": path.resolve(__dirname, "../src"),
-        "_": __dirname
-      }
-    },
-    plugins: [
-
-      /* Hack: The webpack development middleware sometimes goes into a loop
-         on macOS when starting for the first time. This is a quick fix until
-         this issue is resolved. See: http://bit.ly/2AsizEn */
-      new EventHooksPlugin({
-        "watch-run": (compiler: any, done: () => {}) => {
-          compiler.startTime += 10000
-          done()
-        },
-        "done": (stats: any) => {
-          stats.startTime -= 10000
-        }
-      })
-    ],
-    devtool: "source-map"
-  }
-
-  /* Instrumentation for code coverage */
-  if (config.singleRun)
-    (webpack.module as WebpackNewModule).rules.push({
-      test: /\.ts$/,
-      use: "istanbul-instrumenter-loader?+esModules",
-      include: path.resolve(__dirname, "../src"),
-      enforce: "post"
-    })
-
-  /* Karma configuration */
   config.set({
     basePath: __dirname,
 
@@ -106,20 +46,20 @@ export default (config: KarmaConfig & KarmaConfigOptions) => {
     /* Include fixtures and tests */
     files: [
       "fixtures/**/*",
-      "index.ts"
+      "suites/unit/**/*.ts"
     ],
 
     /* Preprocessors */
     preprocessors: {
-      "fixtures/**/*.html": ["html2js"],
-      "index.ts": [
+      "**/*.html": ["html2js"],
+      "**/*.ts": [
         "webpack",
         "sourcemap"
       ]
     },
 
     /* Webpack configuration */
-    webpack,
+    webpack: webpack(config),
 
     /* Reporters */
     reporters: config.singleRun
@@ -137,10 +77,7 @@ export default (config: KarmaConfig & KarmaConfigOptions) => {
 
     /* Configuration for coverage reporter */
     coverageIstanbulReporter: {
-      reports: [
-        "html",
-        "text"
-      ]
+      reports: ["html", "text"]
     },
 
     /* Hack: Don't serve TypeScript files with "video/mp2t" mime type */
@@ -153,181 +90,11 @@ export default (config: KarmaConfig & KarmaConfigOptions) => {
       jasmine: {
         random: false
       }
-    }
-  })
+    },
 
-  // /* Travis and SauceLabs integration */
-  // if (process.env.TRAVIS || process.env.SAUCE) {
-  //   if (!process.env.SAUCE_USERNAME ||
-  //       !process.env.SAUCE_ACCESS_KEY)
-  //     throw new Error(
-  //       "SauceConnect: please provide SAUCE_USERNAME " +
-  //       "and SAUCE_ACCESS_KEY")
-  //
-  //   /* Define browsers to run tests on, see
-  //      https://wiki.saucelabs.com/display/DOCS/Platform+Configurator */
-  //   const browsers = {
-  //
-  //     /* Chrome (latest) */
-  //     chrome: {
-  //       base: "SauceLabs",
-  //       browserName: "chrome",
-  //       version: "latest",
-  //       platform: "Windows 7",
-  //       screenResolution: "1280x1024"
-  //     },
-  //
-  //     /* Chrome (latest - 1) */
-  //     chrome1: {
-  //       base: "SauceLabs",
-  //       browserName: "chrome",
-  //       version: "latest-1",
-  //       platform: "Windows 7",
-  //       screenResolution: "1280x1024"
-  //     },
-  //
-  //     /* Firefox (latest) */
-  //     firefox: {
-  //       base: "SauceLabs",
-  //       browserName: "firefox",
-  //       version: "latest",
-  //       platform: "Windows 7",
-  //       screenResolution: "1280x1024"
-  //     },
-  //
-  //     /* Firefox (latest - 1) */
-  //     firefox1: {
-  //       base: "SauceLabs",
-  //       browserName: "firefox",
-  //       version: "latest-1",
-  //       platform: "Windows 7",
-  //       screenResolution: "1280x1024"
-  //     },
-  //
-  //     /* Opera (latest) */
-  //     opera: {
-  //       base: "SauceLabs",
-  //       browserName: "opera",
-  //       version: "latest",
-  //       platform: "Windows 2008",
-  //       screenResolution: "1280x1024"
-  //     },
-  //
-  //     /* Edge 15 */
-  //     edge15: {
-  //       base: "SauceLabs",
-  //       browserName: "MicrosoftEdge",
-  //       version: "15",
-  //       platform: "Windows 10",
-  //       screenResolution: "1280x1024"
-  //     },
-  //
-  //     /* Edge 14 */
-  //     edge14: {
-  //       base: "SauceLabs",
-  //       browserName: "MicrosoftEdge",
-  //       version: "14",
-  //       platform: "Windows 10",
-  //       screenResolution: "1280x1024"
-  //     },
-  //
-  //     /* Edge 13 */
-  //     edge13: {
-  //       base: "SauceLabs",
-  //       browserName: "MicrosoftEdge",
-  //       version: "13",
-  //       platform: "Windows 10",
-  //       screenResolution: "1280x1024"
-  //     },
-  //
-  //     /* Internet Explorer 11 */
-  //     ie11: {
-  //       base: "SauceLabs",
-  //       browserName: "internet explorer",
-  //       version: "11",
-  //       platform: "Windows 10",
-  //       screenResolution: "1280x1024"
-  //     },
-  //
-  //     /* Internet Explorer 10 */
-  //     ie10: {
-  //       base: "SauceLabs",
-  //       browserName: "internet explorer",
-  //       version: "10",
-  //       platform: "Windows 8",
-  //       screenResolution: "1280x1024"
-  //     },
-  //
-  //     /* Internet Explorer 9 */
-  //     ie9: {
-  //       base: "SauceLabs",
-  //       browserName: "internet explorer",
-  //       version: "9",
-  //       platform: "Windows 7",
-  //       screenResolution: "1280x1024"
-  //     }
-  //   }
-  //
-  //   /* SauceLabs job name */
-  //   const id = process.env.TRAVIS
-  //     ? `${process.env.TRAVIS_REPO_SLUG} #${process.env.TRAVIS_BUILD_NUMBER}`
-  //     : `~ #${moniker.choose()}`
-  //
-  //   /* Configure SauceLabs integration */
-  //   config.concurrency = 5
-  //   config.sauceLabs = {
-  //     build: process.env.TRAVIS_BUILD_NUMBER,
-  //     testName: id,
-  //     recordVideo: false,
-  //     recordScreenshots: false
-  //   }
-  //
-  //   /* Set browsers */
-  //   config.browsers = Object.keys(browsers)
-  //   config.customLaunchers = browsers
-  //
-  //   /* Set reporters */
-  //   if (karma.singleRun) {
-  //     config.reporters.push("summary")
-  //   } else {
-  //     config.reporters.push("spec")
-  //     config.specReporter.suppressPassed = true
-  //   }
-  //
-  // /* Local environment */
-  // } else {
-  //
-  //   /* Set reporters and browsers */
-  //   config.reporters.push("clear-screen", "spec")
-  //   config.browsers = ["Chrome"]
-  // }
-  //
-  // /* Determine code coverage in single run */
-  // if (karma.singleRun) {
-  //
-  //   /* Load webpack config and add istanbul loader for code coverage */
-  //   webpack.module.rules.push({
-  //     test: /\.js$/,
-  //     loader: "istanbul-instrumenter-loader?+esModules",
-  //     include: path.resolve(__dirname, "../src")
-  //   })
-  //
-  //   /* Enable code coverage */
-  //   config.reporters.push("coverage-istanbul")
-  //   config.coverageIstanbulReporter = {
-  //     reports: [
-  //       "html",
-  //       "text-summary"
-  //     ]
-  //   }
-  //
-  //   /* Continuous integration reporters */
-  //   if (process.env.TRAVIS || process.env.SAUCE) {
-  //     config.reporters.push("saucelabs")
-  //     config.coverageIstanbulReporter.reports = ["lcovonly"]
-  //   }
-  // }
-  //
-  // /* We're good to go */
-  // karma.set(config)
+    /* Configuration overrides */
+    ...(process.env.TRAVIS || process.env.SAUCE
+      ? saucelabs(config, browsers)
+      : {})
+  })
 }

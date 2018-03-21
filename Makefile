@@ -33,8 +33,7 @@ node_modules:
 # -----------------------------------------------------------------------------
 
 # Build theme for distribution with Webpack
-dist/adapter/index.js: $(shell find src/adapter) \
-.babelrc webpack.config.ts src/config/schema.d.ts
+dist/adapter/index.js: $(shell find src/adapter) .babelrc webpack.config.ts
 	$(shell npm bin)/webpack --env.prod
 
 # Create directories
@@ -52,12 +51,6 @@ dist/static/%.html: src/static/%.html dist/static
 # Build distribution files
 dist/index.js: src/index.ts
 	$(shell npm bin)/tsc -p tsconfig.json
-
-# -----------------------------------------------------------------------------
-
-# Generate typings from JSON schema file
-src/config/schema.d.ts: src/config/schema.json
-	$(shell npm bin)/json2ts --no-style.semi $< $@
 
 # -----------------------------------------------------------------------------
 # Rules
@@ -80,16 +73,22 @@ clean:
 lint: node_modules
 	$(shell npm bin)/tslint -p tsconfig.json "{src,tests}/**/*.ts"
 
-# Execute tests
-test: node_modules
-	$(shell npm bin)/karma start tests/karma.conf.ts --single-run
+# Execute integration tests
+test/integration: node_modules
+	$(shell npm bin)/karma start tests/karma.integration.conf.ts \
+		--single-run
 
-# Execute tests in watch mode
+# Execute unit tests
+test: node_modules
+	$(shell npm bin)/karma start tests/karma.conf.ts \
+		--single-run
+
+# Execute unit tests in watch mode
 watch: node_modules
 	$(shell npm bin)/karma start tests/karma.conf.ts
 
 # -----------------------------------------------------------------------------
 
 # Special targets
-.PHONY: .FORCE build clean lint test watch
+.PHONY: .FORCE build clean lint test/integration test watch
 .FORCE:

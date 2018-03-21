@@ -20,17 +20,17 @@
  * IN THE SOFTWARE.
  */
 
+import * as moniker from "moniker"
 import * as path from "path"
-import {
-  Configuration,
-  NoEmitOnErrorsPlugin,
-  optimize
-} from "webpack"
 
-/* Webpack plugins */
-const {
-  UglifyJsPlugin
-} = optimize
+import {
+  Config as KarmaConfig,
+  ConfigOptions as KarmaConfigOptions
+} from "karma"
+import {
+  Configuration as WebpackConfig,
+  NewUseRule as WebpackNewUseRule
+} from "webpack"
 
 /* ----------------------------------------------------------------------------
  * Plugins
@@ -39,43 +39,50 @@ const {
 import EventHooksPlugin = require("event-hooks-webpack-plugin")
 
 /* ----------------------------------------------------------------------------
- * Configuration
+ * Functions
  * ------------------------------------------------------------------------- */
 
-export default (env?: { prod?: boolean }) => {
-  const config: Configuration = {
-
-    /* Entrypoint */
-    entry: [
-      path.resolve(__dirname, "src/adapter/index.ts")
-    ],
-
-    /* Loaders */
+/**
+ * Webpack configuration
+ *
+ * @param config - Configuration
+ *
+ * @return Webpack configuration
+ */
+export function webpack(
+  config: KarmaConfig & KarmaConfigOptions
+): Partial<WebpackConfig> {
+  return {
     module: {
       rules: [
-
-        /* TypeScript */
         {
           test: /\.ts$/,
           use: ["babel-loader", "ts-loader"],
           exclude: /\/node_modules\//
-        }
+        },
+        ...(config.singleRun
+          ? [
+              ({
+                test: /\.ts$/,
+                use: "istanbul-instrumenter-loader?+esModules",
+                include: path.resolve(__dirname, "../../src"),
+                enforce: "post"
+              }) as WebpackNewUseRule
+            ]
+          : [])
       ]
     },
-
-    /* Export class constructor as entrypoint */
-    output: {
-      path: path.resolve(__dirname, "dist/adapter"),
-      pathinfo: true,
-      filename: "index.js",
-      libraryTarget: "window"
+    resolve: {
+      modules: [
+        path.resolve(__dirname, "../../node_modules")
+      ],
+      extensions: [".ts"],
+      alias: {
+        "~": path.resolve(__dirname, "../../src"),
+        "_": path.resolve(__dirname, "..")
+      }
     },
-
-    /* Plugins */
     plugins: [
-
-      /* Don't emit assets if there were errors */
-      new NoEmitOnErrorsPlugin(),
 
       /* Hack: The webpack development middleware sometimes goes into a loop
          on macOS when starting for the first time. This is a quick fix until
@@ -90,43 +97,48 @@ export default (env?: { prod?: boolean }) => {
         }
       })
     ],
-
-    /* Module resolver */
-    resolve: {
-      modules: [
-        __dirname,
-        path.resolve(__dirname, "node_modules")
-      ],
-      extensions: [".ts", ".js", ".json"]
-    },
-
-    /* Sourcemaps */
     devtool: "source-map"
   }
+}
 
-  /* Build for production environment */
-  if (env && env.prod) {
+/**
+ * SauceLabs configuration
+ *
+ * @param config - Configuration
+ * @param browsers - Browser configuration
+ *
+ * @return SauceLabs configuration
+ */
+export function saucelabs(
+  config: KarmaConfig & KarmaConfigOptions, browsers: object
+): Partial<KarmaConfigOptions> {
+  return {
 
-    /* Uglify sources */
-    config.plugins!.push(
-      new UglifyJsPlugin({
-        comments: false,
-        compress: {
-          warnings: false,
-          screw_ie8: true,
-          conditionals: true,
-          unused: true,
-          comparisons: true,
-          sequences: true,
-          dead_code: true,
-          evaluate: true,
-          if_return: true,
-          join_vars: true
-        },
-        sourceMap: true
-      }))
+    /* Define browsers to run tests on, see http://bit.ly/2pl96u1 */
+    browsers: Object.keys(browsers),
+    customLaunchers: browsers,
+
+    /* Configure SauceLabs integration */
+    concurrency: 5,
+    sauceLabs: {
+      build: process.env.TRAVIS_BUILD_NUMBER,
+      testName: process.env.TRAVIS
+        ? `${process.env.TRAVIS_REPO_SLUG} #${process.env.TRAVIS_BUILD_NUMBER}`
+        : `~ #${moniker.choose()}`,
+      recordVideo: false,
+      recordScreenshots: false
+    },
+
+    /* Set reporters */
+    reporters: config.singleRun
+      ? ["summary", "coverage-istanbul"]
+      : ["spec", "clear-screen"],
+    specReporter: {
+      suppressErrorSummary: true,
+      suppressPassed: !config.singleRun
+    },
+    coverageIstanbulReporter: {
+      reports: ["lcovonly", "text"]
+    }
   }
-
-  /* We're good to go */
-  return config
 }

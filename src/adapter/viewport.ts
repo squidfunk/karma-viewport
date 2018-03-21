@@ -20,7 +20,12 @@
  * IN THE SOFTWARE.
  */
 
-import { Schema as Configuration } from "../config/schema"
+import { findIndex } from "lodash"
+
+import {
+  ViewportBreakpoint,
+  ViewportConfiguration
+} from "../index"
 import { inspect } from "./util/inspect"
 
 /* ----------------------------------------------------------------------------
@@ -28,21 +33,35 @@ import { inspect } from "./util/inspect"
  * ------------------------------------------------------------------------- */
 
 /**
- * Extend window element with queried custom type
- *
- * This is necessary, because every context (iframe) provides a separate window
- * instance and comparing for instance of doesn't match across nested windows.
+ * Extend window element with missing types
  */
-interface WindowExt extends Window {
-  HTMLIFrameElement?: typeof HTMLIFrameElement
+declare global {
+  interface Window {
+    HTMLIFrameElement: typeof HTMLIFrameElement
+  }
 }
+
+/**
+ * Re-export viewport breakpoint type
+ */
+export type ViewportBreakpoint = ViewportBreakpoint
+
+/**
+ * Re-export viewport configuration type
+ */
+export type ViewportConfiguration = ViewportConfiguration
+
+/**
+ * Viewport callback
+ */
+export type ViewportCallback = (breakpoint: string) => void
 
 /* ----------------------------------------------------------------------------
  * Functions
  * ------------------------------------------------------------------------- */
 
 /**
- * Resolve relevant breakpoints
+ * Resolve relevant breakpoint range
  *
  * @param breakpoints - Breakpoints
  * @param first - First breakpoint name
@@ -50,12 +69,12 @@ interface WindowExt extends Window {
  *
  * @return Selected breakpoints
  */
-export function resolve(
-  breakpoints: Configuration["breakpoints"],
+export function range(
+  breakpoints: ViewportBreakpoint[],
   first: string, last: string = first
 ) {
   const [from, to] = [first, last].map(name => {
-    const index = breakpoints.findIndex(
+    const index = findIndex(breakpoints,
       breakpoint => breakpoint.name === name)
     if (index === -1)
       throw new ReferenceError(`Invalid breakpoint: ${inspect(name)}`)
@@ -75,61 +94,71 @@ export class Viewport {
   /**
    * Viewport configuration
    */
-  protected config_: Configuration
+  public config: ViewportConfiguration
 
   /**
    * Viewport context
    */
-  protected context_: HTMLIFrameElement
+  public context: HTMLIFrameElement
 
   /**
    * Create viewport resizer
    *
    * @constructor
    *
-   * @property {Object} config_ - Configuration
-   * @property {HTMLIFrameElement} context_ - Viewport element
-   *
-   * @param config - Configuration
+   * @param config - Viewport configuration
    * @param parent - Initialization context
    */
-  public constructor(config: Configuration, parent: WindowExt) { // TODO: this must be renamed!!!!!!!!
+  public constructor(config: ViewportConfiguration, parent: Window) {
 
     /* Retrieve context element travelling up */
     let current = parent
-    let el = parent.document.querySelector(config.context)
-    while (!el && current !== current.parent) {
-      current = current.parent as WindowExt
-      el = current.document.querySelector(config.context)
+    let context = parent.document.querySelector(config.context)
+    while (!context && current !== current.parent) {
+      current = current.parent
+      context = current.document.querySelector(config.context)
     }
-    if (!(el instanceof current.HTMLIFrameElement!))
+    if (!(context instanceof current.HTMLIFrameElement))
       throw new ReferenceError(
         `No match for selector: ${inspect(config.context)}`)
 
     /* Set configuration and context element */
-    this.config_ = config
-    this.context_ = el // TODO: context! el = viewport element which is resized
+    this.config  = config
+    this.context = context
   }
 
   /**
    * Load and embed document into viewport
    *
    * @param url - URL of document to load
-   * @param done - Callback to execute after document was loaded
+   *
+   * @return Promise resolving with no result
    */
-  public load(url: string, done: (err?: Error) => void) {
-    const load = () => {
-      this.context_.removeEventListener("load", load)
-      done()
-    }
-    this.context_.addEventListener("load", load)
-    this.context_.src = url
+  public load(url: string) {
+    return new Promise<void>(resolve => {
+      const load = () => {
+        this.context.removeEventListener("load", load)
+        resolve()
+      }
+      this.context.addEventListener("load", load)
+      this.context.src = url
+    })
+  }
+
+  /**
+   * Change viewport offset (scroll within iframe)
+   *
+   * @param x - Horizontal offset
+   * @param y - Vertical offset
+   */
+  public offset(x: number, y?: number) {
+    this.context.contentWindow.scroll(x, y)
   }
 
   /**
    * Set viewport to breakpoint identifier, number or array
    *
-   * @param {...(string|number|Array<number>)} args - Arguments
+   * @param args - Arguments
    */
   public set(width: number, height?: number): void
   public set(breakpoint: string): void
@@ -143,10 +172,10 @@ export class Viewport {
           throw new TypeError(`Invalid breakpoint width: ${width}`)
 
         /* Set width and height */
-        this.context_.style.width = `${width}px`
-        this.context_.style.height = ""
+        this.context.style.width = `${width}px`
+        this.context.style.height = ""
       } else {
-        const [breakpoint] = resolve(this.config_.breakpoints, args[0])
+        const [breakpoint] = range(this.config.breakpoints, args[0])
         this.set(breakpoint.size.width, breakpoint.size.height)
       }
 
@@ -159,27 +188,23 @@ export class Viewport {
         throw new TypeError(`Invalid breakpoint height: ${height}`)
 
       /* Set width and height */
-      this.context_.style.width = `${width}px`
-      this.context_.style.height = `${height}px`
+      this.context.style.width = `${width}px`
+      this.context.style.height = `${height}px`
     }
 
-    /* Force layout, so styles are sure to propagate */ // TODO: request animation frame with promise!
-    // await viewport.set(250)
-    this.context_.getBoundingClientRect()
+    /* Force layout, so styles are sure to propagate */
+    this.context.getBoundingClientRect()
   }
-
-  // TODO: add typings! "Breakpoint" should be a type and referenced in karma
-  // and exposed through typings!
 
   /**
    * Reset viewport
    */
   public reset() {
-    this.context_.style.width = ""
-    this.context_.style.height = ""
+    this.context.style.width = ""
+    this.context.style.height = ""
 
     /* Force layout, so styles are sure to propagate */
-    this.context_.getBoundingClientRect()
+    this.context.getBoundingClientRect()
   }
 
   /**
@@ -194,14 +219,16 @@ export class Viewport {
    * @param {string} last - Last breakpoint name
    * @param {Function} cb - Callback to execute after resizing
    */
-  public between(first: string, last: string, cb: (name: string) => {}) {
+  public between(first: string, last: string, cb: ViewportCallback) {
 
     /* Resolve breakpoints and execute callback after resizing */
-    resolve(this.config_.breakpoints, first, last).forEach((breakpoint: any) => {
-      this.set(breakpoint.size.width, breakpoint.size.height)
-      cb(breakpoint.name)
-      // TODO: async callback!? async await? promise?
-    })
+    range(this.config.breakpoints, first, last)
+      .forEach((breakpoint: ViewportBreakpoint) => {
+        this.set(breakpoint.size.width, breakpoint.size.height)
+        cb(breakpoint.name)
+         // TODO: this MUST account for async stuff, so the callback may return
+         // a promise. We need to check this
+      })
 
     /* Reset viewport */
     this.reset()
@@ -215,11 +242,11 @@ export class Viewport {
    *     ...
    *   })
    *
-   * @param {Function} cb - Callback to execute after resizing
+   * @param cb - Callback to execute after resizing
    */
-  public each(cb: () => {}) {
-    this.between(this.config_.breakpoints[0].name, this.config_.breakpoints[
-      this.config_.breakpoints.length - 1
+  public each(cb: ViewportCallback) {
+    this.between(this.config.breakpoints[0].name, this.config.breakpoints[
+      this.config.breakpoints.length - 1
     ].name, cb)
   }
 
@@ -231,12 +258,12 @@ export class Viewport {
    *     ...
    *   })
    *
-   * @param {string} first - First breakpoint name
-   * @param {Function} cb - Callback to execute after resizing
+   * @param first - First breakpoint name
+   * @param cb - Callback to execute after resizing
    */
-  public from(first: string, cb: () => {}) {
-    this.between(first, this.config_.breakpoints[
-      this.config_.breakpoints.length - 1
+  public from(first: string, cb: ViewportCallback) {
+    this.between(first, this.config.breakpoints[
+      this.config.breakpoints.length - 1
     ].name, cb)
   }
 
@@ -248,28 +275,10 @@ export class Viewport {
    *     ...
    *   })
    *
-   * @param {string} last - Last breakpoint name
-   * @param {Function} cb - Callback to execute after resizing
+   * @param last - Last breakpoint name
+   * @param cb - Callback to execute after resizing
    */
-  public to(last: string, cb: () => {}) {
-    this.between(this.config_.breakpoints[0].name, last, cb)
-  }
-
-  /**
-   * Retrieve configuration
-   *
-   * @return {Object} Configuration
-   */
-  public get config() {
-    return this.config_
-  }
-
-  /**
-   * Retrieve context element
-   *
-   * @return {HTMLIFrameElement} context element    // TODO: rename this into viewport.context
-   */
-  public get context() {
-    return this.context_
+  public to(last: string, cb: ViewportCallback) {
+    this.between(this.config.breakpoints[0].name, last, cb)
   }
 }

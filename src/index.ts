@@ -36,7 +36,38 @@ import {
   Injectable
 } from "karma"
 
-import { Schema as ViewportConfiguration } from "./config/schema"
+import * as schema from "./config/schema.json" // TODO: maybe re-import viewport breakpoint and type from here
+
+/* ----------------------------------------------------------------------------
+ * Types
+ * ------------------------------------------------------------------------- */
+
+/**
+ * Viewport breakpoint
+ */
+export interface ViewportBreakpoint {
+  name: string                         /* Breakpoint name */
+  size: {
+    width: number                      /* Viewport width */
+    height: number                     /* Viewport height */
+  }
+}
+
+/**
+ * Viewport configuration
+ */
+export interface ViewportConfiguration {
+  context: string                      /* Context element selector */
+  breakpoints: ViewportBreakpoint[]    /* Breakpoints */
+}
+
+/**
+ * Karma viewport configuration
+ *
+ * This is the exported configuration type for usage within Karma, because the
+ * context selector and breakpoints are optional (merged with defaults).
+ */
+export type KarmaViewportConfiguration = Partial<ViewportConfiguration>
 
 /* ----------------------------------------------------------------------------
  * Functions
@@ -136,7 +167,6 @@ const preprocessor: Injectable =
 
     /* Return preprocessor function */
     return (content: string, file: string, done: (result: string) => void) => {
-      const schema = require("./config/schema")
       const config: ViewportConfiguration =
         Object.assign(JSON.parse(content), viewport)
 

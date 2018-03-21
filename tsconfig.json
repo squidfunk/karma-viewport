@@ -1,10 +1,7 @@
 {
   "compilerOptions": {
-    "allowJs": true,
     "alwaysStrict": true,
     "baseUrl": ".",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
     "lib": [
       "dom",
       "es6",
@@ -33,7 +30,6 @@
     "typings"
   ],
   "exclude": [
-    "node_modules",
-    "src/adapter"
+    "node_modules"
   ]
 }
