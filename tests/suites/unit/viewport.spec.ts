@@ -20,14 +20,14 @@
  * IN THE SOFTWARE.
  */
 
-import { resolve, Viewport } from "~/adapter/viewport"
+import { range, Viewport } from "~/adapter/viewport"
 
 import { chance } from "_/helpers"
 import {
   mockViewportConfiguration,
   mockViewportContext
 } from "_/mocks/adapter/viewport"
-import { mockQuerySelector } from "_/mocks/document"
+import { mockQuerySelector } from "_/mocks/vendor/document"
 
 /* ----------------------------------------------------------------------------
  * Declarations
@@ -40,8 +40,9 @@ describe("Viewport", () => {
   const config  = mockViewportConfiguration()
   const context = mockViewportContext()
 
-  /* Attach context */
+  /* Setup fixtures and attach context */
   beforeAll(() => {
+    fixture.setBase("fixtures")
     document.body.appendChild(context)
   })
 
@@ -50,12 +51,12 @@ describe("Viewport", () => {
     document.body.removeChild(context)
   })
 
-  /* resolve */
-  describe("resolve", () => {
+  /* range */
+  describe("range", () => {
 
     /* Test: should return first breakpoint */
     it("should return first breakpoint", () => {
-      const breakpoints = resolve(config.breakpoints, "mobile")
+      const breakpoints = range(config.breakpoints, "mobile")
       expect(breakpoints).toEqual(jasmine.any(Array))
       expect(breakpoints.length).toEqual(1)
       expect(breakpoints[0]).toEqual(config.breakpoints[0])
@@ -63,7 +64,7 @@ describe("Viewport", () => {
 
     /* Test: should return middle breakpoint */
     it("should return middle breakpoint", () => {
-      const breakpoints = resolve(config.breakpoints, "tablet")
+      const breakpoints = range(config.breakpoints, "tablet")
       expect(breakpoints).toEqual(jasmine.any(Array))
       expect(breakpoints.length).toEqual(1)
       expect(breakpoints[0]).toEqual(config.breakpoints[1])
@@ -71,7 +72,7 @@ describe("Viewport", () => {
 
     /* Test: should return last breakpoint */
     it("should return last breakpoint", () => {
-      const breakpoints = resolve(config.breakpoints, "screen")
+      const breakpoints = range(config.breakpoints, "screen")
       expect(breakpoints).toEqual(jasmine.any(Array))
       expect(breakpoints.length).toEqual(1)
       expect(breakpoints[0]).toEqual(config.breakpoints[2])
@@ -79,7 +80,7 @@ describe("Viewport", () => {
 
     /* Test: should return first to first breakpoint */
     it("should return first to first breakpoint", () => {
-      const breakpoints = resolve(config.breakpoints, "mobile", "mobile")
+      const breakpoints = range(config.breakpoints, "mobile", "mobile")
       expect(breakpoints).toEqual(jasmine.any(Array))
       expect(breakpoints.length).toEqual(1)
       expect(breakpoints[0]).toEqual(config.breakpoints[0])
@@ -87,7 +88,7 @@ describe("Viewport", () => {
 
     /* Test: should return first to last breakpoint */
     it("should return first to last breakpoint", () => {
-      const breakpoints = resolve(config.breakpoints, "mobile", "screen")
+      const breakpoints = range(config.breakpoints, "mobile", "screen")
       expect(breakpoints).toEqual(jasmine.any(Array))
       expect(breakpoints.length).toEqual(3)
       expect(breakpoints).toEqual(config.breakpoints)
@@ -95,7 +96,7 @@ describe("Viewport", () => {
 
     /* Test: should return last to last breakpoint */
     it("should return last to last breakpoint", () => {
-      const breakpoints = resolve(config.breakpoints, "screen", "screen")
+      const breakpoints = range(config.breakpoints, "screen", "screen")
       expect(breakpoints).toEqual(jasmine.any(Array))
       expect(breakpoints.length).toEqual(1)
       expect(breakpoints[0]).toEqual(config.breakpoints[2])
@@ -104,7 +105,7 @@ describe("Viewport", () => {
     /* Test: should throw on invalid breakpoint */
     it("should throw on invalid breakpoint", () => {
       expect(() => {
-        resolve([], "invalid")
+        range([], "invalid")
       }).toThrow(
         new ReferenceError("Invalid breakpoint: 'invalid'"))
     })
@@ -144,10 +145,11 @@ describe("Viewport", () => {
     /* Test: should set context source */
     it("should set context source", done => {
       const viewport = new Viewport(config, window)
-      viewport.load("/debug.html", () => {
-        expect(context.src).toContain("/debug.html")
-        done()
-      })
+      viewport.load("/debug.html")
+        .then(() => {
+          expect(context.src).toContain("/debug.html")
+          done()
+        })
     })
   })
 
@@ -272,6 +274,11 @@ describe("Viewport", () => {
   /* #each */
   describe("#each", () => {
 
+    /* Load fixtures */
+    beforeEach(() => {
+      fixture.load("default.html")
+    })
+
     /* Test: should invoke callback on breakpoints */
     it("should invoke callback on breakpoints", () => {
       const cb = jasmine.createSpy("callback")
@@ -280,6 +287,22 @@ describe("Viewport", () => {
       expect(cb).toHaveBeenCalledWith("mobile")
       expect(cb).toHaveBeenCalledWith("tablet")
       expect(cb).toHaveBeenCalledWith("screen")
+    })
+
+    /* Test: should set width and height of breakpoint */
+    it("should set width and height of breakpoint", () => {
+      const cb = jasmine.createSpy("callback")
+        .and.callFake((name: string) => {
+          const style = window.getComputedStyle(document.body)
+          switch (name) {
+            case "mobile": expect(style.fontSize).toEqual("16px"); break
+            case "tablet": expect(style.fontSize).toEqual("14px"); break
+            case "screen": expect(style.fontSize).toEqual("12px"); break
+          }
+        })
+      const viewport = new Viewport({ ...config, context: "#context" }, window)
+      viewport.each(cb)
+      expect(cb.calls.count()).toEqual(3)
     })
   })
 

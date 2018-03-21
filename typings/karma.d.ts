@@ -24,17 +24,28 @@ import "karma"
 
 import { Configuration as WebpackConfig } from "webpack"
 
+import { KarmaViewportConfiguration } from "../src/index"
+
 declare module "karma" {
   interface ConfigOptions {
     beforeMiddleware?: string[]
     webpack?: Partial<WebpackConfig>   /* karma-webpack */
     specReporter?: {                   /* karma-spec-reporter */
-      suppressErrorSummary: boolean
-      suppressSkipped: boolean
+      suppressErrorSummary?: boolean
+      suppressPassed?: boolean
+      suppressSkipped?: boolean
     }
     coverageIstanbulReporter?: {       /* karma-coverage */
       reports: string[]
     }
+    customLaunchers?: any              /* karma-sauce-launcher */
+    sauceLabs?: {
+      build?: string,
+      testName: string,
+      recordVideo: boolean,
+      recordScreenshots: boolean
+    }
+    viewport?: KarmaViewportConfiguration
   }
   interface ClientOptions {            /* karma-jasmine */
     jasmine?: {

@@ -20,12 +20,29 @@
  * IN THE SOFTWARE.
  */
 
-import { Viewport } from "./viewport"
+import {
+  Viewport,
+  ViewportConfiguration
+} from "./viewport"
+
+/* ----------------------------------------------------------------------------
+ * Types
+ * ------------------------------------------------------------------------- */
+
+/**
+ * Extend window element with custom options and viewport instance
+ */
+declare global {
+  interface Window {
+    __viewport__: ViewportConfiguration
+    viewport: Viewport
+  }
+}
 
 /* ----------------------------------------------------------------------------
  * Initialization
  * ------------------------------------------------------------------------- */
 
-((window, karma, config) => {
+((window, config) => {
   window.viewport = new Viewport(config, window)
-})(window, window.__karma__, window.__viewport__)
+})(window, window.__viewport__)

@@ -20,16 +20,6 @@
  * IN THE SOFTWARE.
  */
 
-/* ----------------------------------------------------------------------------
- * Mocks
- * ------------------------------------------------------------------------- */
-
-/**
- * Mock document.querySelector returning the provided element or null
- *
- * @return Viewport element
- */
-export function mockQuerySelector(el: HTMLElement | null): jasmine.Spy {
-  return spyOn(document, "querySelector")
-    .and.returnValue(el)
+declare module "moniker" {
+  export function choose(): string
 }

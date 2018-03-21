@@ -20,19 +20,20 @@
  * IN THE SOFTWARE.
  */
 
-"use strict"
+import {
+  Config as KarmaConfig,
+  ConfigOptions as KarmaConfigOptions
+} from "karma"
 
-const moniker = require("moniker")
+import * as browsers from "./karma/browsers/integration.json"
+import { saucelabs, webpack } from "./karma/common"
 
 /* ----------------------------------------------------------------------------
  * Configuration
  * ------------------------------------------------------------------------- */
 
-module.exports = karma => {
-  const webpack = require("../webpack.config.js")()
-
-  /* Common configuration */
-  const config = {
+export default (config: KarmaConfig & KarmaConfigOptions) => {
+  config.set({
     basePath: __dirname,
 
     /* Frameworks to be used */
@@ -43,19 +44,56 @@ module.exports = karma => {
 
     /* Include tests */
     files: [
-      "smoke/*.js"
+      "suites/integration/**/*.ts"
     ],
 
     /* Preprocessors */
     preprocessors: {
-      "smoke/*.js": [
+      "**/*.ts": [
         "webpack",
         "sourcemap"
       ]
     },
 
+    /* Register this plugin with Karma */
+    plugins: [
+      ...config.plugins!,
+      require.resolve("..")
+    ],
+
     /* Webpack configuration */
-    webpack,
+    webpack: webpack(config),
+
+    /* Reporters */
+    reporters: config.singleRun
+      ? ["spec", "coverage-istanbul"]
+      : ["spec", "clear-screen"],
+
+    /* Browsers */
+    browsers: ["Chrome"],
+
+    /* Configuration for spec reporter */
+    specReporter: {
+      suppressErrorSummary: true,
+      suppressSkipped: !config.singleRun
+    },
+
+    /* Configuration for coverage reporter */
+    coverageIstanbulReporter: {
+      reports: ["html", "text"]
+    },
+
+    /* Hack: Don't serve TypeScript files with "video/mp2t" mime type */
+    mime: {
+      "text/x-typescript": ["ts"]
+    },
+
+    /* Client configuration */
+    client: {
+      jasmine: {
+        random: false
+      }
+    },
 
     /* Viewport configuration */
     viewport: {
@@ -84,66 +122,9 @@ module.exports = karma => {
       ]
     },
 
-    /* Reporters */
-    reporters: ["summary"],
-
-    /* Set browsers */
-    browsers: ["Chrome"]
-  }
-
-  /* Register this plugin with Karma */
-  karma.plugins.push(require.resolve(".."))
-
-  /* Travis and SauceLabs integration */
-  if (process.env.CI || process.env.SAUCE) {
-    if (!process.env.SAUCE_USERNAME ||
-        !process.env.SAUCE_ACCESS_KEY)
-      throw new Error(
-        "SauceConnect: please provide SAUCE_USERNAME " +
-        "and SAUCE_ACCESS_KEY")
-
-    /* Run smoke test at both ends of the spectrum */
-    const browsers = {
-
-      /* Chrome (latest) */
-      chrome: {
-        base: "SauceLabs",
-        browserName: "chrome",
-        version: "latest",
-        platform: "Windows 7",
-        screenResolution: "1280x1024"
-      },
-
-      /* Internet Explorer 9 */
-      ie9: {
-        base: "SauceLabs",
-        browserName: "internet explorer",
-        version: "9",
-        platform: "Windows 7",
-        screenResolution: "1280x1024"
-      }
-    }
-
-    /* SauceLabs job name */
-    const id = process.env.TRAVIS
-      ? `${process.env.TRAVIS_REPO_SLUG} #${process.env.TRAVIS_BUILD_NUMBER}`
-      : `~ #${moniker.choose()}`
-
-    /* Configure SauceLabs integration */
-    config.concurrency = 5
-    config.sauceLabs = {
-      build: process.env.TRAVIS_BUILD_NUMBER,
-      testName: id,
-      recordVideo: false,
-      recordScreenshots: false
-    }
-
-    /* Set reporters and browsers */
-    config.reporters.push("saucelabs")
-    config.browsers = Object.keys(browsers)
-    config.customLaunchers = browsers
-  }
-
-  /* We're good to go */
-  karma.set(config)
+    /* Configuration overrides */
+    ...(process.env.TRAVIS || process.env.SAUCE
+      ? saucelabs(config, browsers)
+      : {})
+  })
 }

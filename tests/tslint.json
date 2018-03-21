@@ -3,6 +3,7 @@
     "../tslint.json"
   ],
   "rules": {
+    "no-object-literal-type-assertion": false,
     "no-unused-expression": false
   }
 }
