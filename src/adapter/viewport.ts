@@ -20,7 +20,7 @@
  * IN THE SOFTWARE.
  */
 
-import { findIndex } from "lodash"
+import "array-findindex-polyfill"
 
 import {
   ViewportBreakpoint,
@@ -74,7 +74,7 @@ export function range(
   first: string, last: string = first
 ) {
   const [from, to] = [first, last].map(name => {
-    const index = findIndex(breakpoints,
+    const index = breakpoints.findIndex(
       breakpoint => breakpoint.name === name)
     if (index === -1)
       throw new ReferenceError(`Invalid breakpoint: ${inspect(name)}`)

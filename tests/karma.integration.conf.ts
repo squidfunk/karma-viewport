@@ -66,7 +66,7 @@ export default (config: KarmaConfig & KarmaConfigOptions) => {
 
     /* Reporters */
     reporters: config.singleRun
-      ? ["spec", "coverage-istanbul"]
+      ? ["spec"]
       : ["spec", "clear-screen"],
 
     /* Browsers */
@@ -76,11 +76,6 @@ export default (config: KarmaConfig & KarmaConfigOptions) => {
     specReporter: {
       suppressErrorSummary: true,
       suppressSkipped: !config.singleRun
-    },
-
-    /* Configuration for coverage reporter */
-    coverageIstanbulReporter: {
-      reports: ["html", "text"]
     },
 
     /* Hack: Don't serve TypeScript files with "video/mp2t" mime type */
@@ -125,6 +120,11 @@ export default (config: KarmaConfig & KarmaConfigOptions) => {
     /* Configuration overrides */
     ...(process.env.TRAVIS || process.env.SAUCE
       ? saucelabs(config, browsers)
-      : {})
+      : {}),
+
+    /* Configuration for coverage reporter */
+    coverageIstanbulReporter: {
+      reports: []
+    }
   })
 }
