@@ -57,7 +57,17 @@ export default (env?: { prod?: boolean }) => {
         /* TypeScript */
         {
           test: /\.ts$/,
-          use: ["babel-loader", "ts-loader"],
+          use: [
+            "babel-loader",
+            {
+              loader: "ts-loader",
+              options: {
+                compilerOptions: {
+                  target: "es2015"     /* Use ES modules for tree-shaking */
+                }
+              }
+            }
+          ],
           exclude: /\/node_modules\//
         }
       ]

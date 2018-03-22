@@ -67,14 +67,14 @@ build: \
 
 # Clean distribution files
 clean:
-	rm -rf dist
+	rm -rf coverage dist
 
 # Lint source files
 lint: node_modules
 	$(shell npm bin)/tslint -p tsconfig.json "{src,tests}/**/*.ts"
 
 # Execute integration tests
-test/integration: node_modules
+test/integration: node_modules build
 	$(shell npm bin)/karma start tests/karma.integration.conf.ts \
 		--single-run
 
