@@ -36,7 +36,7 @@ import {
   Injectable
 } from "karma"
 
-import * as schema from "./config/schema.json" // TODO: maybe re-import viewport breakpoint and type from here
+import * as schema from "./config/schema.json"
 
 /* ----------------------------------------------------------------------------
  * Types
@@ -62,12 +62,16 @@ export interface ViewportConfiguration {
 }
 
 /**
- * Karma viewport configuration
+ * Augment Karma configuration type
  *
  * This is the exported configuration type for usage within Karma, because the
  * context selector and breakpoints are optional (merged with defaults).
  */
-export type KarmaViewportConfiguration = Partial<ViewportConfiguration>
+declare module "karma" {
+  interface ConfigOptions {
+    viewport?: Partial<ViewportConfiguration>
+  }
+}
 
 /* ----------------------------------------------------------------------------
  * Functions
@@ -148,9 +152,6 @@ const middleware: Injectable = () =>
           '" />'), "utf-8")
     })
   }
-
-/* Dependency injection */
-middleware.$inject = []                                                         // TODO: necessary?
 
 /**
  * Inject custom configuration

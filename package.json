@@ -4,6 +4,7 @@
   "description": "A Karma plugin for testing responsive layouts",
   "keywords": [
     "breakpoint",
+    "iframe",
     "karma",
     "karma-framework",
     "karma-plugin",
@@ -27,22 +28,23 @@
     "url": "https://github.com/squidfunk/karma-viewport.git"
   },
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "make -j clean build",
     "clean": "make clean",
     "lint": "make lint",
-    "smoke": "",
     "test": "make test",
+    "test/integration": "make test/integration",
     "watch": "make watch"
   },
   "dependencies": {
+    "@types/karma": "^1.7.3",
     "jsonschema": "^1.1.1"
   },
   "devDependencies": {
     "@types/chance": "^1.0.0",
     "@types/jasmine": "^2.8.6",
     "@types/jsonschema": "^1.1.1",
-    "@types/karma": "^1.7.3",
     "@types/karma-fixture": "^0.2.3",
     "@types/node": "^9.4.7",
     "@types/webpack": "^3.8.8",

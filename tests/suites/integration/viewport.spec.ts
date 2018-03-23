@@ -20,23 +20,7 @@
  * IN THE SOFTWARE.
  */
 
-import { Viewport } from "~/adapter/viewport"
-
 import { chance } from "_/helpers"
-
-/* ----------------------------------------------------------------------------
- * Types
- * ------------------------------------------------------------------------- */
-
-/**
- * Extend window element with queried custom type
- *
- * This is necessary, because every context (iframe) provides a separate window
- * instance and comparing for instance doesn't match across windows.
- */
-declare global {
-  const viewport: Viewport
-}
 
 /* ----------------------------------------------------------------------------
  * Declarations

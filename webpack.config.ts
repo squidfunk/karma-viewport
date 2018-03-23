@@ -63,6 +63,8 @@ export default (env?: { prod?: boolean }) => {
               loader: "ts-loader",
               options: {
                 compilerOptions: {
+                  declaration: true,
+                  declarationDir: "..",
                   target: "es2015"     /* Use ES modules for tree-shaking */
                 }
               }

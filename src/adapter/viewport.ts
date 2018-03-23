@@ -162,6 +162,7 @@ export class Viewport {
    */
   public set(width: number, height?: number): void
   public set(breakpoint: string): void
+  // public set(widthOrBreakpoint: number | string, height?: number)
   public set(...args: any[]) {
 
     /* Width or breakpoint name */
@@ -226,8 +227,6 @@ export class Viewport {
       .forEach((breakpoint: ViewportBreakpoint) => {
         this.set(breakpoint.size.width, breakpoint.size.height)
         cb(breakpoint.name)
-         // TODO: this MUST account for async stuff, so the callback may return
-         // a promise. We need to check this
       })
 
     /* Reset viewport */
