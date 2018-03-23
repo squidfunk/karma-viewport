@@ -24,8 +24,6 @@ import "karma"
 
 import { Configuration as WebpackConfig } from "webpack"
 
-import { KarmaViewportConfiguration } from "../src/index"
-
 declare module "karma" {
   interface ConfigOptions {
     beforeMiddleware?: string[]
@@ -45,7 +43,6 @@ declare module "karma" {
       recordVideo: boolean,
       recordScreenshots: boolean
     }
-    viewport?: KarmaViewportConfiguration
   }
   interface ClientOptions {            /* karma-jasmine */
     jasmine?: {
