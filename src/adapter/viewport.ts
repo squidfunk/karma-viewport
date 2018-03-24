@@ -199,7 +199,7 @@ export class Viewport {
     }
 
     /* Force layout, so styles are sure to propagate */
-    this.context.getBoundingClientRect()
+    window.getComputedStyle(this.context)
   }
 
   /**
@@ -211,7 +211,7 @@ export class Viewport {
     this.context.style.height = ""
 
     /* Force layout, so styles are sure to propagate */
-    this.context.getBoundingClientRect()
+    window.getComputedStyle(this.context)
   }
 
   /**
