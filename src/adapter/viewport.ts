@@ -22,15 +22,35 @@
 
 import "array-findindex-polyfill"
 
-import {
-  ViewportBreakpoint,
-  ViewportConfiguration
-} from "../index"
 import { inspect } from "./util/inspect"
 
 /* ----------------------------------------------------------------------------
  * Types
  * ------------------------------------------------------------------------- */
+
+/**
+ * Viewport breakpoint
+ */
+export interface ViewportBreakpoint {
+  name: string                         /* Breakpoint name */
+  size: {
+    width: number                      /* Viewport width */
+    height: number                     /* Viewport height */
+  }
+}
+
+/**
+ * Viewport configuration
+ */
+export interface ViewportConfiguration {
+  context: string                      /* Context element selector */
+  breakpoints: ViewportBreakpoint[]    /* Breakpoints */
+}
+
+/**
+ * Viewport callback
+ */
+export type ViewportCallback = (breakpoint: string) => void
 
 /**
  * Extend window element with missing types
@@ -40,21 +60,6 @@ declare global {
     HTMLIFrameElement: typeof HTMLIFrameElement
   }
 }
-
-/**
- * Re-export viewport breakpoint type
- */
-export type ViewportBreakpoint = ViewportBreakpoint
-
-/**
- * Re-export viewport configuration type
- */
-export type ViewportConfiguration = ViewportConfiguration
-
-/**
- * Viewport callback
- */
-export type ViewportCallback = (breakpoint: string) => void
 
 /* ----------------------------------------------------------------------------
  * Functions
@@ -201,6 +206,7 @@ export class Viewport {
    * Reset viewport
    */
   public reset() {
+    this.context.contentWindow.scroll(0, 0)
     this.context.style.width = ""
     this.context.style.height = ""
 

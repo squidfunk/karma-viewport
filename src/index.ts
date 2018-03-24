@@ -36,30 +36,22 @@ import {
   Injectable
 } from "karma"
 
+import {
+  Viewport,
+  ViewportConfiguration
+} from "./adapter/viewport"
 import * as schema from "./config/schema.json"
+
+export {
+  Viewport,
+  ViewportBreakpoint,
+  ViewportCallback,
+  ViewportConfiguration
+} from "./adapter/viewport"
 
 /* ----------------------------------------------------------------------------
  * Types
  * ------------------------------------------------------------------------- */
-
-/**
- * Viewport breakpoint
- */
-export interface ViewportBreakpoint {
-  name: string                         /* Breakpoint name */
-  size: {
-    width: number                      /* Viewport width */
-    height: number                     /* Viewport height */
-  }
-}
-
-/**
- * Viewport configuration
- */
-export interface ViewportConfiguration {
-  context: string                      /* Context element selector */
-  breakpoints: ViewportBreakpoint[]    /* Breakpoints */
-}
 
 /**
  * Augment Karma configuration type
@@ -71,6 +63,17 @@ declare module "karma" {
   interface ConfigOptions {
     viewport?: Partial<ViewportConfiguration>
   }
+}
+
+/**
+ * Extend window element with custom options and viewport instance
+ */
+declare global  {
+  interface Window {
+    __viewport__: ViewportConfiguration
+    viewport: Viewport
+  }
+  const viewport: Viewport
 }
 
 /* ----------------------------------------------------------------------------

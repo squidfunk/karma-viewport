@@ -33,7 +33,8 @@ node_modules:
 # -----------------------------------------------------------------------------
 
 # Build theme for distribution with Webpack
-dist/adapter/index.js: $(shell find src/adapter) .babelrc webpack.config.ts
+dist/adapter/index.js: $(shell find src/adapter) \
+.babelrc webpack.config.ts dist/index.js
 	$(shell npm bin)/webpack --env.prod
 
 # Create directories
@@ -51,6 +52,7 @@ dist/static/%.html: src/static/%.html dist/static
 # Build distribution files
 dist/index.js: src/index.ts
 	$(shell npm bin)/tsc -p tsconfig.json
+	rm -rf dist/adapter
 
 # -----------------------------------------------------------------------------
 # Rules
