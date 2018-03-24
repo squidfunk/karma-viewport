@@ -21,7 +21,6 @@
  */
 
 import "array-findindex-polyfill"
-import "promise/polyfill"
 
 import { inspect } from "./util/inspect"
 
