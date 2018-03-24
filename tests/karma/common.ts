@@ -29,7 +29,8 @@ import {
 } from "karma"
 import {
   Configuration as WebpackConfig,
-  NewUseRule as WebpackNewUseRule
+  NewUseRule as WebpackNewUseRule,
+  ProvidePlugin
 } from "webpack"
 
 /* ----------------------------------------------------------------------------
@@ -83,6 +84,11 @@ export function webpack(
       }
     },
     plugins: [
+
+      /* Polyfills */
+      new ProvidePlugin({
+        Promise: "es6-promise"
+      }),
 
       /* Hack: The webpack development middleware sometimes goes into a loop
          on macOS when starting for the first time. This is a quick fix until

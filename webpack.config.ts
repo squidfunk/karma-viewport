@@ -24,7 +24,8 @@ import * as path from "path"
 import {
   Configuration,
   NoEmitOnErrorsPlugin,
-  optimize
+  optimize,
+  ProvidePlugin
 } from "webpack"
 
 /* Webpack plugins */
@@ -88,6 +89,11 @@ export default (env?: { prod?: boolean }) => {
 
       /* Don't emit assets if there were errors */
       new NoEmitOnErrorsPlugin(),
+
+      /* Polyfills */
+      new ProvidePlugin({
+        Promise: "es6-promise"
+      }),
 
       /* Hack: The webpack development middleware sometimes goes into a loop
          on macOS when starting for the first time. This is a quick fix until
