@@ -27,13 +27,6 @@
     "platform": "Windows 7",
     "screenResolution": "1280x1024"
   },
-  "opera": {
-    "base": "SauceLabs",
-    "browserName": "opera",
-    "version": "latest",
-    "platform": "Windows 2008",
-    "screenResolution": "1280x1024"
-  },
   "edge15": {
     "base": "SauceLabs",
     "browserName": "MicrosoftEdge",
