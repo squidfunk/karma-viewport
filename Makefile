@@ -18,7 +18,7 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-all: clean lint | build test
+all: clean lint | build test test/integration
 
 # -----------------------------------------------------------------------------
 # Prerequisites

@@ -21,6 +21,7 @@
  */
 
 import "array-findindex-polyfill"
+import "promise/polyfill"
 
 import { inspect } from "./util/inspect"
 
@@ -141,12 +142,13 @@ export class Viewport {
    */
   public load(url: string) {
     return new Promise<void>(resolve => {
-      const load = () => {
-        this.context.removeEventListener("load", load)
+      this.context.onload = () => {
+        this.context.onload = () => { /* noop */ }
         resolve()
       }
-      this.context.addEventListener("load", load)
-      this.context.src = url
+      requestAnimationFrame(() => {
+        this.context.src = url
+      })
     })
   }
 
@@ -199,7 +201,7 @@ export class Viewport {
     }
 
     /* Force layout, so styles are sure to propagate */
-    window.getComputedStyle(this.context)
+    this.context.contentDocument.body.getBoundingClientRect()
   }
 
   /**
@@ -211,7 +213,7 @@ export class Viewport {
     this.context.style.height = ""
 
     /* Force layout, so styles are sure to propagate */
-    window.getComputedStyle(this.context)
+    this.context.contentDocument.body.getBoundingClientRect()
   }
 
   /**

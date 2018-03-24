@@ -76,7 +76,7 @@ export function webpack(
       modules: [
         path.resolve(__dirname, "../../node_modules")
       ],
-      extensions: [".ts"],
+      extensions: [".ts", ".js"],
       alias: {
         "~": path.resolve(__dirname, "../../src"),
         "_": path.resolve(__dirname, "..")

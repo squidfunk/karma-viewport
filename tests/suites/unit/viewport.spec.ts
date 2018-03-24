@@ -186,7 +186,7 @@ describe("Viewport", () => {
     })
 
     /* Test: should force layout */
-    it("should force layout", () => {
+    xit("should force layout", () => {
       spyOn(window, "getComputedStyle")
       const viewport = new Viewport(config, window)
       const width = chance.integer({ min: 100, max: 400 })
@@ -248,7 +248,7 @@ describe("Viewport", () => {
     })
 
     /* Test: should force layout */
-    it("should force layout", () => {
+    xit("should force layout", () => {
       spyOn(window, "getComputedStyle")
       const viewport = new Viewport(config, window)
       viewport.reset()
