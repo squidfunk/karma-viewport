@@ -26,8 +26,4 @@ declare module "jsonschema" {
   interface ValidationError {
     stack: string
   }
-  interface Injectable {
-    (...args: any[]): void
-    $inject?: string[]
-  }
 }

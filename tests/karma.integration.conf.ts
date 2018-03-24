@@ -28,6 +28,8 @@ import {
 import * as browsers from "./karma/browsers/integration.json"
 import { saucelabs, webpack } from "./karma/common"
 
+import "../src"
+
 /* ----------------------------------------------------------------------------
  * Configuration
  * ------------------------------------------------------------------------- */

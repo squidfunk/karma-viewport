@@ -42,13 +42,6 @@ import {
 } from "./adapter/viewport"
 import * as schema from "./config/schema.json"
 
-export {
-  Viewport,
-  ViewportBreakpoint,
-  ViewportCallback,
-  ViewportConfiguration
-} from "./adapter/viewport"
-
 /* ----------------------------------------------------------------------------
  * Types
  * ------------------------------------------------------------------------- */
@@ -66,13 +59,9 @@ declare module "karma" {
 }
 
 /**
- * Extend window element with custom options and viewport instance
+ * Declare ambient viewport instance
  */
 declare global  {
-  interface Window {
-    __viewport__: ViewportConfiguration
-    viewport: Viewport
-  }
   const viewport: Viewport
 }
 
