@@ -187,11 +187,11 @@ describe("Viewport", () => {
 
     /* Test: should force layout */
     it("should force layout", () => {
-      spyOn(context, "getBoundingClientRect")
+      spyOn(window, "getComputedStyle")
       const viewport = new Viewport(config, window)
       const width = chance.integer({ min: 100, max: 400 })
       viewport.set(width)
-      expect(context.getBoundingClientRect)
+      expect(window.getComputedStyle)
         .toHaveBeenCalled()
     })
 
@@ -249,10 +249,10 @@ describe("Viewport", () => {
 
     /* Test: should force layout */
     it("should force layout", () => {
-      spyOn(context, "getBoundingClientRect")
+      spyOn(window, "getComputedStyle")
       const viewport = new Viewport(config, window)
       viewport.reset()
-      expect(context.getBoundingClientRect)
+      expect(window.getComputedStyle)
         .toHaveBeenCalled()
     })
   })
