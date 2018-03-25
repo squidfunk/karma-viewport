@@ -140,7 +140,7 @@ describe("Viewport", () => {
   })
 
   /* #load */
-  fdescribe("#load", () => {
+  describe("#load", () => {
 
     // /* Test: should set context source */
     // it("should set context source", done => {
