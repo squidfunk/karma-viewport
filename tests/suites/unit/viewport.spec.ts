@@ -140,10 +140,19 @@ describe("Viewport", () => {
   })
 
   /* #load */
-  describe("#load", () => {
+  fdescribe("#load", () => {
 
-    /* Test: should set context source */
-    it("should set context source", done => {
+    // /* Test: should set context source */
+    // it("should set context source", done => {
+    //   const viewport = new Viewport(config, window)
+    //   viewport.load("/debug.html", () => {
+    //     expect(context.src).toContain("/debug.html")
+    //     done()
+    //   })
+    // })
+
+    /* Test: should set context source and return promise */
+    it("should set context source and return promise", done => {
       const viewport = new Viewport(config, window)
       viewport.load("/debug.html")
         .then(() => {
@@ -186,12 +195,12 @@ describe("Viewport", () => {
     })
 
     /* Test: should force layout */
-    xit("should force layout", () => {
-      spyOn(window, "getComputedStyle")
+    it("should force layout", () => {
+      spyOn(context.contentDocument.body, "getBoundingClientRect")
       const viewport = new Viewport(config, window)
       const width = chance.integer({ min: 100, max: 400 })
       viewport.set(width)
-      expect(window.getComputedStyle)
+      expect(context.contentDocument.body.getBoundingClientRect)
         .toHaveBeenCalled()
     })
 
@@ -248,11 +257,11 @@ describe("Viewport", () => {
     })
 
     /* Test: should force layout */
-    xit("should force layout", () => {
-      spyOn(window, "getComputedStyle")
+    it("should force layout", () => {
+      spyOn(context.contentDocument.body, "getBoundingClientRect")
       const viewport = new Viewport(config, window)
       viewport.reset()
-      expect(window.getComputedStyle)
+      expect(context.contentDocument.body.getBoundingClientRect)
         .toHaveBeenCalled()
     })
   })

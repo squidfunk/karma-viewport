@@ -141,13 +141,12 @@ export class Viewport {
    */
   public load(url: string) {
     return new Promise<void>(resolve => {
-      this.context.onload = () => {
-        this.context.onload = () => { /* noop */ }
+      const load = () => {
+        this.context.removeEventListener("load", load)
         resolve()
       }
-      requestAnimationFrame(() => {
-        this.context.src = url
-      })
+      this.context.addEventListener("load", load)
+      this.context.src = url
     })
   }
 
