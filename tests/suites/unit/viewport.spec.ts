@@ -38,16 +38,23 @@ describe("Viewport", () => {
 
   /* Viewport configuration and context */
   const config  = mockViewportConfiguration()
-  const context = mockViewportContext()
 
-  /* Setup fixtures and attach context */
+  /* Viewport context */
+  let context: HTMLIFrameElement
+
+  /* Setup fixtures */
   beforeAll(() => {
     fixture.setBase("fixtures")
+  })
+
+  /* Create and attach context */
+  beforeEach(() => {
+    context = mockViewportContext()
     document.body.appendChild(context)
   })
 
   /* Detach context */
-  afterAll(() => {
+  afterEach(() => {
     document.body.removeChild(context)
   })
 
@@ -142,14 +149,14 @@ describe("Viewport", () => {
   /* #load */
   describe("#load", () => {
 
-    // /* Test: should set context source */
-    // it("should set context source", done => {
-    //   const viewport = new Viewport(config, window)
-    //   viewport.load("/debug.html", () => {
-    //     expect(context.src).toContain("/debug.html")
-    //     done()
-    //   })
-    // })
+    /* Test: should set context source */
+    it("should set context source", done => {
+      const viewport = new Viewport(config, window)
+      viewport.load("/debug.html", () => {
+        expect(context.src).toContain("/debug.html")
+        done()
+      })
+    })
 
     /* Test: should set context source and return promise */
     it("should set context source and return promise", done => {
@@ -159,6 +166,34 @@ describe("Viewport", () => {
           expect(context.src).toContain("/debug.html")
           done()
         })
+    })
+  })
+
+  /* #offset */
+  describe("#offset", () => {
+
+    /* Test: should set horizontal offset */
+    it("should set horizontal offset", () => {
+      const viewport = new Viewport(config, window)
+      const x = chance.integer({ min: 10, max: 100 })
+      context.contentDocument.body.style.width =
+        `${context.contentWindow.innerWidth + x}`
+      viewport.offset(x)
+      expect(viewport.context.contentWindow.pageXOffset).toEqual(x)
+    })
+
+    /* Test: should set horizontal and vertical offset */
+    it("should set horizontal and vertical offset", () => {
+      const viewport = new Viewport(config, window)
+      const x = chance.integer({ min: 10, max: 100 })
+      const y = chance.integer({ min: 10, max: 100 })
+      context.contentDocument.body.style.width =
+        `${context.contentWindow.innerWidth + x}`
+      context.contentDocument.body.style.height =
+        `${context.contentWindow.innerHeight + y}`
+      viewport.offset(x, y)
+      expect(viewport.context.contentWindow.pageXOffset).toEqual(x)
+      expect(viewport.context.contentWindow.pageYOffset).toEqual(y)
     })
   })
 
@@ -254,6 +289,21 @@ describe("Viewport", () => {
       viewport.reset()
       expect(context.style.width).toEqual("")
       expect(context.style.height).toEqual("")
+    })
+
+    /* Test: should reset width and height */
+    it("should reset offset", () => {
+      const viewport = new Viewport(config, window)
+      const x = chance.integer({ min: 10, max: 100 })
+      const y = chance.integer({ min: 10, max: 100 })
+      context.contentDocument.body.style.width =
+        `${context.contentWindow.innerWidth + x}`
+      context.contentDocument.body.style.height =
+        `${context.contentWindow.innerHeight + y}`
+      viewport.offset(x, y)
+      viewport.reset()
+      expect(viewport.context.contentWindow.pageXOffset).toEqual(0)
+      expect(viewport.context.contentWindow.pageYOffset).toEqual(0)
     })
 
     /* Test: should force layout */

@@ -139,10 +139,11 @@ export class Viewport {
    *
    * @return Promise resolving with no result
    */
-  public load(url: string) {
+  public load(url: string, cb?: () => void) {
     return new Promise<void>(resolve => {
       const load = () => {
         this.context.removeEventListener("load", load)
+        if (cb) cb()
         resolve()
       }
       this.context.addEventListener("load", load)
@@ -157,7 +158,7 @@ export class Viewport {
    * @param y - Vertical offset
    */
   public offset(x: number, y?: number) {
-    this.context.contentWindow.scroll(x, y)
+    this.context.contentWindow.scrollTo(x, y)
   }
 
   /**
@@ -206,7 +207,7 @@ export class Viewport {
    * Reset viewport
    */
   public reset() {
-    this.context.contentWindow.scroll(0, 0)
+    this.context.contentWindow.scrollTo(0, 0)
     this.context.style.width = ""
     this.context.style.height = ""
 
