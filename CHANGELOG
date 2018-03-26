@@ -1,4 +1,4 @@
-karma-viewport-1.0.0 (2018-xx-xx)
+karma-viewport-1.0.0 (2018-03-26)
 
   * Refactored complete code base into TypeScript
   * Added Promise support for callback functions
