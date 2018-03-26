@@ -39,8 +39,7 @@ export default (config: KarmaConfig & KarmaConfigOptions) => {
     /* Frameworks to be used */
     frameworks: [
       "fixture",
-      "jasmine",
-      "jasmine-diff"
+      "jasmine"
     ],
 
     /* Include fixtures and tests */
