@@ -162,41 +162,30 @@ export class Viewport {
   }
 
   /**
-   * Set viewport to breakpoint identifier, number or array
+   * Set viewport to width (and height) or breakpoint name
    *
-   * @param args - Arguments
+   * @param widthOrBreakpoint - Width in pixels or breakpoint name
    */
   public set(width: number, height?: number): void
   public set(breakpoint: string): void
-  // public set(widthOrBreakpoint: number | string, height?: number)
-  public set(...args: any[]) {
+  public set(widthOrBreakpoint: number | string, height?: number) {
 
-    /* Width or breakpoint name */
-    if (args.length === 1) {
-      if (typeof args[0] === "number") {
-        const [width] = args
-        if (width <= 0)
-          throw new TypeError(`Invalid breakpoint width: ${width}`)
+    /* Set viewport by breakpoint name */
+    if (typeof widthOrBreakpoint === "string") {
+      const [breakpoint] = range(this.config.breakpoints, widthOrBreakpoint)
+      return this.set(breakpoint.size.width, breakpoint.size.height)
 
-        /* Set width and height */
-        this.context.style.width = `${width}px`
-        this.context.style.height = ""
-      } else {
-        const [breakpoint] = range(this.config.breakpoints, args[0])
-        this.set(breakpoint.size.width, breakpoint.size.height)
-      }
-
-    /* Explicit width and height */
+    /* Set viewport width (and height) */
     } else {
-      const [width, height] = args
-      if (typeof width !== "number" || width <= 0)
-        throw new TypeError(`Invalid breakpoint width: ${width}`)
-      if (typeof height !== "number" || height <= 0)
+      if (typeof widthOrBreakpoint !== "number" || widthOrBreakpoint <= 0)
+        throw new TypeError(`Invalid breakpoint width: ${widthOrBreakpoint}`)
+      if (height && (typeof height !== "number" || height <= 0))
         throw new TypeError(`Invalid breakpoint height: ${height}`)
 
       /* Set width and height */
-      this.context.style.width = `${width}px`
-      this.context.style.height = `${height}px`
+      this.context.style.width = `${widthOrBreakpoint}px`
+      if (height)
+        this.context.style.height = `${height}px`
     }
 
     /* Force layout, so styles are sure to propagate */
