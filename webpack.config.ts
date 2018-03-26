@@ -66,6 +66,7 @@ export default (env?: { prod?: boolean }) => {
                 compilerOptions: {
                   declaration: true,
                   declarationDir: "..",
+                  removeComments: false,
                   target: "es2015"     /* Use ES modules for tree-shaking */
                 }
               }

@@ -50,7 +50,7 @@ export interface ViewportConfiguration {
 /**
  * Viewport callback
  */
-export type ViewportCallback = (breakpoint: string) => Promise<any> | any
+export type ViewportCallback<T> = (breakpoint: string) => T
 
 /**
  * Extend window element with missing types
@@ -75,8 +75,7 @@ declare global {
  * @return Selected breakpoints
  */
 export function range(
-  breakpoints: ViewportBreakpoint[],
-  first: string, last: string = first
+  breakpoints: ViewportBreakpoint[], first: string, last: string = first
 ) {
   const [from, to] = [first, last].map(name => {
     const index = breakpoints.findIndex(
@@ -90,6 +89,17 @@ export function range(
   return breakpoints.slice(from, to + 1)
 }
 
+/**
+ * Type guard for Promise
+ *
+ * @param value - Value to be checked
+ *
+ * @return Whether the value is a Promise
+ */
+function isPromise(value: any): value is Promise<any> {
+  return Promise.resolve(value) === value
+}
+
 /* ----------------------------------------------------------------------------
  * Class
  * ------------------------------------------------------------------------- */
@@ -99,7 +109,7 @@ export class Viewport {
   /**
    * Viewport configuration
    */
-  public config: ViewportConfiguration
+  public config: Readonly<ViewportConfiguration>
 
   /**
    * Viewport context
@@ -165,6 +175,7 @@ export class Viewport {
    * Set viewport to width (and height) or breakpoint name
    *
    * @param widthOrBreakpoint - Width in pixels or breakpoint name
+   * @param height - Height in pixels
    */
   public set(width: number, height?: number): void
   public set(breakpoint: string): void
@@ -177,13 +188,14 @@ export class Viewport {
 
     /* Set viewport width (and height) */
     } else {
-      if (typeof widthOrBreakpoint !== "number" || widthOrBreakpoint <= 0)
-        throw new TypeError(`Invalid breakpoint width: ${widthOrBreakpoint}`)
+      const width = widthOrBreakpoint
+      if (typeof width !== "number" || width <= 0)
+        throw new TypeError(`Invalid breakpoint width: ${width}`)
       if (height && (typeof height !== "number" || height <= 0))
         throw new TypeError(`Invalid breakpoint height: ${height}`)
 
       /* Set width and height */
-      this.context.style.width = `${widthOrBreakpoint}px`
+      this.context.style.width = `${width}px`
       if (height)
         this.context.style.height = `${height}px`
     }
@@ -219,9 +231,12 @@ export class Viewport {
    * @param {string} last - Last breakpoint name
    * @param {Function} cb - Callback to execute after resizing
    */
-  public between(
-    first: string, last: string,
-    cb: ViewportCallback
+  public between<T extends Promise<any>>(
+    first: string, last: string, cb: ViewportCallback<T>
+  ): Promise<void>
+  public between<T>(first: string, last: string, cb: ViewportCallback<T>): void
+  public between<T>(
+    first: string, last: string, cb: ViewportCallback<T>
   ): void | Promise<void> {
     const [initial, ...rest] = range(this.config.breakpoints, first, last)
 
@@ -234,11 +249,11 @@ export class Viewport {
     /* Execute the first callback and check if it returns a Promise, as we
        need to make sure that everything is executed sequentially */
     const result = invoke(initial)
-    if (Promise.resolve(result) === result)
+    if (isPromise(result))
       return rest
 
         /* Resolve breakpoints and execute callback after resizing */
-        .reduce<Promise<any>>((promise, breakpoint) => {
+        .reduce((promise: Promise<any>, breakpoint) => {
           return promise.then(() => breakpoint).then(invoke)
         }, result)
 
@@ -262,7 +277,9 @@ export class Viewport {
    *
    * @return Promise resolving with no result
    */
-  public each(cb: ViewportCallback) {
+  public each<T extends Promise<any>>(cb: ViewportCallback<T>): Promise<void>
+  public each<T>(cb: ViewportCallback<T>): void
+  public each<T>(cb: ViewportCallback<T>): void | Promise<void> {
     return this.between(this.config.breakpoints[0].name,
       this.config.breakpoints[this.config.breakpoints.length - 1].name, cb)
   }
@@ -280,7 +297,11 @@ export class Viewport {
    *
    * @return Promise resolving with no result
    */
-  public from(first: string, cb: ViewportCallback) {
+  public from<T extends Promise<any>>(
+    first: string, cb: ViewportCallback<T>
+  ): Promise<void>
+  public from<T>(first: string, cb: ViewportCallback<T>): void
+  public from<T>(first: string, cb: ViewportCallback<T>): void | Promise<void> {
     return this.between(first,
       this.config.breakpoints[this.config.breakpoints.length - 1].name, cb)
   }
@@ -298,7 +319,11 @@ export class Viewport {
    *
    * @return Promise resolving with no result
    */
-  public to(last: string, cb: ViewportCallback) {
+  public to<T extends Promise<any>>(
+    last: string, cb: ViewportCallback<T>
+  ): Promise<void>
+  public to<T>(last: string, cb: ViewportCallback<T>): void
+  public to<T>(last: string, cb: ViewportCallback<T>): void | Promise<void> {
     return this.between(this.config.breakpoints[0].name, last, cb)
   }
 }
