@@ -144,7 +144,7 @@ export function saucelabs(
       suppressPassed: !config.singleRun
     },
     coverageIstanbulReporter: {
-      reports: ["lcovonly", "text"]
+      reports: ["lcovonly"]
     }
   }
 }

@@ -287,17 +287,6 @@ describe("Viewport", () => {
   describe("#reset", () => {
 
     /* Test: should reset width and height */
-    it("should reset width and height", () => {
-      const viewport = new Viewport(config, window)
-      const width  = chance.integer({ min: 100, max: 400 })
-      const height = chance.integer({ min: 100, max: 400 })
-      viewport.set(width, height)
-      viewport.reset()
-      expect(context.style.width).toEqual("")
-      expect(context.style.height).toEqual("")
-    })
-
-    /* Test: should reset width and height */
     it("should reset offset", () => {
       const viewport = new Viewport(config, window)
       const x = chance.integer({ min: 10, max: 100 })
@@ -310,6 +299,17 @@ describe("Viewport", () => {
       viewport.reset()
       expect(viewport.context.contentWindow.pageXOffset).toEqual(0)
       expect(viewport.context.contentWindow.pageYOffset).toEqual(0)
+    })
+
+    /* Test: should reset width and height */
+    it("should reset width and height", () => {
+      const viewport = new Viewport(config, window)
+      const width  = chance.integer({ min: 100, max: 400 })
+      const height = chance.integer({ min: 100, max: 400 })
+      viewport.set(width, height)
+      viewport.reset()
+      expect(context.style.width).toEqual("")
+      expect(context.style.height).toEqual("")
     })
 
     /* Test: should force layout */
@@ -333,6 +333,17 @@ describe("Viewport", () => {
       expect(cb).toHaveBeenCalledWith("mobile")
       expect(cb).toHaveBeenCalledWith("tablet")
       expect(cb).not.toHaveBeenCalledWith("screen")
+    })
+
+    /* Test: should invoke callback returning promise on breakpoints */
+    it("should invoke callback returning promise on breakpoints", async () => {
+      const cb = jasmine.createSpy("callback")
+        .and.returnValue(Promise.resolve())
+      const viewport = new Viewport(config, window)
+      await viewport.between("tablet", "screen", cb)
+      expect(cb).not.toHaveBeenCalledWith("mobile")
+      expect(cb).toHaveBeenCalledWith("tablet")
+      expect(cb).toHaveBeenCalledWith("screen")
     })
   })
 
