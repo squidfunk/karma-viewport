@@ -225,31 +225,28 @@ export class Viewport {
   ): Promise<void> | void {
     const [initial, ...rest] = range(this.config.breakpoints, first, last)
 
+    /* Apply breakpoint and execute callback */
+    const invoke = (breakpoint: ViewportBreakpoint) => {
+      this.set(breakpoint.size.width, breakpoint.size.height)
+      return cb(breakpoint.name)
+    }
+
     /* Execute the first callback and check if it returns a Promise, as we
        need to make sure that everything is executed sequentially */
-    this.set(initial.size.width, initial.size.height)
-    const result = cb(initial.name)
+    const result = invoke(initial)
     if (Promise.resolve(result) === result)
       return rest
 
         /* Resolve breakpoints and execute callback after resizing */
         .reduce<Promise<any>>((promise, breakpoint) => {
-          return promise.then(() => {
-            this.set(breakpoint.size.width, breakpoint.size.height)
-            return cb(breakpoint.name)
-          })
+          return promise.then(() => breakpoint).then(invoke)
         }, result)
 
         /* Reset viewport */
         .then(() => this.reset())
 
-    /* Callback doesn't return Promise */
-    rest.forEach(breakpoint => {
-      this.set(breakpoint.size.width, breakpoint.size.height)
-      cb(breakpoint.name)
-    })
-
-    /* Reset viewport */
+    /* Invoke callback and reset viewport */
+    rest.forEach(invoke)
     this.reset()
   }
 
