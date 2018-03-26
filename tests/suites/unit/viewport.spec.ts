@@ -51,6 +51,9 @@ describe("Viewport", () => {
   beforeEach(() => {
     context = mockViewportContext()
     document.body.appendChild(context)
+    /* Hack: Internet Explorer doesn't initialize an empty iframe, so we have
+       to do it by ourselves, see https://bit.ly/2GaF6Iw */
+    context.contentDocument.write("<body></body>")
   })
 
   /* Detach context */
@@ -177,7 +180,7 @@ describe("Viewport", () => {
       const viewport = new Viewport(config, window)
       const x = chance.integer({ min: 10, max: 100 })
       context.contentDocument.body.style.width =
-        `${context.contentWindow.innerWidth + x}`
+        `${context.contentWindow.innerWidth + x}px`
       viewport.offset(x)
       expect(viewport.context.contentWindow.pageXOffset).toEqual(x)
     })
@@ -188,9 +191,9 @@ describe("Viewport", () => {
       const x = chance.integer({ min: 10, max: 100 })
       const y = chance.integer({ min: 10, max: 100 })
       context.contentDocument.body.style.width =
-        `${context.contentWindow.innerWidth + x}`
+        `${context.contentWindow.innerWidth + x}px`
       context.contentDocument.body.style.height =
-        `${context.contentWindow.innerHeight + y}`
+        `${context.contentWindow.innerHeight + y}px`
       viewport.offset(x, y)
       expect(viewport.context.contentWindow.pageXOffset).toEqual(x)
       expect(viewport.context.contentWindow.pageYOffset).toEqual(y)
