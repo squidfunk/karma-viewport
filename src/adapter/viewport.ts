@@ -222,7 +222,7 @@ export class Viewport {
   public between(
     first: string, last: string,
     cb: ViewportCallback
-  ): Promise<void> | void {
+  ): void | Promise<void> {
     const [initial, ...rest] = range(this.config.breakpoints, first, last)
 
     /* Apply breakpoint and execute callback */
