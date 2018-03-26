@@ -50,7 +50,7 @@ export interface ViewportConfiguration {
 /**
  * Viewport callback
  */
-export type ViewportCallback = (breakpoint: string) => void
+export type ViewportCallback = (breakpoint: string) => Promise<any> | any
 
 /**
  * Extend window element with missing types
@@ -207,6 +207,9 @@ export class Viewport {
   /**
    * Execute a callback for all breakpoints between the first and last given
    *
+   * If the callback return value is a Promise, callback invocations will be
+   * chained to guarantee sequential execution.
+   *
    * @example
    *   viewport.between("mobile", "tablet", name => {
    *     ...
@@ -216,14 +219,35 @@ export class Viewport {
    * @param {string} last - Last breakpoint name
    * @param {Function} cb - Callback to execute after resizing
    */
-  public between(first: string, last: string, cb: ViewportCallback) {
+  public between(
+    first: string, last: string,
+    cb: ViewportCallback
+  ): Promise<void> | void {
+    const [initial, ...rest] = range(this.config.breakpoints, first, last)
 
-    /* Resolve breakpoints and execute callback after resizing */
-    range(this.config.breakpoints, first, last)
-      .forEach((breakpoint: ViewportBreakpoint) => {
-        this.set(breakpoint.size.width, breakpoint.size.height)
-        cb(breakpoint.name)
-      })
+    /* Execute the first callback and check if it returns a Promise, as we
+       need to make sure that everything is executed sequentially */
+    this.set(initial.size.width, initial.size.height)
+    const result = cb(initial.name)
+    if (Promise.resolve(result) === result)
+      return rest
+
+        /* Resolve breakpoints and execute callback after resizing */
+        .reduce<Promise<any>>((promise, breakpoint) => {
+          return promise.then(() => {
+            this.set(breakpoint.size.width, breakpoint.size.height)
+            return cb(breakpoint.name)
+          })
+        }, result)
+
+        /* Reset viewport */
+        .then(() => this.reset())
+
+    /* Callback doesn't return Promise */
+    rest.forEach(breakpoint => {
+      this.set(breakpoint.size.width, breakpoint.size.height)
+      cb(breakpoint.name)
+    })
 
     /* Reset viewport */
     this.reset()
@@ -238,11 +262,12 @@ export class Viewport {
    *   })
    *
    * @param cb - Callback to execute after resizing
+   *
+   * @return Promise resolving with no result
    */
   public each(cb: ViewportCallback) {
-    this.between(this.config.breakpoints[0].name, this.config.breakpoints[
-      this.config.breakpoints.length - 1
-    ].name, cb)
+    return this.between(this.config.breakpoints[0].name,
+      this.config.breakpoints[this.config.breakpoints.length - 1].name, cb)
   }
 
   /**
@@ -255,11 +280,12 @@ export class Viewport {
    *
    * @param first - First breakpoint name
    * @param cb - Callback to execute after resizing
+   *
+   * @return Promise resolving with no result
    */
   public from(first: string, cb: ViewportCallback) {
-    this.between(first, this.config.breakpoints[
-      this.config.breakpoints.length - 1
-    ].name, cb)
+    return this.between(first,
+      this.config.breakpoints[this.config.breakpoints.length - 1].name, cb)
   }
 
   /**
@@ -272,8 +298,10 @@ export class Viewport {
    *
    * @param last - Last breakpoint name
    * @param cb - Callback to execute after resizing
+   *
+   * @return Promise resolving with no result
    */
   public to(last: string, cb: ViewportCallback) {
-    this.between(this.config.breakpoints[0].name, last, cb)
+    return this.between(this.config.breakpoints[0].name, last, cb)
   }
 }

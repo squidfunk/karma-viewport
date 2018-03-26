@@ -29,6 +29,7 @@
 /scripts
 /src
 /tests
+/typings
 
 # Coverage reports
 /coverage
@@ -37,13 +38,17 @@
 .babelrc
 .codecov.yml
 .editorconfig
-.eslintignore
-.eslintrc
 .gitignore
 .npmignore
 .travis.yml
+CHANGELOG
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+Makefile
 package-lock.json
-webpack.config.js
+tsconfig.json
+tslint.json
+webpack.config.ts
 
 # Git-related
 /.githooks

@@ -1,3 +1,11 @@
+karma-viewport-1.0.0 (2018-xx-xx)
+
+  * Refactored complete code base into TypeScript
+  * Added Promise support for callback functions
+  * Added typings to distribution files
+  * Improved forced layout recalculation
+  * Improved unit and integration tests
+
 karma-viewport-0.4.2 (2017-09-05)
 
   * Fixed debug context middleware not being registered
