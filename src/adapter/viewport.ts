@@ -157,7 +157,7 @@ export class Viewport {
    * @param x - Horizontal offset
    * @param y - Vertical offset
    */
-  public offset(x: number, y?: number) {
+  public offset(x: number, y: number = 0) {
     this.context.contentWindow.scrollTo(x, y)
   }
 
