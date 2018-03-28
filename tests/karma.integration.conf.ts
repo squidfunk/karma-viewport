@@ -20,6 +20,8 @@
  * IN THE SOFTWARE.
  */
 
+/// <reference path="../src/index.ts" />
+
 import {
   Config as KarmaConfig,
   ConfigOptions as KarmaConfigOptions
@@ -27,8 +29,6 @@ import {
 
 import * as browsers from "./karma/browsers/integration.json"
 import { saucelabs, webpack } from "./karma/common"
-
-import "../src"
 
 /* ----------------------------------------------------------------------------
  * Configuration

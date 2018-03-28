@@ -20,7 +20,7 @@
  * IN THE SOFTWARE.
  */
 
-/** @internal */
+/** @internal polyfill Array.findIndex */
 import "array-findindex-polyfill"
 
 import { inspect } from "./util/inspect"
@@ -55,6 +55,8 @@ export type ViewportCallback<T> = (breakpoint: string) => T
 
 /**
  * Extend window element with missing types
+ *
+ * @internal
  */
 declare global {
   interface Window {
