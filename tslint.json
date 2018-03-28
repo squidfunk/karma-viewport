@@ -84,7 +84,7 @@
     ],
     "variable-name": [
       true,
-      "allow-trailing-underscore",
+      "allow-leading-underscore",
       "ban-keywords",
       "check-format"
     ],

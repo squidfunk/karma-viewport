@@ -61,7 +61,7 @@ declare module "karma" {
 /**
  * Declare ambient viewport instance
  */
-declare global  {
+declare global {
   const viewport: Viewport
 }
 
@@ -159,7 +159,7 @@ const preprocessor: Injectable =
       throw new TypeError(`Invalid viewport configuration: ${viewport}`)
 
     /* Return preprocessor function */
-    return (content: string, file: string, done: (result: string) => void) => {
+    return (content: string, _file: string, done: (result: string) => void) => {
       const config: ViewportConfiguration =
         Object.assign(JSON.parse(content), viewport)
 

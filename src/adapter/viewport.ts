@@ -20,6 +20,7 @@
  * IN THE SOFTWARE.
  */
 
+/** @internal */
 import "array-findindex-polyfill"
 
 import { inspect } from "./util/inspect"
@@ -227,9 +228,11 @@ export class Viewport {
    *     ...
    *   })
    *
-   * @param {string} first - First breakpoint name
-   * @param {string} last - Last breakpoint name
-   * @param {Function} cb - Callback to execute after resizing
+   * @param first - First breakpoint name
+   * @param last - Last breakpoint name
+   * @param cb - Callback to execute after resizing
+   *
+   * @return Promise resolving with no result
    */
   public between<T extends Promise<any>>(
     first: string, last: string, cb: ViewportCallback<T>
