@@ -10,11 +10,11 @@
   [gitter-image]: https://img.shields.io/gitter/room/squidfunk/karma-viewport.svg
   [gitter-link]: https://gitter.im/squidfunk/karma-viewport
   [npm-image]: https://img.shields.io/npm/v/karma-viewport.svg
-  [npm-link]: https://npmjs.com/packages/karma-viewport
+  [npm-link]: https://npmjs.com/package/karma-viewport
 
 # karma-viewport
 
-Karma viewport resizer for testing responsive features and layout.
+Karma viewport resizer for testing responsive features and layout
 
 ## Installation
 
@@ -23,8 +23,6 @@ npm install karma-viewport
 ```
 
 ## Usage
-
-### Basic configuration
 
 Add `viewport` to the list of frameworks inside your Karma configuration:
 
@@ -37,8 +35,8 @@ module.exports = function(config) {
 }
 ```
 
-This will expose the global variable `viewport` which allows setting the
-dimensions of the viewport within tests, e.g.:
+This will expose the global variable `viewport` to your tests, which allows
+setting the dimensions of the viewport, e.g.:
 
 ``` js
 // Set to 320px x 100%
@@ -51,24 +49,12 @@ viewport.set(320, 480)
 viewport.reset()
 ```
 
-Remember to call `viewport.reset()` after each test, e.g. for [Jasmine][1] or
-[Mocha][2]:
-
-``` js
-afterEach(() => {
-  viewport.reset()
-})
-```
-
-  [1]: https://jasmine.github.io
-  [2]: https://mochajs.org/
-
-### Advanced configuration
+### Configuration
 
 #### `config.viewport.context`
 
 By default, `viewport` will target the default `iframe#context` of Karma,
-which is enabled through `client.useIframe` (see the [configuration guide][3]).
+which is enabled through `client.useIframe` (see the [configuration guide][1]).
 This will also wrap the `debug` context to run inside the `iframe#context`.
 
 To run tests within a custom, separate context, e.g. `iframe#viewport`:
@@ -88,16 +74,15 @@ module.exports = function(config) {
 ```
 
 Note that the `iframe#viewport` element must be present in the `context.html`
-and `debug.html` files that are served by Karma. Using a separate, custom
-context makes it possible to load entire webpages for testing:
+and `debug.html` files that are served by Karma. You can override the files, or
+add an `iframe` element dynamically before running the tests. Using a separate,
+custom context makes it possible to load entire webpages for testing:
 
 ``` js
-beforeEach(done => {
-  viewport.load("/path/to/fixture.html", done)
-})
+viewport.load("/path/to/fixture.html").then(() => { /* webpage was loaded */ })
 ```
 
-  [3]: http://karma-runner.github.io/1.0/config/configuration-file.html
+  [1]: http://karma-runner.github.io/1.0/config/configuration-file.html
 
 #### `config.viewport.breakpoints`
 
@@ -176,7 +161,19 @@ viewport.between("tablet", "screen", name => {
 })
 ```
 
-After breakpoint iteration, `viewport.reset()` is called internally.
+After breakpoint iteration, `viewport.reset()` is called internally. If the
+callback provided to the breakpoint returns a `Promise`, the return value of
+the function will also be a `Promise`. This enables asynchronous tests.
+
+### TypeScript
+
+`karma-viewport` is written in TypeScript and comes with its own typings. Don't
+include the package using an `import` statement, but instead include its types
+via `tsconfig.json` or a reference within `karma.conf.ts` or tests:
+
+``` ts
+/// <reference types="karma-viewport" />
+```
 
 ## License
 
