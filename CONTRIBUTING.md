@@ -31,7 +31,7 @@ Please consider what kind of change it is:
 
 * For a **major feature**, first open an issue and outline your proposal so
   that it can be discussed. This will also allow us to better coordinate our
-  efforts, prevent duplication of work, and help you to craft the change so
+  efforts, prevent duplication of work and help you to craft the change so
   that it is successfully accepted into the project.
 
 * **Small features and bugs** can be crafted and directly submitted as a pull

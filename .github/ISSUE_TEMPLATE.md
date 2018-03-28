@@ -19,6 +19,7 @@
 ### Package versions
 
 * karma-viewport: `...`
+* karma: `...`
 
 ### System information
 
