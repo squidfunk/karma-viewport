@@ -137,7 +137,7 @@ export function saucelabs(
 
     /* Set reporters */
     reporters: config.singleRun
-      ? ["summary", "coverage-istanbul"]
+      ? ["summary", "coverage-istanbul", "saucelabs"]
       : ["spec", "clear-screen"],
     specReporter: {
       suppressErrorSummary: true,
