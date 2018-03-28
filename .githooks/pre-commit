@@ -21,6 +21,13 @@
 # IN THE SOFTWARE.
 
 # -----------------------------------------------------------------------------
+# Constants
+# -----------------------------------------------------------------------------
+
+# Patch file to store working tree
+PATCH=".working-tree.patch"
+
+# -----------------------------------------------------------------------------
 # Functions
 # -----------------------------------------------------------------------------
 
@@ -45,9 +52,6 @@ trap cleanup EXIT SIGINT SIGHUP
 # Values
 # -----------------------------------------------------------------------------
 
-# Patch file to store working tree
-PATCH=".working-tree.patch"
-
 # Project root
 ROOT=$(git rev-parse --show-toplevel)
 
@@ -60,26 +64,17 @@ git diff > "${PATCH}"
 git checkout -- .
 
 # Filter staged files and create short list for files to lint
-STAGE=$(git diff --cached --name-only --diff-filter=ACMR)
-FILES=$(echo ${STAGE} | grep "\.ts$")
+FILES=$(git diff --cached --name-only --diff-filter=ACMR | grep "\.ts$")
 
-# Determine affected packages
+# Run check and print indicator
 if [ -n "${FILES}" ]; then
-  PACKAGES=$(echo ${FILES} | ${ROOT}/packages/build/helpers/affected)
-  AFFECTED=$(echo ${PACKAGES} | sed 's/packages/_lint\/packages/g')
+  echo -e "\x1B[33mLinting affected files:\x1B[0m"
+  for FILE in $FILES; do
+    echo "  ${FILE}"
+  done
+  echo
 
-  # Only lint, if there is at least one affected package
-  if [ -n "${AFFECTED}" ]; then
-
-    # Print which packages are affected and linted
-    echo -e "\x1B[33mLinting affected files:\x1B[0m"
-    for FILE in $FILES; do
-      echo "  ${FILE}"
-    done
-    echo
-
-    # Run linter for affected packages in parallel
-    npm run lint
-    exit $?
-  fi
+  # Run linter for affected packages in parallel
+  npm run lint
+  exit $?
 fi
