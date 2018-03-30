@@ -40,6 +40,10 @@ script:
   - npm run test/integration
   - npm run test
 
+# Upload coverage report
+after_success:
+  - node_modules/.bin/codecov
+
 # Release specification
 deploy:
   provider: npm
