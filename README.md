@@ -7,7 +7,7 @@
   [travis-link]: https://travis-ci.org/squidfunk/karma-viewport
   [codecov-image]: https://img.shields.io/codecov/c/github/squidfunk/karma-viewport/master.svg
   [codecov-link]: https://codecov.io/gh/squidfunk/karma-viewport
-  [gitter-image]: https://img.shields.io/gitter/room/squidfunk/karma-viewport.svg
+  [gitter-image]: https://badges.gitter.im/squidfunk/karma-viewport.svg
   [gitter-link]: https://gitter.im/squidfunk/karma-viewport
   [npm-image]: https://img.shields.io/npm/v/karma-viewport.svg
   [npm-link]: https://npmjs.com/package/karma-viewport

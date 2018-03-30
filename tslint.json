@@ -37,6 +37,10 @@
     "no-submodule-imports": false,
     "no-trailing-whitespace": true,
     "no-var-keyword": true,
+    "object-literal-key-quotes": [
+      true,
+      "consistent-as-needed"
+    ],
     "object-literal-sort-keys": false,
     "one-line": [
       true,
