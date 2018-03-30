@@ -49,6 +49,10 @@ viewport.set(320, 480)
 viewport.reset()
 ```
 
+### Browser support
+
+Chrome, Firefox, Safari, Edge 13-15, IE 9-11 and possibly some more.
+
 ### Configuration
 
 #### `config.viewport.context`
