@@ -34,7 +34,7 @@
     "clean": "make clean",
     "lint": "make lint",
     "test": "make test",
-    "test/integration": "make test/integration",
+    "test:integration": "make test-integration",
     "watch": "make watch"
   },
   "dependencies": {

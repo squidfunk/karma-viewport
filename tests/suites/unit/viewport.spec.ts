@@ -54,7 +54,7 @@ describe("Viewport", () => {
 
     /* Hack: Internet Explorer doesn't initialize the document for an empty
        iframe, so we have to do it by ourselves, see https://bit.ly/2GaF6Iw */
-    context.contentDocument.write("<body></body>")
+    context.contentDocument!.write("<body></body>")
   })
 
   /* Detach context */
@@ -180,12 +180,12 @@ describe("Viewport", () => {
     it("should set horizontal offset", () => {
       const viewport = new Viewport(config, window)
       const x = chance.integer({ min: 10, max: 100 })
-      context.contentDocument.body.style.width =
-        `${context.contentWindow.innerWidth + x}px`
-      context.contentDocument.body.style.height =
-        `${context.contentWindow.innerHeight}px`
+      context.contentDocument!.body.style.width =
+        `${context.contentWindow!.innerWidth + x}px`
+      context.contentDocument!.body.style.height =
+        `${context.contentWindow!.innerHeight}px`
       viewport.offset(x)
-      expect(viewport.context.contentWindow.pageXOffset).toEqual(x)
+      expect(viewport.context.contentWindow!.pageXOffset).toEqual(x)
     })
 
     /* Test: should set horizontal and vertical offset */
@@ -193,13 +193,13 @@ describe("Viewport", () => {
       const viewport = new Viewport(config, window)
       const x = chance.integer({ min: 10, max: 100 })
       const y = chance.integer({ min: 10, max: 100 })
-      context.contentDocument.body.style.width =
-        `${context.contentWindow.innerWidth + x}px`
-      context.contentDocument.body.style.height =
-        `${context.contentWindow.innerHeight + y}px`
+      context.contentDocument!.body.style.width =
+        `${context.contentWindow!.innerWidth + x}px`
+      context.contentDocument!.body.style.height =
+        `${context.contentWindow!.innerHeight + y}px`
       viewport.offset(x, y)
-      expect(viewport.context.contentWindow.pageXOffset).toEqual(x)
-      expect(viewport.context.contentWindow.pageYOffset).toEqual(y)
+      expect(viewport.context.contentWindow!.pageXOffset).toEqual(x)
+      expect(viewport.context.contentWindow!.pageYOffset).toEqual(y)
     })
   })
 
@@ -237,11 +237,11 @@ describe("Viewport", () => {
 
     /* Test: should force layout */
     it("should force layout", () => {
-      spyOn(context.contentDocument.body, "getBoundingClientRect")
+      spyOn(context.contentDocument!.body, "getBoundingClientRect")
       const viewport = new Viewport(config, window)
       const width = chance.integer({ min: 100, max: 400 })
       viewport.set(width)
-      expect(context.contentDocument.body.getBoundingClientRect)
+      expect(context.contentDocument!.body.getBoundingClientRect)
         .toHaveBeenCalled()
     })
 
@@ -291,14 +291,14 @@ describe("Viewport", () => {
       const viewport = new Viewport(config, window)
       const x = chance.integer({ min: 10, max: 100 })
       const y = chance.integer({ min: 10, max: 100 })
-      context.contentDocument.body.style.width =
-        `${context.contentWindow.innerWidth + x}`
-      context.contentDocument.body.style.height =
-        `${context.contentWindow.innerHeight + y}`
+      context.contentDocument!.body.style.width =
+        `${context.contentWindow!.innerWidth + x}`
+      context.contentDocument!.body.style.height =
+        `${context.contentWindow!.innerHeight + y}`
       viewport.offset(x, y)
       viewport.reset()
-      expect(viewport.context.contentWindow.pageXOffset).toEqual(0)
-      expect(viewport.context.contentWindow.pageYOffset).toEqual(0)
+      expect(viewport.context.contentWindow!.pageXOffset).toEqual(0)
+      expect(viewport.context.contentWindow!.pageYOffset).toEqual(0)
     })
 
     /* Test: should reset width and height */
@@ -314,10 +314,10 @@ describe("Viewport", () => {
 
     /* Test: should force layout */
     it("should force layout", () => {
-      spyOn(context.contentDocument.body, "getBoundingClientRect")
+      spyOn(context.contentDocument!.body, "getBoundingClientRect")
       const viewport = new Viewport(config, window)
       viewport.reset()
-      expect(context.contentDocument.body.getBoundingClientRect)
+      expect(context.contentDocument!.body.getBoundingClientRect)
         .toHaveBeenCalled()
     })
   })

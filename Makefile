@@ -73,10 +73,11 @@ clean:
 
 # Lint source files
 lint: node_modules
-	$(shell npm bin)/tslint -p tsconfig.json "{src,tests}/**/*.ts"
+	$(shell npm bin)/tslint -p tsconfig.json "src/**/*.ts"
+	$(shell npm bin)/tslint -p tests/tsconfig.json "tests/**/*.ts"
 
 # Execute integration tests
-test/integration: node_modules build
+test-integration: node_modules build
 	$(shell npm bin)/karma start tests/karma.integration.conf.ts \
 		--single-run
 
