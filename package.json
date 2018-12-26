@@ -54,7 +54,7 @@
     "babel-loader": "^7.1.1",
     "babel-preset-env": "^1.6.1",
     "chance": "^1.0.13",
-    "codecov": "^2.1.0",
+    "codecov": "^3.1.0",
     "es6-promise": "^4.2.4",
     "event-hooks-webpack-plugin": "^1.0.0",
     "git-hooks": "^1.1.8",
