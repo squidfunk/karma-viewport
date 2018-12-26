@@ -48,6 +48,7 @@ export function webpack(
   config: KarmaConfig & KarmaConfigOptions
 ): Partial<WebpackConfig> {
   return {
+    mode: "development",
     module: {
       rules: [
         {
