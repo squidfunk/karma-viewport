@@ -29,8 +29,8 @@ import {
 } from "karma"
 import {
   Configuration as WebpackConfig,
-  NewUseRule as WebpackNewUseRule,
-  ProvidePlugin
+  ProvidePlugin,
+  RuleSetRule as WebpackRuleSetRule
 } from "webpack"
 
 /* ----------------------------------------------------------------------------
@@ -68,7 +68,7 @@ export function webpack(
                 use: "istanbul-instrumenter-loader?+esModules",
                 include: path.resolve(__dirname, "../../src"),
                 enforce: "post"
-              }) as WebpackNewUseRule
+              }) as WebpackRuleSetRule
             ]
           : [])
       ]
