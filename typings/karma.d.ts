@@ -36,7 +36,6 @@ declare module "karma" {
     coverageIstanbulReporter?: {       /* karma-coverage */
       reports: string[]
     }
-    customLaunchers?: any              /* karma-sauce-launcher */
     sauceLabs?: {
       build?: string,
       testName: string,

@@ -1,37 +1,11 @@
 {
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "allowJs": true,
-    "alwaysStrict": true,
-    "baseUrl": ".",
-    "lib": [
-      "dom",
-      "es2015",
-      "esnext"
-    ],
-    "moduleResolution": "node",
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "outDir": "dist",
-    "paths": {
-      "~/*": ["../src/*"],
-      "_/*": ["./*"]
-    },
-    "preserveConstEnums": true,
-    "removeComments": true,
-    "sourceMap": true,
-    "strict": true,
-    "stripInternal": true,
-    "target": "es5"
+    "removeComments": false
   },
   "include": [
-    ".",
+    "../src",
+    "../tests",
     "../typings"
-  ],
-  "exclude": [
-    "node_modules"
   ]
 }

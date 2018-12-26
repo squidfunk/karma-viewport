@@ -35,7 +35,7 @@ node_modules:
 # Build theme for distribution with Webpack
 dist/adapter/index.js: $(shell find src/adapter) \
 .babelrc webpack.config.ts dist/index.js
-	$(shell npm bin)/webpack --env.prod
+	$(shell npm bin)/webpack --mode production
 
 # Create directories
 dist/config dist/static:
@@ -78,16 +78,19 @@ lint: node_modules
 
 # Execute integration tests
 test-integration: node_modules build
-	$(shell npm bin)/karma start tests/karma.integration.conf.ts \
-		--single-run
+	TS_NODE_PROJECT=tests/tsconfig.json TS_NODE_FILES=1 \
+		$(shell npm bin)/karma start tests/karma.integration.conf.ts \
+			--single-run
 
 # Execute unit tests
 test: node_modules
-	$(shell npm bin)/karma start tests/karma.conf.ts --single-run
+	TS_NODE_PROJECT=tests/tsconfig.json TS_NODE_FILES=1 \
+		$(shell npm bin)/karma start tests/karma.conf.ts --single-run
 
 # Execute unit tests in watch mode
 watch: node_modules
-	$(shell npm bin)/karma start tests/karma.conf.ts
+	TS_NODE_PROJECT=tests/tsconfig.json TS_NODE_FILES=1 \
+		$(shell npm bin)/karma start tests/karma.conf.ts
 
 # -----------------------------------------------------------------------------
 

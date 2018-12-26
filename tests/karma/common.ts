@@ -34,12 +34,6 @@ import {
 } from "webpack"
 
 /* ----------------------------------------------------------------------------
- * Plugins
- * ------------------------------------------------------------------------- */
-
-import EventHooksPlugin = require("event-hooks-webpack-plugin")
-
-/* ----------------------------------------------------------------------------
  * Functions
  * ------------------------------------------------------------------------- */
 
@@ -88,19 +82,6 @@ export function webpack(
       /* Polyfills */
       new ProvidePlugin({
         Promise: "es6-promise"
-      }),
-
-      /* Hack: The webpack development middleware sometimes goes into a loop
-         on macOS when starting for the first time. This is a quick fix until
-         this issue is resolved. See: http://bit.ly/2AsizEn */
-      new EventHooksPlugin({
-        "watch-run": (compiler: any, done: () => {}) => {
-          compiler.startTime += 10000
-          done()
-        },
-        "done": (stats: any) => {
-          stats.startTime -= 10000
-        }
       })
     ],
     devtool: "source-map"
@@ -122,7 +103,7 @@ export function saucelabs(
 
     /* Define browsers to run tests on, see http://bit.ly/2pl96u1 */
     browsers: Object.keys(browsers),
-    customLaunchers: browsers,
+    customLaunchers: browsers as any,
 
     /* Configure SauceLabs integration */
     concurrency: 5,

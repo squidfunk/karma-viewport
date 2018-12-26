@@ -24,32 +24,27 @@ import * as path from "path"
 import {
   Configuration,
   NoEmitOnErrorsPlugin,
-  optimize,
   ProvidePlugin
 } from "webpack"
-
-/* Webpack plugins */
-const {
-  UglifyJsPlugin
-} = optimize
-
-/* ----------------------------------------------------------------------------
- * Plugins
- * ------------------------------------------------------------------------- */
-
-import EventHooksPlugin = require("event-hooks-webpack-plugin")
 
 /* ----------------------------------------------------------------------------
  * Configuration
  * ------------------------------------------------------------------------- */
 
-export default (env?: { prod?: boolean }) => {
+/**
+ * Webpack configuration
+ *
+ * @param env - Webpack environment arguments
+ * @param args - Command-line arguments
+ *
+ * @return Webpack configuration
+ */
+export default (_env: never, args: Configuration) => {
   const config: Configuration = {
+    mode: args.mode,
 
     /* Entrypoint */
-    entry: [
-      path.resolve(__dirname, "src/adapter/index.ts")
-    ],
+    entry: ["src/adapter"],
 
     /* Loaders */
     module: {
@@ -66,6 +61,8 @@ export default (env?: { prod?: boolean }) => {
                 compilerOptions: {
                   declaration: true,
                   declarationDir: "..",
+                  noUnusedLocals: args.mode === "production",
+                  noUnusedParameters: args.mode === "production",
                   removeComments: false,
                   target: "es2015"     /* Use ES modules for tree-shaking */
                 }
@@ -80,7 +77,7 @@ export default (env?: { prod?: boolean }) => {
     /* Export class constructor as entrypoint */
     output: {
       path: path.resolve(__dirname, "dist/adapter"),
-      pathinfo: true,
+      pathinfo: false,
       filename: "index.js",
       libraryTarget: "window"
     },
@@ -94,19 +91,6 @@ export default (env?: { prod?: boolean }) => {
       /* Polyfills */
       new ProvidePlugin({
         Promise: "es6-promise"
-      }),
-
-      /* Hack: The webpack development middleware sometimes goes into a loop
-         on macOS when starting for the first time. This is a quick fix until
-         this issue is resolved. See: http://bit.ly/2AsizEn */
-      new EventHooksPlugin({
-        "watch-run": (compiler: any, done: () => {}) => {
-          compiler.startTime += 10000
-          done()
-        },
-        "done": (stats: any) => {
-          stats.startTime -= 10000
-        }
       })
     ],
 
@@ -121,29 +105,6 @@ export default (env?: { prod?: boolean }) => {
 
     /* Sourcemaps */
     devtool: "source-map"
-  }
-
-  /* Build for production environment */
-  if (env && env.prod) {
-
-    /* Uglify sources */
-    config.plugins!.push(
-      new UglifyJsPlugin({
-        comments: false,
-        compress: {
-          warnings: false,
-          screw_ie8: true,
-          conditionals: true,
-          unused: true,
-          comparisons: true,
-          sequences: true,
-          dead_code: true,
-          evaluate: true,
-          if_return: true,
-          join_vars: true
-        },
-        sourceMap: true
-      }))
   }
 
   /* We're good to go */
