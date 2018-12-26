@@ -171,7 +171,7 @@ export class Viewport {
    * @param y - Vertical offset
    */
   public offset(x: number, y: number = 0) {
-    this.context.contentWindow.scrollTo(x, y)
+    this.context.contentWindow!.scrollTo(x, y)
   }
 
   /**
@@ -204,19 +204,19 @@ export class Viewport {
     }
 
     /* Force layout, so styles are sure to propagate */
-    this.context.contentDocument.body.getBoundingClientRect()
+    this.context.contentDocument!.body.getBoundingClientRect()
   }
 
   /**
    * Reset viewport
    */
   public reset() {
-    this.context.contentWindow.scrollTo(0, 0)
+    this.context.contentWindow!.scrollTo(0, 0)
     this.context.style.width = ""
     this.context.style.height = ""
 
     /* Force layout, so styles are sure to propagate */
-    this.context.contentDocument.body.getBoundingClientRect()
+    this.context.contentDocument!.body.getBoundingClientRect()
   }
 
   /**

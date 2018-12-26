@@ -18,7 +18,7 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-all: clean lint | build test test/integration
+all: clean lint | build test/integration test
 
 # -----------------------------------------------------------------------------
 # Prerequisites
@@ -82,8 +82,7 @@ test/integration: node_modules build
 
 # Execute unit tests
 test: node_modules
-	$(shell npm bin)/karma start tests/karma.conf.ts \
-		--single-run
+	$(shell npm bin)/karma start tests/karma.conf.ts --single-run
 
 # Execute unit tests in watch mode
 watch: node_modules

@@ -67,7 +67,7 @@ if [ -n "${FILES}" ]; then
   done
   echo
 
-  # Run linter for affected packages in parallel
+  # Run linter
   npm run lint
   exit $?
 fi
