@@ -42,6 +42,8 @@
     "jsonschema": "^1.2.4"
   },
   "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.2.3",
     "@types/chance": "^1.0.1",
     "@types/jasmine": "^3.3.5",
     "@types/jsonschema": "^1.1.1",
@@ -49,8 +51,6 @@
     "@types/node": "^9.6.41",
     "@types/webpack": "^4.4.22",
     "array-findindex-polyfill": "^0.1.0",
-    "@babel/core": "^7.2.2",
-    "@babel/preset-env": "^7.2.3",
     "babel-loader": "^8.0.4",
     "chance": "^1.0.18",
     "codecov": "^3.1.0",
