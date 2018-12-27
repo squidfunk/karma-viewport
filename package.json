@@ -55,7 +55,6 @@
     "chance": "^1.0.18",
     "codecov": "^3.1.0",
     "es6-promise": "^4.2.5",
-    "git-hooks": "^1.1.8",
     "istanbul-instrumenter-loader": "^3.0.1",
     "jasmine-core": "^3.3.0",
     "karma": "^3.1.4",
