@@ -35,7 +35,7 @@ node_modules:
 # Build theme for distribution with Webpack
 dist/adapter/index.js: $(shell find src/adapter) \
 .babelrc webpack.config.ts dist/index.js
-	TS_NODE_FILES=true $(shell npm bin)/webpack --mode production
+	$(shell npm bin)/webpack --mode production
 
 # Create directories
 dist/config dist/static:
