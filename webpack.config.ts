@@ -60,7 +60,6 @@ export default (_env: never, args: Configuration) => {
               options: {
                 compilerOptions: {
                   declaration: true,
-                  declarationDir: "..",
                   noUnusedLocals: args.mode === "production",
                   noUnusedParameters: args.mode === "production",
                   removeComments: false,
