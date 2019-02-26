@@ -38,14 +38,14 @@
     "watch": "make watch"
   },
   "dependencies": {
-    "@types/karma": "^3.0.1",
+    "@types/karma": "^3.0.2",
     "jsonschema": "^1.2.4"
   },
   "devDependencies": {
-    "@babel/core": "^7.2.2",
-    "@babel/preset-env": "^7.2.3",
+    "@babel/core": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
     "@types/chance": "^1.0.1",
-    "@types/jasmine": "^3.3.5",
+    "@types/jasmine": "^3.3.9",
     "@types/jsonschema": "^1.1.1",
     "@types/karma-fixture": "^0.2.5",
     "@types/node": "^9.6.41",
@@ -74,7 +74,7 @@
     "ts-node": "^8.0.0",
     "tslint": "^5.12.0",
     "typescript": "^3.2.2",
-    "webpack": "^4.28.2",
+    "webpack": "^4.29.4",
     "webpack-cli": "^3.2.1"
   }
 }
