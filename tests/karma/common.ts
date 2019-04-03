@@ -20,18 +20,11 @@
  * IN THE SOFTWARE.
  */
 
-import * as moniker from "moniker"
 import * as path from "path"
 
-import {
-  Config as KarmaConfig,
-  ConfigOptions as KarmaConfigOptions
-} from "karma"
-import {
-  Configuration as WebpackConfig,
-  ProvidePlugin,
-  RuleSetRule as WebpackRuleSetRule
-} from "webpack"
+import { Config as KarmaConfig, ConfigOptions as KarmaConfigOptions } from "karma"
+import { generate } from "project-name-generator"
+import { Configuration as WebpackConfig, ProvidePlugin, RuleSetRule as WebpackRuleSetRule } from "webpack"
 
 /* ----------------------------------------------------------------------------
  * Functions
@@ -58,13 +51,13 @@ export function webpack(
         },
         ...(config.singleRun
           ? [
-              ({
-                test: /\.ts$/,
-                use: "istanbul-instrumenter-loader?+esModules",
-                include: path.resolve(__dirname, "../../src"),
-                enforce: "post"
-              }) as WebpackRuleSetRule
-            ]
+            ({
+              test: /\.ts$/,
+              use: "istanbul-instrumenter-loader?+esModules",
+              include: path.resolve(__dirname, "../../src"),
+              enforce: "post"
+            }) as WebpackRuleSetRule
+          ]
           : [])
       ]
     },
@@ -112,7 +105,7 @@ export function saucelabs(
       build: process.env.TRAVIS_BUILD_NUMBER,
       testName: process.env.TRAVIS
         ? `${process.env.TRAVIS_REPO_SLUG} #${process.env.TRAVIS_BUILD_NUMBER}`
-        : `~ #${moniker.choose()}`,
+        : `~ #${generate().dashed}`,
       recordVideo: false,
       recordScreenshots: false
     },

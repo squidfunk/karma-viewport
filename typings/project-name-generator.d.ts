@@ -20,6 +20,6 @@
  * IN THE SOFTWARE.
  */
 
-declare module "moniker" {
-  export function choose(): string
+declare module "project-name-generator" {
+  export function generate(): { raw: string, dashed: string, spaced: string }
 }

@@ -34,3 +34,6 @@
 
 # Generated typings
 src/**/*.d.ts
+
+# Idea IDE
+.idea/
