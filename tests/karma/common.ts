@@ -20,8 +20,8 @@
  * IN THE SOFTWARE.
  */
 
-import * as moniker from "moniker"
 import * as path from "path"
+import { generate } from "project-name-generator"
 
 import {
   Config as KarmaConfig,
@@ -112,7 +112,7 @@ export function saucelabs(
       build: process.env.TRAVIS_BUILD_NUMBER,
       testName: process.env.TRAVIS
         ? `${process.env.TRAVIS_REPO_SLUG} #${process.env.TRAVIS_BUILD_NUMBER}`
-        : `~ #${moniker.choose()}`,
+        : `~ #${generate().dashed}`,
       recordVideo: false,
       recordScreenshots: false
     },
