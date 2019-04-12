@@ -22,7 +22,7 @@ Karma viewport resizer for testing responsive features and layout
 ## Installation
 
 ``` sh
-npm install karma-viewport
+npm install karma-viewport --save-dev
 ```
 
 ## Usage
@@ -34,6 +34,19 @@ Add `viewport` to the list of frameworks inside your Karma configuration:
 module.exports = function(config) {
   config.set({
     frameworks: ["viewport"]
+  })
+}
+```
+
+Note: if you've defined a `plugins` array in your Karma configuration, you must also
+register the plugin there:
+
+``` js
+// karma.conf.js
+module.exports = function(config) {
+  config.set({
+    frameworks: ["viewport"],
+    plugins: ['karma-other-plugin', 'karma-viewport']  // <-- register here if you're defining `plugins`
   })
 }
 ```
