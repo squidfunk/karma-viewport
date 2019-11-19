@@ -159,7 +159,7 @@ const preprocessor: Injectable =
       throw new TypeError(`Invalid viewport configuration: ${viewport}`)
 
     /* Return preprocessor function */
-    return (content: string, _file: string, done: (result: string) => void) => {
+    return (content: string, file: { path: string }, done: (result: string) => void) => {
       const config: ViewportConfiguration =
         Object.assign(JSON.parse(content), viewport)
 
@@ -173,6 +173,8 @@ const preprocessor: Injectable =
       if (config.context === "#context" && !client.useIframe)
         throw new Error("Invalid configuration: client.useIframe " +
           "must be set to true or a different context selector must be given")
+
+      file.path += ".js"
 
       /* Store viewport configuration globally */
       done(`window.__viewport__ = ${JSON.stringify(config, undefined, 2)}`)
