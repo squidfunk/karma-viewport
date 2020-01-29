@@ -1,6 +1,6 @@
 {
   "name": "karma-viewport",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A Karma plugin for testing responsive features and layout",
   "keywords": [
     "breakpoint",

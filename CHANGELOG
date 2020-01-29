@@ -1,3 +1,7 @@
+karma-viewport-1.0.5 (2020-01-29)
+
+  * Fixed #113: Invalid file type warning
+
 karma-viewport-1.0.4 (2019-01-10)
 
   * Fixed TypeScript typings

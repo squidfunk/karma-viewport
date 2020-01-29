@@ -174,6 +174,7 @@ const preprocessor: Injectable =
         throw new Error("Invalid configuration: client.useIframe " +
           "must be set to true or a different context selector must be given")
 
+      /* Ensure correct file type */
       file.path += ".js"
 
       /* Store viewport configuration globally */
