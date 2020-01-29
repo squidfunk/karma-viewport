@@ -159,7 +159,8 @@ const preprocessor: Injectable =
       throw new TypeError(`Invalid viewport configuration: ${viewport}`)
 
     /* Return preprocessor function */
-    return (content: string, file: { path: string }, done: (result: string) => void) => {
+    type DoneFn = (result: string) => void
+    return (content: string, file: { path: string }, done: DoneFn) => {
       const config: ViewportConfiguration =
         Object.assign(JSON.parse(content), viewport)
 
