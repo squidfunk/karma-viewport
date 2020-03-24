@@ -25,7 +25,7 @@ import * as path from "path"
 import * as url from "url"
 
 import {
-  ServerRequest,
+  IncomingMessage,
   ServerResponse
 } from "http"
 import { validate } from "jsonschema"
@@ -123,7 +123,7 @@ framework.$inject = ["config"]
  * @return Connect-compatible middleware
  */
 const middleware: Injectable = () =>
-  (req: ServerRequest, res: ServerResponse, next: (err?: Error) => void) => {
+  (req: IncomingMessage, res: ServerResponse, next: (err?: Error) => void) => {
     const uri = url.parse(req.url!, true)
     if (uri.pathname !== "/debug.html" ||
         typeof uri.query.embed !== "undefined")
