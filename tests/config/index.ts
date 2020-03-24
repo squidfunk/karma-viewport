@@ -20,13 +20,14 @@
  * IN THE SOFTWARE.
  */
 
-import * as path from "path"
-import { generate } from "project-name-generator"
-
 import {
   Config as KarmaConfig,
-  ConfigOptions as KarmaConfigOptions
+  ConfigOptions as KarmaConfigOptions,
+  CustomLauncher
 } from "karma"
+import * as path from "path"
+import { generate } from "project-name-generator"
+import { TsconfigPathsPlugin } from "tsconfig-paths-webpack-plugin"
 import {
   Configuration as WebpackConfig,
   ProvidePlugin,
@@ -47,8 +48,11 @@ import {
 export function webpack(
   config: KarmaConfig & KarmaConfigOptions
 ): Partial<WebpackConfig> {
+  delete process.env.TS_NODE_PROJECT
   return {
     mode: "development",
+
+    /* Loaders */
     module: {
       rules: [
         {
@@ -72,10 +76,12 @@ export function webpack(
       modules: [
         path.resolve(__dirname, "../../node_modules")
       ],
-      extensions: [".ts", ".js"],
+      extensions: [".ts", ".js", ".json"],
+      plugins: [
+        new TsconfigPathsPlugin()
+      ],
       alias: {
-        "~": path.resolve(__dirname, "../../src"),
-        "_": path.resolve(__dirname, "..")
+        _: path.resolve(__dirname, "..")
       }
     },
     plugins: [
@@ -98,7 +104,8 @@ export function webpack(
  * @return SauceLabs configuration
  */
 export function saucelabs(
-  config: KarmaConfig & KarmaConfigOptions, browsers: object
+  config: KarmaConfig & KarmaConfigOptions,
+  browsers: Record<string, CustomLauncher>
 ): Partial<KarmaConfigOptions> {
   return {
 

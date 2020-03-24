@@ -27,8 +27,8 @@ import {
   ConfigOptions as KarmaConfigOptions
 } from "karma"
 
-import * as browsers from "./karma/browsers/integration.json"
-import { saucelabs, webpack } from "./karma/common"
+import { saucelabs, webpack } from "./config"
+import * as browsers from "./config/browsers/integration.json"
 
 /* ----------------------------------------------------------------------------
  * Configuration

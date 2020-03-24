@@ -20,7 +20,7 @@
  * IN THE SOFTWARE.
  */
 
-import { ViewportConfiguration } from "~/adapter/viewport"
+import { ViewportConfiguration } from "adapter/viewport"
 
 import { chance } from "_/helpers"
 
