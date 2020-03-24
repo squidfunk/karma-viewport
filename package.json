@@ -1,6 +1,6 @@
 {
   "name": "karma-viewport",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A Karma plugin for testing responsive features and layout",
   "keywords": [
     "breakpoint",
@@ -27,6 +27,9 @@
     "type": "git",
     "url": "https://github.com/squidfunk/karma-viewport.git"
   },
+  "files": [
+    "dist"
+  ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
