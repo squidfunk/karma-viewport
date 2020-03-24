@@ -186,7 +186,7 @@ via `tsconfig.json` or a reference within `karma.conf.ts` or tests:
 
 **MIT License**
 
-Copyright (c) 2017-2019 Martin Donath
+Copyright (c) 2017-2020 Martin Donath
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to
