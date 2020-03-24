@@ -1,11 +1,11 @@
-[![Travis][travis-image]][travis-link]
+[![Github Action][action-image]][action-link]
 [![Codecov][codecov-image]][codecov-link]
 [![Gitter][gitter-image]][gitter-link]
 [![npm][npm-image]][npm-link]
 [![dependabot][dependabot-image]][dependabot-link]
 
-  [travis-image]: https://travis-ci.org/squidfunk/karma-viewport.svg?branch=master
-  [travis-link]: https://travis-ci.org/squidfunk/karma-viewport
+  [action-image]: https://github.com/squidfunk/iframe-worker/workflows/ci/badge.svg?branch=master
+  [action-link]: https://github.com/squidfunk/iframe-worker/actions
   [codecov-image]: https://img.shields.io/codecov/c/github/squidfunk/karma-viewport/master.svg
   [codecov-link]: https://codecov.io/gh/squidfunk/karma-viewport
   [gitter-image]: https://badges.gitter.im/squidfunk/karma-viewport.svg

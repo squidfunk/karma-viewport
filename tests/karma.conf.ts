@@ -92,7 +92,7 @@ export default (config: KarmaConfig & KarmaConfigOptions) => {
     },
 
     /* Configuration overrides */
-    ...(process.env.TRAVIS || process.env.SAUCE
+    ...(process.env.GITHUB_ACTIONS || process.env.SAUCE
       ? saucelabs(config, browsers)
       : {})
   })

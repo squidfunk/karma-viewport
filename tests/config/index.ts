@@ -116,9 +116,9 @@ export function saucelabs(
     /* Configure SauceLabs integration */
     concurrency: 5,
     sauceLabs: {
-      build: process.env.TRAVIS_BUILD_NUMBER,
-      testName: process.env.TRAVIS
-        ? `${process.env.TRAVIS_REPO_SLUG} #${process.env.TRAVIS_BUILD_NUMBER}`
+      build: process.env.GITHUB_ACTIONS,
+      testName: process.env.GITHUB_RUN_ID
+        ? `${process.env.GITHUB_RUN_ID}`
         : `~ #${generate().dashed}`,
       recordVideo: false,
       recordScreenshots: false
