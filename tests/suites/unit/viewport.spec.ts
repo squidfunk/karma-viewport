@@ -20,7 +20,7 @@
  * IN THE SOFTWARE.
  */
 
-import { range, Viewport } from "~/adapter/viewport"
+import { range, Viewport } from "adapter/viewport"
 
 import { chance } from "_/helpers"
 import {

@@ -20,7 +20,7 @@
  * IN THE SOFTWARE.
  */
 
-import { inspect } from "~/adapter/util/inspect"
+import { inspect } from "adapter/util/inspect"
 
 import { chance } from "_/helpers"
 

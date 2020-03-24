@@ -55,18 +55,7 @@ export default (_env: never, args: Configuration) => {
           test: /\.ts$/,
           use: [
             "babel-loader",
-            {
-              loader: "ts-loader",
-              options: {
-                compilerOptions: {
-                  declaration: true,
-                  noUnusedLocals: args.mode === "production",
-                  noUnusedParameters: args.mode === "production",
-                  removeComments: false,
-                  target: "es2015"     /* Use ES modules for tree-shaking */
-                }
-              }
-            }
+            "ts-loader"
           ],
           exclude: /\/node_modules\//
         }
