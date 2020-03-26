@@ -2,7 +2,6 @@
 [![Codecov][codecov-image]][codecov-link]
 [![Gitter][gitter-image]][gitter-link]
 [![npm][npm-image]][npm-link]
-[![dependabot][dependabot-image]][dependabot-link]
 
   [action-image]: https://github.com/squidfunk/iframe-worker/workflows/ci/badge.svg?branch=master
   [action-link]: https://github.com/squidfunk/iframe-worker/actions
@@ -12,8 +11,6 @@
   [gitter-link]: https://gitter.im/squidfunk/karma-viewport
   [npm-image]: https://img.shields.io/npm/v/karma-viewport.svg
   [npm-link]: https://npmjs.com/package/karma-viewport
-  [dependabot-image]: https://img.shields.io/badge/dependabot-enabled-06f.svg
-  [dependabot-link]: https://dependabot.com
 
 # karma-viewport
 
