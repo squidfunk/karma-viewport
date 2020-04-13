@@ -3,8 +3,8 @@
 [![Gitter][gitter-image]][gitter-link]
 [![npm][npm-image]][npm-link]
 
-  [action-image]: https://github.com/squidfunk/iframe-worker/workflows/ci/badge.svg?branch=master
-  [action-link]: https://github.com/squidfunk/iframe-worker/actions
+  [action-image]: https://github.com/squidfunk/karma-viewport/workflows/ci/badge.svg?branch=master
+  [action-link]: https://github.com/squidfunk/karma-viewport/actions
   [codecov-image]: https://img.shields.io/codecov/c/github/squidfunk/karma-viewport/master.svg
   [codecov-link]: https://codecov.io/gh/squidfunk/karma-viewport
   [gitter-image]: https://badges.gitter.im/squidfunk/karma-viewport.svg
