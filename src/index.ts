@@ -76,10 +76,10 @@ declare global {
  *
  * @return File pattern
  */
-const pattern = (file: string): FilePattern => ({
+const pattern = (file: string, served: boolean = true): FilePattern => ({
   pattern: file,
   included: true,
-  served: true,
+  served,
   watched: false
 })
 
@@ -91,7 +91,8 @@ const pattern = (file: string): FilePattern => ({
 const framework: Injectable = (config: ConfigOptions) => {
   config.files!.push(
     pattern(path.resolve(__dirname, "config/default.json")),
-    pattern(path.resolve(__dirname, "adapter/index.js"))
+    pattern(path.resolve(__dirname, "adapter/index.js")),
+    pattern(path.resolve(__dirname, "adapter/index.js.map"), false)
   )
 
   /* Register debug context middleware */
