@@ -3,7 +3,7 @@
     "base": "SauceLabs",
     "browserName": "chrome",
     "version": "latest",
-    "platform": "Windows 7"
+    "platform": "Windows 10"
   },
   "ie11": {
     "base": "SauceLabs",
