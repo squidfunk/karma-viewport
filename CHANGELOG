@@ -1,3 +1,7 @@
+karma-viewport-1.0.7 (2020-08-30)
+
+  * Added source maps to served files to fix 404 warnings
+
 karma-viewport-1.0.6 (2020-03-24)
 
   * Upgraded dependencies and fixed security vulnerabilities
