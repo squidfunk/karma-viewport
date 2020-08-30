@@ -3,14 +3,12 @@
     "base": "SauceLabs",
     "browserName": "chrome",
     "version": "latest",
-    "platform": "Windows 7",
-    "screenResolution": "1280x1024"
+    "platform": "Windows 7"
   },
   "ie11": {
     "base": "SauceLabs",
     "browserName": "internet explorer",
     "version": "11",
-    "platform": "Windows 10",
-    "screenResolution": "1280x1024"
+    "platform": "Windows 10"
   }
 }
