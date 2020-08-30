@@ -53,10 +53,10 @@ jobs:
       # Run linter and build distribution files
       - run: npm run lint
       - run: npm run build
-      - run: npm run test
-        env:
-          SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
-          SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
+      # - run: npm run test
+      #   env:
+      #     SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
+      #     SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
 
       # Upload coverage report to codecov.io
       - run: |
