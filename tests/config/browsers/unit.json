@@ -3,25 +3,25 @@
     "base": "SauceLabs",
     "browserName": "chrome",
     "version": "latest",
-    "platform": "Windows 7"
+    "platform": "Windows 10"
   },
   "chrome1": {
     "base": "SauceLabs",
     "browserName": "chrome",
     "version": "latest-1",
-    "platform": "Windows 7"
+    "platform": "Windows 10"
   },
   "firefox": {
     "base": "SauceLabs",
     "browserName": "firefox",
     "version": "latest",
-    "platform": "Windows 7"
+    "platform": "Windows 10"
   },
   "firefox1": {
     "base": "SauceLabs",
     "browserName": "firefox",
     "version": "latest-1",
-    "platform": "Windows 7"
+    "platform": "Windows 10"
   },
   "edge15": {
     "base": "SauceLabs",
