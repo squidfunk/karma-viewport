@@ -49,6 +49,11 @@ viewport.set(320, 480)
 viewport.reset()
 ```
 
+_Note that you (probably) cannot use `viewport` in the top-level scope of your
+tests, as Karma might not have initialized all plugins until all files were
+read, so makes sure to call the respective functions from the setup hooks of
+your test framework or from within your tests._
+
 ### Browser support
 
 Chrome, Firefox, Safari, Edge 13-15, IE 9-11 and possibly some more.
