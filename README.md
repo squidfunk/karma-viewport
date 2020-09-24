@@ -88,7 +88,7 @@ add an `iframe` element dynamically before running the tests. Using a separate,
 custom context makes it possible to load entire webpages for testing:
 
 ``` js
-viewport.load("/path/to/fixture.html").then(() => { /* webpage was loaded */ })
+await viewport.load("/path/to/fixture.html")
 ```
 
   [1]: http://karma-runner.github.io/1.0/config/configuration-file.html
@@ -172,7 +172,13 @@ viewport.between("tablet", "screen", name => {
 
 After breakpoint iteration, `viewport.reset()` is called internally. If the
 callback provided to the breakpoint returns a `Promise`, the return value of
-the function will also be a `Promise`. This enables asynchronous tests.
+the function will also be a `Promise`. This enables asynchronous tests:
+
+``` js
+viewport.each(async name => {
+  // await ...
+})
+```
 
 ### TypeScript
 
