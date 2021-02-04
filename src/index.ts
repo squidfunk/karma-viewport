@@ -73,10 +73,11 @@ declare global {
  * Return specification for file server/watcher
  *
  * @param file - File
+ * @param included - Whether the file should be included
  *
  * @return File pattern
  */
-const pattern = (file: string, included: boolean = true): FilePattern => ({
+const pattern = (file: string, included = true): FilePattern => ({
   pattern: file,
   included,
   served: true,
