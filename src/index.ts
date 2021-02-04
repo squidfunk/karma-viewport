@@ -76,10 +76,10 @@ declare global {
  *
  * @return File pattern
  */
-const pattern = (file: string, served: boolean = true): FilePattern => ({
+const pattern = (file: string, included: boolean = true): FilePattern => ({
   pattern: file,
-  included: true,
-  served,
+  included,
+  served: true,
   watched: false
 })
 
