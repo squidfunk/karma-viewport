@@ -52,7 +52,7 @@
     "@types/jsonschema": "^1.1.1",
     "@types/karma-fixture": "^0.2.5",
     "@types/node": "^14.6.2",
-    "@types/webpack": "^4.41.21",
+    "@types/webpack": "^5.0.0",
     "array-findindex-polyfill": "^0.1.0",
     "babel-loader": "^8.1.0",
     "chance": "^1.1.7",
