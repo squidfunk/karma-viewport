@@ -1,5 +1,6 @@
 [![Github Action][action-image]][action-link]
 [![Codecov][codecov-image]][codecov-link]
+![Downloads][npm-downloads]
 [![Gitter][gitter-image]][gitter-link]
 [![npm][npm-image]][npm-link]
 
@@ -11,6 +12,7 @@
   [gitter-link]: https://gitter.im/squidfunk/karma-viewport
   [npm-image]: https://img.shields.io/npm/v/karma-viewport.svg
   [npm-link]: https://npmjs.com/package/karma-viewport
+  [npm-downloads]: https://img.shields.io/npm/dm/karma-viewport
 
 # karma-viewport
 
