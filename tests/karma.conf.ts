@@ -61,11 +61,11 @@ export default (config: KarmaConfig & KarmaConfigOptions) => {
 
     /* Reporters */
     reporters: config.singleRun
-      ? ["summary", "coverage-istanbul", "saucelabs"]
+      ? ["summary", "coverage-istanbul"]
       : ["spec", "clear-screen"],
 
     /* Browsers */
-    browsers: ["ChromeNoSandbox"],
+    browsers: ["ChromeNoSandbox", "FirefoxHeadless"],
     customLaunchers: {
       ChromeNoSandbox: {
         base: "ChromeHeadless",
