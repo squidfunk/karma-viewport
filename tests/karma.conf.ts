@@ -65,7 +65,19 @@ export default (config: KarmaConfig & KarmaConfigOptions) => {
       : ["spec", "clear-screen"],
 
     /* Browsers */
-    browsers: ["Chrome"],
+    browsers: ["ChromeNoSandbox"],
+    customLaunchers: {
+      ChromeNoSandbox: {
+        base: "ChromeHeadless",
+        flags: [
+            "--disable-gpu",
+            "--no-sandbox",
+            "--disable-setuid-sandbox",
+            "--disable-extensions",
+            "--disable-dev-shm-usage"
+        ]
+      }
+    },
 
     /* Configuration for spec reporter */
     specReporter: {
