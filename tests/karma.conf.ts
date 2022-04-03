@@ -61,7 +61,7 @@ export default (config: KarmaConfig & KarmaConfigOptions) => {
 
     /* Reporters */
     reporters: config.singleRun
-      ? ["spec", "coverage-istanbul"]
+      ? ["summary", "coverage-istanbul", "saucelabs"]
       : ["spec", "clear-screen"],
 
     /* Browsers */
@@ -75,7 +75,7 @@ export default (config: KarmaConfig & KarmaConfigOptions) => {
 
     /* Configuration for coverage reporter */
     coverageIstanbulReporter: {
-      reports: ["html", "text"]
+      reports: ["html", "text", "lcovonly"]
     },
 
     /* Hack: Don't serve TypeScript files with "video/mp2t" mime type */
