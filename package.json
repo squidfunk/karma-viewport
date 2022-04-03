@@ -41,8 +41,8 @@
     "watch": "make watch"
   },
   "dependencies": {
-    "@types/karma": "^6.1.0",
-    "jsonschema": "^1.2.6"
+    "@types/karma": "^6.3.3",
+    "jsonschema": "^1.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.17.8",
