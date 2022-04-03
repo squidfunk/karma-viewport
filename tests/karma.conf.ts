@@ -25,8 +25,7 @@ import {
   ConfigOptions as KarmaConfigOptions
 } from "karma"
 
-import { saucelabs, webpack } from "./config"
-import * as browsers from "./config/browsers/unit.json"
+import { webpack } from "./config"
 
 /* ----------------------------------------------------------------------------
  * Configuration
@@ -89,11 +88,6 @@ export default (config: KarmaConfig & KarmaConfigOptions) => {
       jasmine: {
         random: false
       }
-    },
-
-    /* Configuration overrides */
-    ...(process.env.GITHUB_ACTIONS || process.env.SAUCE
-      ? saucelabs(config, browsers)
-      : {})
+    }
   })
 }
