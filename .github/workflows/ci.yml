@@ -29,6 +29,10 @@ jobs:
   # Build theme
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x, 16.x]
+
     steps:
 
       # Limit clone depth to speed up build
@@ -39,7 +43,7 @@ jobs:
       # Install Node runtime and dependencies
       - uses: actions/setup-node@v1
         with:
-          node-version: 10.x
+          node-version: ${{ matrix.node-version }}
 
       - uses: actions/cache@v1
         id: cache-node
