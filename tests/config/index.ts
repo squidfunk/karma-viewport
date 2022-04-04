@@ -23,10 +23,8 @@
 import {
   Config as KarmaConfig,
   ConfigOptions as KarmaConfigOptions,
-  CustomLauncher
 } from "karma"
 import * as path from "path"
-import { generate } from "project-name-generator"
 import { TsconfigPathsPlugin } from "tsconfig-paths-webpack-plugin"
 import {
   Configuration as WebpackConfig,
@@ -92,48 +90,5 @@ export function webpack(
       })
     ],
     devtool: "source-map"
-  }
-}
-
-/**
- * SauceLabs configuration
- *
- * @param config - Configuration
- * @param browsers - Browser configuration
- *
- * @return SauceLabs configuration
- */
-export function saucelabs(
-  config: KarmaConfig & KarmaConfigOptions,
-  browsers: Record<string, CustomLauncher>
-): Partial<KarmaConfigOptions> {
-  return {
-
-    /* Define browsers to run tests on, see http://bit.ly/2pl96u1 */
-    browsers: Object.keys(browsers),
-    customLaunchers: browsers as any,
-
-    /* Configure SauceLabs integration */
-    concurrency: 5,
-    sauceLabs: {
-      build: process.env.GITHUB_ACTIONS,
-      testName: process.env.GITHUB_RUN_ID
-        ? `${process.env.GITHUB_RUN_ID}`
-        : `~ #${generate().dashed}`,
-      recordVideo: false,
-      recordScreenshots: false
-    },
-
-    /* Set reporters */
-    reporters: config.singleRun
-      ? ["summary", "coverage-istanbul", "saucelabs"]
-      : ["spec", "clear-screen"],
-    specReporter: {
-      suppressErrorSummary: true,
-      suppressPassed: !config.singleRun
-    },
-    coverageIstanbulReporter: {
-      reports: ["lcovonly"]
-    }
   }
 }

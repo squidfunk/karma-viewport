@@ -29,6 +29,10 @@ jobs:
   # Build theme
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x, 16.x]
+
     steps:
 
       # Limit clone depth to speed up build
@@ -39,7 +43,7 @@ jobs:
       # Install Node runtime and dependencies
       - uses: actions/setup-node@v1
         with:
-          node-version: 10.x
+          node-version: ${{ matrix.node-version }}
 
       - uses: actions/cache@v1
         id: cache-node
@@ -53,10 +57,8 @@ jobs:
       # Run linter and build distribution files
       - run: npm run lint
       - run: npm run build
-      # - run: npm run test
-      #   env:
-      #     SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
-      #     SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
+      - run: npm run test
+      - run: npm run test:integration
 
       # Upload coverage report to codecov.io
       # - run: |

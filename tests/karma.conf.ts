@@ -25,8 +25,7 @@ import {
   ConfigOptions as KarmaConfigOptions
 } from "karma"
 
-import { saucelabs, webpack } from "./config"
-import * as browsers from "./config/browsers/unit.json"
+import { webpack } from "./config"
 
 /* ----------------------------------------------------------------------------
  * Configuration
@@ -62,11 +61,23 @@ export default (config: KarmaConfig & KarmaConfigOptions) => {
 
     /* Reporters */
     reporters: config.singleRun
-      ? ["spec", "coverage-istanbul"]
+      ? ["summary", "coverage-istanbul"]
       : ["spec", "clear-screen"],
 
     /* Browsers */
-    browsers: ["Chrome"],
+    browsers: ["ChromeNoSandbox", "FirefoxHeadless"],
+    customLaunchers: {
+      ChromeNoSandbox: {
+        base: "ChromeHeadless",
+        flags: [
+            "--disable-gpu",
+            "--no-sandbox",
+            "--disable-setuid-sandbox",
+            "--disable-extensions",
+            "--disable-dev-shm-usage"
+        ]
+      }
+    },
 
     /* Configuration for spec reporter */
     specReporter: {
@@ -76,7 +87,7 @@ export default (config: KarmaConfig & KarmaConfigOptions) => {
 
     /* Configuration for coverage reporter */
     coverageIstanbulReporter: {
-      reports: ["html", "text"]
+      reports: ["html", "text", "lcovonly"]
     },
 
     /* Hack: Don't serve TypeScript files with "video/mp2t" mime type */
@@ -89,11 +100,6 @@ export default (config: KarmaConfig & KarmaConfigOptions) => {
       jasmine: {
         random: false
       }
-    },
-
-    /* Configuration overrides */
-    ...(process.env.GITHUB_ACTIONS || process.env.SAUCE
-      ? saucelabs(config, browsers)
-      : {})
+    }
   })
 }
