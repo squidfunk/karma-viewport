@@ -1,3 +1,7 @@
+karma-viewport-1.0.9 (2022-04-04)
+
+  * Upgraded dependencies and fixed security vulnerabilities
+
 karma-viewport-1.0.8 (2021-02-04)
 
   * Fixed source map warnings
