@@ -1,15 +1,12 @@
 [![Github Action][action-image]][action-link]
 [![Codecov][codecov-image]][codecov-link]
 ![Downloads][npm-downloads]
-[![Gitter][gitter-image]][gitter-link]
 [![npm][npm-image]][npm-link]
 
   [action-image]: https://github.com/squidfunk/karma-viewport/workflows/ci/badge.svg?branch=master
   [action-link]: https://github.com/squidfunk/karma-viewport/actions
   [codecov-image]: https://img.shields.io/codecov/c/github/squidfunk/karma-viewport/master.svg
   [codecov-link]: https://codecov.io/gh/squidfunk/karma-viewport
-  [gitter-image]: https://badges.gitter.im/squidfunk/karma-viewport.svg
-  [gitter-link]: https://gitter.im/squidfunk/karma-viewport
   [npm-image]: https://img.shields.io/npm/v/karma-viewport.svg
   [npm-link]: https://npmjs.com/package/karma-viewport
   [npm-downloads]: https://img.shields.io/npm/dm/karma-viewport
